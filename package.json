@@ -1,0 +1,32 @@
+{
+  "name": "terano-rose",
+  "version": "0.0.1",
+  "description": "bot written with discord-rose",
+  "main": "dist/master.js",
+  "scripts": {
+    "test": "cd src/ && nodemom",
+    "start": "cd src/ && node",
+    "poststart": "curl http://localhost:19998/off"
+  },
+  "keywords": [
+    "discord-rose"
+  ],
+  "author": "MILLION",
+  "license": "MIT",
+  "dependencies": {
+    "@types/redis": "^2.8.28",
+    "canvas": "^2.6.1",
+    "colors": "^1.4.0",
+    "discord-api-types": "^0.12.1",
+    "discord-rose": "0.0.3",
+    "dotenv": "^8.2.0",
+    "form-data": "^3.0.0",
+    "loggers": "github:million900o/loggers",
+    "mongoose": "^5.11.14",
+    "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/colors": "^1.2.1",
+    "@types/node": "^14.14.22"
+  }
+}
