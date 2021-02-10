@@ -12,7 +12,7 @@ export default class Responses {
         if (e) {
           const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`
           ctx.embed
-            .author(ctx.message.author.username + ' | ' + ctx.command.command, url)
+            .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
             .description(response)
             .footer('Developed by MILLION#1321')
             .color(color)
@@ -52,7 +52,7 @@ export default class Responses {
         if (e) {
           const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`
           ctx.embed
-            .author(ctx.message.author.username + ' | ' + ctx.command.command, url)
+            .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
             .description(response)
             .color(color)
             .send(true);
