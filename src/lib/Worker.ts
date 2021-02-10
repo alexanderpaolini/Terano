@@ -1,5 +1,5 @@
-import path, { resolve } from 'path';
-import fs, { readdir } from 'fs'
+import path from 'path';
+import fs from 'fs'
 
 import { promisify } from 'util';
 import redis from 'redis'
@@ -19,8 +19,8 @@ import guildModerationModel from '../database/models/guilds/moderation'
 import LevelMonitor from '../monitors/level'
 
 import mongoose from 'mongoose';
-import GuildDB from '../database/models/guilds';
-import UserDB from '../database/models/users';
+import GuildDB from '../database/guilds';
+import UserDB from '../database/users';
 
 import { colors } from '../structures/colors';
 import createLogger from '../utils/createLogger';

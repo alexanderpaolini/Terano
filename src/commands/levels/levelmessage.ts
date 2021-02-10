@@ -8,10 +8,9 @@ export default {
   permissions: ['manageMessages'],
   botPermissions: [],
   exec: async (ctx: CommandContext) => {
-    const guildData = await ctx.worker.db.guildDB.getGuild(ctx.guild.id);
-    guildData.options.level.send_message = !guildData.options.level.send_message;
-    await ctx.worker.db.guildDB.updateGuild(ctx.guild.id, guildData);
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-up messages ${guildData.options.level.send_message ? 'Enabled' : 'Disabled'}`)
+    const sendMesasge = !(await ctx.worker.db.guildDB.getGuild(ctx.guild.id));
+    await ctx.worker.db.guildDB.updateSendLevelMessage(ctx.guild.id, sendMesasge);
+    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-up messages ${sendMesasge ? 'Enabled' : 'Disabled'}`)
     return;
   }
 } as CommandOptions

@@ -1,8 +1,8 @@
 import { Cache } from 'discord-rose/dist/utils/Cache'
 
-import LevelModel from './levels'
-import SettingsModel from './settings'
-import UserModel from './users'
+import LevelModel from './models/users/levels'
+import SettingsModel from './models/users/settings'
+import UserModel from './models/users/users'
 
 interface LevelDoc {
   guildID: string,

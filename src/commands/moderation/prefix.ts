@@ -10,8 +10,7 @@ export default {
     if (prefix) {
       if (prefix.length < 21) {
         const oldPrefx = guildData.prefix;
-        guildData.prefix = prefix;
-        await ctx.worker.db.guildDB.updateGuild(ctx.guild.id, guildData);
+        await ctx.worker.db.guildDB.updatePrefix(ctx.guild.id, prefix);
         ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefx} to \`${guildData.prefix}\``)
         return;
       } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Prefix length must be no greater than 20.')
