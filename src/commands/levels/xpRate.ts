@@ -1,56 +1,26 @@
 import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
 
 export default {
+  name: 'XP Multiplier',
   command: 'xpmultiplier',
   aliases: ['xprate'],
-  userPerms: ['manageMessages'],
-  botPerms: [''],
+  permissions: ['manageMessages'],
+  botPermissions: [],
   exec: async (ctx: CommandContext) => {
     const newRate = Number(ctx.args[0]);
     if (newRate !== NaN) {
       if (newRate > 0) {
-        if (newRate < 20) {
+        if (newRate < 21) {
           const guildData = await ctx.worker.db.guildDB.getGuild(ctx.guild.id);
           const oldRate = guildData.options.level.xp_rate;
           guildData.options.level.xp_rate = newRate;
           await ctx.worker.db.guildDB.updateGuild(ctx.guild.id, guildData);
-          ctx.embed
-            .author(ctx.message.author.username + ' | XP Rate', `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`)
-            .description(`Changed XP-multplier from ${oldRate} to **${newRate}**.`)
-            .footer('Developed by MILLION#1321')
-            .color(ctx.worker.colors.GREEN)
-            .timestamp()
-            .send();
+          ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-Multplier from ${oldRate} to **${newRate}**.`)
           return;
-        } else {
-          ctx.embed
-            .author(ctx.message.author.username + ' | XP Rate', `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`)
-            .description(`The XP-multiplier must be less than 20.`)
-            .footer('Developed by MILLION#1321')
-            .color(ctx.worker.colors.RED)
-            .timestamp()
-            .send();
-          return;
-        }
-      } else {
-        ctx.embed
-          .author(ctx.message.author.username + ' | XP Rate', `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`)
-          .description(`The XP-multiplier must be greater than 0.`)
-          .footer('Developed by MILLION#1321')
-          .color(ctx.worker.colors.RED)
-          .timestamp()
-          .send();
-        return;
-      }
-    } else {
-      ctx.embed
-        .author(ctx.message.author.username + ' | XP Rate', `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`)
-        .description(`No XP-multiplier was included.`)
-        .footer('Developed by MILLION#1321')
-        .color(ctx.worker.colors.RED)
-        .timestamp()
-        .send();
-      return;
-    }
+        } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 20')
+      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `The XP-Multiplier must be greater than 0.`)
+    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `No XP-Multiplier was given.`)
+    return;
   }
-}
+} as CommandOptions

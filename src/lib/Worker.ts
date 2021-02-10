@@ -4,7 +4,7 @@ import fs, { readdir } from 'fs'
 import { promisify } from 'util';
 import redis from 'redis'
 
-import Worker from "../../../discord-rose/dist/clustering/worker/Worker";
+import Worker from "discord-rose/dist/clustering/worker/Worker";
 
 import TeranoOptions from '../structures/TeranoOptions'
 
@@ -24,12 +24,15 @@ import UserDB from '../database/models/users';
 
 import { colors } from '../structures/colors';
 import createLogger from '../utils/createLogger';
+import Responses from './Responses';
+import PrefixMonitor from '../monitors/prefix';
 
 export default class TeranoWorker extends Worker {
   redis: RedisClient;
   // logger: Logger;
   logger: any;
   dbModels: any;
+  responses: typeof Responses
   db: {
     guildDB: GuildDB,
     userDB: UserDB,
@@ -39,7 +42,7 @@ export default class TeranoWorker extends Worker {
   constructor(public opts: TeranoOptions) {
     super()
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow')
-    // this.logger = new Logger({ catch: true, colors: true, debug: true, method: console.log, newLine: false });
+    this.responses = Responses;
     
     this.colors = colors;
     
@@ -78,7 +81,8 @@ export default class TeranoWorker extends Worker {
   }
 
   loadMonitors() {
-    new LevelMonitor(this)
+    new LevelMonitor(this);
+    new PrefixMonitor(this);
   }
 
   async initMongo() {

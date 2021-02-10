@@ -18,10 +18,9 @@
     "canvas": "^2.6.1",
     "colors": "^1.4.0",
     "discord-api-types": "^0.12.1",
-    "discord-rose": "0.0.3",
+    "discord-rose": "0.0.5",
     "dotenv": "^8.2.0",
     "form-data": "^3.0.0",
-    "loggers": "github:million900o/loggers",
     "mongoose": "^5.11.14",
     "redis": "^3.0.2"
   },

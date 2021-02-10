@@ -1,4 +1,4 @@
-import { Cache } from '../../../../../discord-rose/dist/utils/Cache'
+import { Cache } from 'discord-rose/dist/utils/Cache'
 
 import LevelModel from './levels'
 import SettingsModel from './settings'

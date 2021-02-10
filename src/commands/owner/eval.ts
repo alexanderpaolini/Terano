@@ -6,12 +6,13 @@ export default {
   userPerms: [''],
   botPerms: ['owner'],
   exec: async (ctx: CommandContext) => {
-    const userDoc = await ctx.worker.dbModels.userModel.findOne({ id: ctx.message.author.id })
+    const userDoc = await ctx.worker.db.userDB.getUser(ctx.message.author.id)
     if (!userDoc || !userDoc.owner) return await ctx.embed
       .title('Owner Only Command')
       .description(`\`\`\`You can't run this command, silly.\`\`\``)
       .color(ctx.worker.colors.RED)
       .send()
+
     let output: string;
     let status = true;
     try {
@@ -26,16 +27,11 @@ export default {
       output = err;
     }
     try {
-      await ctx.embed
-        .description(`\`\`\`js\n${output}\`\`\``)
-        .color(status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED)
-        .send()
+      ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`)
       return;
     } catch (err) {
-      await ctx.embed
-        .description(`\`\`\`js\n${err.toString()}\`\`\``)
-        .color(ctx.worker.colors.RED)
-        .send()
+      ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`)
+      return;
     }
   }
 };

@@ -1,14 +1,16 @@
 import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
+
 import colors from '../../utils/colors'
 
 export default {
+  name: 'Color',
   command: 'color',
   aliases: ['colour'],
-  userPerms: [''],
-  botPerms: [''],
+  permissions: [],
+  botPermissions: [],
   exec: async (ctx: CommandContext) => {
     let color = ctx.args.join('').toLowerCase();
-    const avatarURL = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`
     if (color) {
       if (colors[color]) {
         let userSettingsDoc = await ctx.worker.db.userDB.getSettings(ctx.message.author.id);
@@ -18,31 +20,10 @@ export default {
         })
         userSettingsDoc.level.color = colors[color];
         await ctx.worker.db.userDB.updateSettings(ctx.message.author.id, userSettingsDoc);
-        ctx.embed
-          .author(ctx.message.author.username + ' | Color', avatarURL)
-          .description(`Set card color to **${colors[color].toLowerCase()}**`)
-          .footer('Developed by MILLION#1321')
-          .color(Number('0x' + colors[color].slice(1)))
-          .timestamp()
-          .send();
+        ctx.worker.responses.normal(ctx, Number('0x' + colors[color].slice(1)), `Set card color to **${colors[color].toLowerCase()}**`)
         return;
-      } else {
-        ctx.embed
-          .author(ctx.message.author.username + ' | Color', avatarURL)
-          .description(`I don't know the color \`${ctx.args.join(' ')}\`.`)
-          .footer('Developed by MILLION#1321')
-          .color(ctx.worker.colors.RED)
-          .timestamp()
-          .send()
-      }
-    } else {
-      ctx.embed
-        .author(ctx.message.author.username + ' | Color', avatarURL)
-        .description(`No color was included.`)
-        .footer('Developed by MILLION#1321')
-        .color(ctx.worker.colors.RED)
-        .timestamp()
-        .send()
-    }
+      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `I don't know the color \`${ctx.args.join(' ')}\`.`)
+    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `No color was given.`)
+    return;
   }
-}
+} as CommandOptions

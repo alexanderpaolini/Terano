@@ -1,10 +1,12 @@
 import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
 
 export default {
+  name: 'Tag',
   command: 'tag',
-  aliases: [''],
-  userPerms: [''],
-  botPerms: [''],
+  aliases: [],
+  permissions: [],
+  botPermissions: [],
   exec: async (ctx: CommandContext) => {
     let tag = ctx.args.join(' ');
     const avatarURL = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`
@@ -17,33 +19,10 @@ export default {
         })
         userSettingsDoc.level.tag = tag;
         await ctx.worker.db.userDB.updateSettings(ctx.message.author.id, userSettingsDoc);
-        ctx.embed
-          .author(ctx.message.author.username + ' | Tag', avatarURL)
-          .description(`Set card tag to: **${tag}**`)
-          .footer('Developed by MILLION#1321')
-          .color(ctx.worker.colors.GREEN)
-          .timestamp()
-          .send();
+        ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Set card tag to: **${tag}**`)
         return;
-      } else {
-        ctx.embed
-          .author(ctx.message.author.username + ' | Tag', avatarURL)
-          .description(`Tag is too long, it must be at most 20 characters.`)
-          .footer('Developed by MILLION#1321')
-          .color(ctx.worker.colors.RED)
-          .timestamp()
-          .send();
-        return;
-      }
-    } else {
-      ctx.embed
-        .author(ctx.message.author.username + ' | Tag', avatarURL)
-        .description(`No tag was included.`)
-        .footer('Developed by MILLION#1321')
-        .color(ctx.worker.colors.RED)
-        .timestamp()
-        .send();
-      return;
-    }
+      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Tag must be no longer than 20 characters.')
+    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No tag was given.')
+    return;
   }
-}
+} as CommandOptions

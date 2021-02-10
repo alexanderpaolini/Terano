@@ -1,4 +1,4 @@
-import { Cache } from '../../../../../discord-rose/dist/utils/Cache'
+import { Cache } from 'discord-rose/dist/utils/Cache'
 
 import GuildModel from './guilds'
 import ModerationModel from './moderation'

@@ -1,11 +1,14 @@
 import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
+
 import Canvas from 'canvas'
 
 export default {
+  name: 'Rank',
   command: 'rank',
   aliases: ['card', 'level'],
-  userPerms: [''],
-  botPerms: [''],
+  permissions: [],
+  botPermissions: ['administrator', 'administrator'],
   exec: async (cmdCTX: CommandContext) => {
     const data = await cmdCTX.worker.db.userDB.getLevel(cmdCTX.message.author.id, cmdCTX.message.guild_id);
     const settings = await cmdCTX.worker.db.userDB.getSettings(cmdCTX.message.author.id)
@@ -69,4 +72,4 @@ export default {
 
     cmdCTX.sendFile({ buffer: canvas.toBuffer('image/png'), name: 'rank.png' });
   }
-}
+} as CommandOptions
