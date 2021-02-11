@@ -1,4 +1,3 @@
-import CommandContext from '../../structures/CommandContext';
 import CommandOptions from '../../structures/CommandOptions';
 
 export default {
@@ -7,7 +6,7 @@ export default {
   aliases: ['cooldown'],
   permissions: ['manageMessages'],
   botPermissions: [],
-  exec: async (ctx: CommandContext) => {
+  exec: async (ctx) => {
     const newCooldown = Number(ctx.args[0]);
     if (newCooldown !== NaN) {
       if (newCooldown > 0) {

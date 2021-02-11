@@ -1,4 +1,3 @@
-import CommandContext from '../../structures/CommandContext';
 import CommandOptions from '../../structures/CommandOptions';
 
 export default {
@@ -7,7 +6,7 @@ export default {
   aliases: [],
   permissions: [],
   botPermissions: [],
-  exec: async (ctx: CommandContext) => {
+  exec: async (ctx) => {
     let tag = ctx.args.join(' ');
     const avatarURL = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`
     if (tag.length) {

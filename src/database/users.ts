@@ -22,7 +22,8 @@ interface SettingsDoc {
 
 interface UserDoc {
   id: string,
-  owner: boolean
+  owner: boolean,
+  blacklisted: boolean
 }
 
 export default class UserDB {
@@ -82,7 +83,7 @@ export default class UserDB {
     return await this.getLevel(userID, guildID);
   }
 
-  async getLevel(userID: string, guildID: string): Promise<LevelDoc> {
+  async getLevel(userID: string | null, guildID: string): Promise<LevelDoc> {
     const fromCache = this.levels.get(`${guildID}${userID}`);
     if (fromCache) return fromCache
     const doc: LevelDoc = await LevelModel.findOne({ guildID, userID }).lean();
@@ -100,9 +101,40 @@ export default class UserDB {
     };
   }
 
+  async getAllLevel(guildID: string): Promise<LevelDoc[]> {
+    return await LevelModel.find({ guildID }).lean();
+  }
+
   async updateLevel(userID: string, guildID: string, doc: LevelDoc): Promise<LevelDoc> {
     this.levels.set(`${guildID}${userID}`, doc);
     await LevelModel.findOneAndUpdate({ userID, guildID }, doc);
     return await LevelModel.findOneAndUpdate({ guildID, userID }, doc).lean() as LevelDoc
+  }
+
+  // Other functions
+  // These functions will be used 
+  // for getting/changing 1 or 2 things
+
+  async getOwner(userID: string) {
+    const userData = await this.getUser(userID);
+    return userData?.owner;
+  }
+
+  async setOwner(userID: string, value: boolean) {
+    const userData = await this.getUser(userID);
+    if (userData) {
+      userData.owner = value;
+      await this.updateUser(userID, userData);
+      return;
+    } else {
+      const data: UserDoc = { id: userID, owner: value, blacklisted: false };
+      await this.setUser(userID, data)
+      return;
+    }
+  }
+
+  async getBlacklist(userID: string) {
+    const userData = await this.getUser(userID);
+    return userData?.blacklisted
   }
 }

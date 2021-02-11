@@ -1,4 +1,3 @@
-import CommandContext from '../../structures/CommandContext';
 import CommandOptions from '../../structures/CommandOptions';
 
 import Canvas from 'canvas'
@@ -9,7 +8,7 @@ export default {
   aliases: ['card', 'level'],
   permissions: [],
   botPermissions: ['administrator', 'administrator'],
-  exec: async (cmdCTX: CommandContext) => {
+  exec: async (cmdCTX) => {
     const data = await cmdCTX.worker.db.userDB.getLevel(cmdCTX.message.author.id, cmdCTX.message.guild_id);
     const settings = await cmdCTX.worker.db.userDB.getSettings(cmdCTX.message.author.id)
     const user = cmdCTX.message.author;

@@ -43,16 +43,16 @@ export default class TeranoWorker extends Worker {
     super()
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow')
     this.responses = Responses;
-    
+
     this.colors = colors;
-    
+
     // Init shit
     this.db = {
       guildDB: new GuildDB(),
       userDB: new UserDB(),
     };
-    
-    this.loadCommands(path.resolve(__dirname, '../', opts.commandDir))
+
+    this.loadCommands(path.resolve(__dirname, '../', './commands/'))
     this.loadMonitors()
     this.initMongo()
     this.initRedis()

@@ -9,6 +9,5 @@ export default interface TeranoOptions {
   redis: ClientOpts,
   discord: {
     token: string
-  },
-  commandDir: string
+  }
 }

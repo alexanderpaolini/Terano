@@ -1,4 +1,3 @@
-import CommandContext from '../../structures/CommandContext';
 import CommandOptions from '../../structures/CommandOptions';
 
 export default {
@@ -7,7 +6,7 @@ export default {
   aliases: ['xprate'],
   permissions: ['manageMessages'],
   botPermissions: [],
-  exec: async (ctx: CommandContext) => {
+  exec: async (ctx) => {
     const newRate = Number(ctx.args[0]);
     if (newRate !== NaN) {
       if (newRate > 0) {

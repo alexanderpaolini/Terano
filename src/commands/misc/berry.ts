@@ -1,10 +1,11 @@
-import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
 
 export default {
+  name: 'Berry',
   command: 'stinky',
-  userPerms: [''],
-  botPerms: [''],
-  exec: async (ctx: CommandContext) => {
+  permissions: [],
+  botPermissions: [],
+  exec: async (ctx) => {
     ctx.reply(`<@142408079177285632>`);
   }
-}
+} as CommandOptions

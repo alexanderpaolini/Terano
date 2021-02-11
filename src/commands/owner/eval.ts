@@ -1,22 +1,19 @@
-import CommandContext from '../../structures/CommandContext';
+import CommandOptions from '../../structures/CommandOptions';
+
 import { inspect } from 'util';
 
 export default {
+  name: 'Eval',
   command: 'eval',
-  userPerms: [''],
-  botPerms: ['owner'],
-  exec: async (ctx: CommandContext) => {
-    const userDoc = await ctx.worker.db.userDB.getUser(ctx.message.author.id)
-    if (!userDoc || !userDoc.owner) return await ctx.embed
-      .title('Owner Only Command')
-      .description(`\`\`\`You can't run this command, silly.\`\`\``)
-      .color(ctx.worker.colors.RED)
-      .send()
-
+  aliases: ['ev'],
+  permissions: [],
+  botPermissions: [],
+  owner: true,
+  exec: async (ctx) => {
     let output: string;
     let status = true;
     try {
-      let evaled = eval(ctx.message.content.slice(6));
+      let evaled = eval(ctx.args.join(' '));
 
       if (evaled instanceof Promise) evaled = await evaled;
       evaled = inspect(evaled);
@@ -34,4 +31,4 @@ export default {
       return;
     }
   }
-};
+} as CommandOptions;

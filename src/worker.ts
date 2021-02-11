@@ -12,6 +12,18 @@ worker.commands.middleware(async (ctx: CommandContext) => {
   return !hasPerms;
 })
 
+worker.commands.middleware(async (ctx: CommandContext) => {
+  if(ctx.command.owner) {
+    const isOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
+    if (!isOwner) ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, 'You can\'t do this, silly.')
+    return isOwner;
+  } else return true;
+})
+
+worker.commands.middleware(async (ctx: CommandContext) => {
+  return !ctx.worker.db.userDB.getBlacklist(ctx.message.author.id)
+})
+
 // worker.commands.middleware(async (ctx: CommandContext) => {
 //   const perms = ctx.command.botPermissions
 //   const hasPerms = perms.every((perm: any) => ctx.myPerms(perm));
@@ -20,7 +32,5 @@ worker.commands.middleware(async (ctx: CommandContext) => {
 // })
 
 worker.commands.setPrefix(async (msg) => {
-  const guildData = await worker.db.guildDB.getGuild(msg.guild_id);
-  if (!guildData) return 't!'
-  return guildData.prefix || ''
+  return await worker.db.guildDB.getPrefix(msg.guild_id);
 })
