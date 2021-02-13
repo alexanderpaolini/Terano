@@ -32,7 +32,7 @@ const Colors = {
 };
 
 class Embed {
-  obj: any
+  obj: any;
   constructor() {
     this.obj = {
       title: null,

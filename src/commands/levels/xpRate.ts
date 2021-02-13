@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'XP Multiplier',
+  usage: 'xpmultiplier <multiplier>',
+  description: 'Change the multiplier on receiving XP.',
+  category: 'leveling',
   command: 'xpmultiplier',
   aliases: ['xprate'],
   permissions: ['manageMessages'],

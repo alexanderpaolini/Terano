@@ -1,9 +1,12 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import Canvas from 'canvas';
 
 export default {
   name: 'Rank',
+  usage: 'rank [mention]',
+  description: 'View your rank in a card format.',
+  category: 'leveling',
   command: 'rank',
   aliases: ['card', 'level'],
   permissions: [],

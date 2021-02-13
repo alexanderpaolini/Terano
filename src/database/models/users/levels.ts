@@ -5,7 +5,7 @@ const LevelSchema = new Schema({
   userID: { type: String, required: true }, // User ID
   xp: { type: String, default: '0' }, // 1 | 2 | 3...
   level: { type: Number, default: 0 }, // Level will never be greater than double, right?
-})
+});
 
 export default model('users.levels', LevelSchema);
 

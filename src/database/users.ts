@@ -75,7 +75,7 @@ export default class UserDB {
   async updateUser(id: string, doc: UserDoc): Promise<UserDoc> {
     this.users.set(id, doc);
     await UserModel.findOneAndUpdate({ id }, doc);
-    return await UserModel.findOneAndUpdate({ id }, doc).lean() as UserDoc;
+    return await UserModel.findOneAndUpdate({ id }, doc).lean();
   }
 
   async setLevel(userID: string, guildID: string, doc: LevelDoc): Promise<LevelDoc> {
@@ -98,7 +98,7 @@ export default class UserDB {
         level: 0,
       };
       return await this.setLevel(userID, guildID, data);
-    };
+    }
   }
 
   async getAllLevel(guildID: string): Promise<LevelDoc[]> {
@@ -109,7 +109,7 @@ export default class UserDB {
   async updateLevel(userID: string, guildID: string, doc: LevelDoc): Promise<LevelDoc> {
     this.levels.set(`${guildID}${userID}`, doc);
     await LevelModel.findOneAndUpdate({ userID, guildID }, doc);
-    return await LevelModel.findOneAndUpdate({ guildID, userID }, doc).lean() as LevelDoc;
+    return await LevelModel.findOneAndUpdate({ guildID, userID }, doc).lean();
   }
 
   // Other functions

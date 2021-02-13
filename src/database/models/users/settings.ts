@@ -7,6 +7,6 @@ const SettingsSchema = new Schema({
     color: { type: String, default: '' },
     picture: { type: String, default: '' },
   }
-})
+});
 
 export default model('users.settings', SettingsSchema);

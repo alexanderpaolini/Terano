@@ -1,10 +1,12 @@
-// import CommandContext from '../../structures/CommandContext';
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import colors from '../../utils/colors';
 
 export default {
   name: 'Color',
+  usage: 'color <color>',
+  description: 'Change the color of your rank card.',
+  category: 'leveling',
   command: 'color',
   aliases: ['colour'],
   permissions: [],

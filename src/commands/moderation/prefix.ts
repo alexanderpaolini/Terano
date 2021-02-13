@@ -1,11 +1,14 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Prefix',
+  usage: 'prefix <new prefix>',
+  description: 'Change the server-specific prefix.',
+  category: 'moderation',
   command: 'prefix',
   aliases: [],
   permissions: ['manageMessages'],
-  botPermissions: [''],
+  botPermissions: [],
   exec: async (ctx) => {
     const prefix = ctx.args[0];
     if (prefix) {

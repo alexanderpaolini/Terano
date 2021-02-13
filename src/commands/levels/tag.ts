@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Tag',
+  usage: 'tag <new tag>',
+  description: 'Set your tag for the rank card.',
+  category: 'leveling',
   command: 'tag',
   aliases: [],
   permissions: [],

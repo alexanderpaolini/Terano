@@ -1,9 +1,12 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import { inspect } from 'util';
 
 export default {
   name: 'Eval',
+  usage: 'eval <code>',
+  description: 'Eval some code on the worker process',
+  category: 'owner',
   command: 'eval',
   aliases: ['ev'],
   permissions: [],

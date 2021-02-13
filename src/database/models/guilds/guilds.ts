@@ -14,6 +14,6 @@ const GuildSchema = new Schema({
       cooldown: { type: String, default: 15 }
     }
   }
-})
+});
 
 export default model('guilds', GuildSchema);

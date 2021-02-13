@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Disable',
+  usage: 'disable <command>',
+  description: 'Disable a command globally',
+  category: 'owner',
   command: 'disable',
   aliases: [],
   permissions: [],
@@ -10,7 +13,7 @@ export default {
   exec: async (ctx) => {
     const command = ctx.args[0];
     if (command) {
-      const cmd = ctx.worker.commands.commands.find((c: CommandOptions) => c.command === command) as CommandOptions;
+      const cmd = ctx.worker.commands.commands.find((c: CommandOptions) => c.command === command);
       if (cmd) {
         if (cmd.disabled) delete cmd.disabled;
         else cmd.disabled = true;

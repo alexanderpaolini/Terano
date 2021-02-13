@@ -3,11 +3,12 @@ import { ClientOpts } from "redis";
 
 export default interface TeranoOptions {
   mongodb: {
-    connectURI: string,
+    connectURI: string;
     connectOptions: ConnectOptions;
-  },
-  redis: ClientOpts,
+  };
+  redis: ClientOpts;
   discord: {
     token: string;
   };
+  topdotgeegee: string;
 }

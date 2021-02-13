@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Owner',
+  usage: 'owner <mention | id>',
+  description: 'Add or remove someone from bot owner.',
+  category: 'owner',
   command: 'owner',
   aliases: ['owo'],
   permissions: [],

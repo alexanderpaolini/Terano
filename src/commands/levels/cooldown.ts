@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'XP-Cooldown',
+  usage: 'xpcooldown <seconds>',
+  description: 'Change the cooldown for getting xp from messages.',
+  category: 'leveling',
   command: 'xpcooldown',
   aliases: ['cooldown'],
   permissions: ['manageMessages'],

@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Blacklist',
+  usage: 'blacklist <mention | ID>',
+  description: 'Blacklist a user from using the bot.',
+  category: 'owner',
   command: 'blacklist',
   aliases: ['bl'],
   permissions: [],

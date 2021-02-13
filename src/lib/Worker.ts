@@ -1,6 +1,7 @@
 // Other shit
 import Worker from 'discord-rose/dist/clustering/worker/Worker';
 import { promisify } from 'util';
+import { Api } from '@top-gg/sdk';
 import path from 'path';
 import fs from 'fs';
 
@@ -29,7 +30,7 @@ import TeranoOptions from '../structures/TeranoOptions';
 
 // Lib
 import Responses from './Responses';
-import Embed from './Embed';
+// import Embed from './Embed';
 
 // Utils
 import createLogger from '../utils/createLogger';
@@ -46,6 +47,8 @@ export default class TeranoWorker extends Worker {
   };
   colors: typeof colors;
   devMode: boolean;
+  topgg: Api;
+  statsInterval: NodeJS.Timeout;
   constructor(public opts: TeranoOptions) {
     super();
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
@@ -57,6 +60,7 @@ export default class TeranoWorker extends Worker {
     this.initMongo();
     this.initRedis();
     this.loadInit();
+    // this.loadTOPGG();
   }
 
   loadInit() {
@@ -105,5 +109,28 @@ export default class TeranoWorker extends Worker {
     });
     this.logger.log('Connected to Redis at:', this.opts.redis.host + ':' + this.opts.redis.port);
     return client;
+  }
+
+  get shardGuildCounts() {
+    return this.guilds.reduce((a, b) => {
+      const shard = Number((BigInt(b.id) >> BigInt(22)) % BigInt(this.options.shards));
+      if (!a[shard]) a[shard] = 0;
+      a[shard]++;
+      return a;
+    }, {});
+  }
+
+  loadTOPGG() {
+    this.topgg = new Api(this.opts.topdotgeegee);
+    this.statsInterval = setInterval(() => {
+      const shardGuildCounts = this.shardGuildCounts;
+      for (const [K, V] of Object.entries(shardGuildCounts)) {
+        this.topgg.postStats({
+          serverCount: V as number,
+          shardId: Number(K),
+          shardCount: this.options.shards as number
+        });
+      }
+    }, 20 * 60 * 1000);
   }
 }

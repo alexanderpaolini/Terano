@@ -7,12 +7,12 @@ export default function loadFunctions(worker: TeranoWorker) {
     files.forEach(file => {
       if (!file.endsWith('.js')) return;
       try {
-        const f = require(resolve(__dirname, '../', `./events/${file}`)).default
+        const f = require(resolve(__dirname, '../', `./events/${file}`)).default;
         f(worker);
         return;
-      } catch(e) {
-        throw new Error(`Error while loading event: ${file}\n${e.toString()}`)
+      } catch (e) {
+        throw new Error(`Error while loading event: ${file}\n${e.toString()}`);
       }
-    })
-  })
+    });
+  });
 }

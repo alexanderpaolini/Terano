@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Level-Up Message',
+  usage: 'levelmessage',
+  description: 'Toggle the Level-Up messages',
+  category: 'leveling',
   command: 'levelmessage',
   aliases: ['lm'],
   permissions: ['manageMessages'],

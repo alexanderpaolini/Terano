@@ -10,7 +10,7 @@ const ModerationSchema = new Schema({
     moderator: { type: String, required: true }, // User ID
     timestamp: { type: Date, required: true }
   }
-})
+});
 
 // type reason = 'WARN' | 'MUTE' | 'BAN' | 'TEMPBAN'
 

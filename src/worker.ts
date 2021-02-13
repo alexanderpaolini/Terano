@@ -1,6 +1,6 @@
 import config from './config.json';
 import TeranoWorker from './lib/Worker';
-import CommandContext from './structures/CommandContext';
+import { CommandContext } from 'discord-rose/dist/typings/lib';
 
 const worker: TeranoWorker = new TeranoWorker(config);
 

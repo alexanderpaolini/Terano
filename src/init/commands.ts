@@ -3,7 +3,7 @@ import { resolve } from "path";
 import TeranoWorker from "../lib/Worker";
 
 export default function loadFunctions(worker: TeranoWorker) {
-  function loadCommands(dir) {
+  function loadCommands(dir: string) {
     readdir(dir, (err, files) => {
       if (err) return console.error(err.toString());
       else {

@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Ping',
+  usage: 'ping',
+  description: 'Get the bot\'s ping',
+  category: 'misc',
   command: 'ping',
   permissions: [],
   botPermissions: [],

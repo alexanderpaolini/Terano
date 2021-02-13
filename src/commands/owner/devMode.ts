@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Dev Mode',
+  usage: 'devmode',
+  description: 'Toggle Developer-Only mode for the bot.',
+  category: 'owner',
   command: 'devmode',
   aliases: [],
   permissions: [],

@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Leaderboard',
+  usage: 'leaderboard',
+  description: 'View the guild leaderboard',
+  category: 'leveling',
   command: 'leaderboard',
   aliases: ['lb'],
   permissions: [],

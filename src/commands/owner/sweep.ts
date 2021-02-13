@@ -1,7 +1,10 @@
-import CommandOptions from '../../structures/CommandOptions';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 export default {
   name: 'Sweep',
+  usage: 'sweep',
+  description: 'Sweep the database cache.',
+  category: 'owner',
   command: 'sweep',
   aliases: [],
   permissions: [],
