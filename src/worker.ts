@@ -5,24 +5,52 @@ import CommandContext from './structures/CommandContext';
 const worker: TeranoWorker = new TeranoWorker(config);
 
 worker.commands.middleware(async (ctx: CommandContext) => {
-  const perms = ctx.command.permissions
-  const hasPerms = perms.every((perm: any) => ctx.hasPerms(perm));
-  const guildData = await worker.db.guildDB.getGuild(ctx.guild.id);
-  if(guildData.options.noPermissions) throw new Error(`Missing Permissions. Required Permissions: ${perms.join(', ')}`)
-  return !hasPerms;
-})
-
-worker.commands.middleware(async (ctx: CommandContext) => {
-  if(ctx.command.owner) {
-    const isOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
-    if (!isOwner) ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, 'You can\'t do this, silly.')
-    return isOwner;
+  const perms = ctx.command.permissions;
+  if (perms.length) {
+    const hasPerms = perms.every((perm: any) => ctx.hasPerms(perm));
+    const guildData = await worker.db.guildDB.getGuild(ctx.guild.id);
+    if (!hasPerms) {
+      if (guildData.options.noPermissions) ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `Missing Permissions. Required Permissions: ${perms.join(', ')}`);
+      return false;
+    }
+    return true;
   } else return true;
-})
+});
 
 worker.commands.middleware(async (ctx: CommandContext) => {
-  return !ctx.worker.db.userDB.getBlacklist(ctx.message.author.id)
-})
+  if (ctx.worker.devMode) {
+    const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
+    if (isOwner) return true;
+    ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, 'Commands are currently disabled.');
+    return false;
+  }
+  else return true;
+});
+
+worker.commands.middleware(async (ctx: CommandContext) => {
+  if (ctx.command.disabled) {
+    const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
+    if (isOwner) return true;
+    ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, 'This command is currently disabled.');
+    return false;
+  }
+  return true;
+});
+
+worker.commands.middleware(async (ctx: CommandContext) => {
+  if (ctx.command.owner) {
+    const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
+    if (!isOwner) {
+      ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, 'You can\'t do this, silly.');
+      return false;
+    }
+    return true;
+  } else return true;
+});
+
+worker.commands.middleware(async (ctx: CommandContext) => {
+  return !await ctx.worker.db.userDB.getBlacklist(ctx.message.author.id);
+});
 
 // worker.commands.middleware(async (ctx: CommandContext) => {
 //   const perms = ctx.command.botPermissions
@@ -32,5 +60,6 @@ worker.commands.middleware(async (ctx: CommandContext) => {
 // })
 
 worker.commands.setPrefix(async (msg) => {
-  return await worker.db.guildDB.getPrefix(msg.guild_id);
-})
+  return 't!';
+  // return (await worker.db.guildDB.getPrefix(msg.guild_id)) || 't!';
+});

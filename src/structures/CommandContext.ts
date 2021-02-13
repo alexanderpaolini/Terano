@@ -4,5 +4,5 @@ import CommandOptions from "./CommandOptions";
 
 export default class CommandContext extends ctx {
   worker: TeranoWorker;
-  command: CommandOptions
+  command: CommandOptions;
 }

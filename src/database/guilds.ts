@@ -1,7 +1,7 @@
-import { Cache } from 'discord-rose/dist/utils/Cache'
+import { Cache } from 'discord-rose/dist/utils/Cache';
 
-import GuildModel from './models/guilds/guilds'
-import ModerationModel from './models/guilds/moderation'
+import GuildModel from './models/guilds/guilds';
+import ModerationModel from './models/guilds/moderation';
 
 interface GuildDoc {
   id: string,
@@ -14,9 +14,9 @@ interface GuildDoc {
       send_message: boolean,
       default_color: string,
       level_message: string,
-      cooldown: number
-    }
-  }
+      cooldown: number;
+    };
+  };
 }
 
 interface ModerationDoc {
@@ -28,16 +28,22 @@ interface ModerationDoc {
     action: 'BAN' | 'KICK' | 'MUTE' | 'WARN',
     reason: string,
     moderator: string,
-    timestamp: string
-  }
+    timestamp: string;
+  };
 }
 
 export default class GuildDB {
   guilds: Cache<string, GuildDoc>;
   moderation: Cache<string, ModerationDoc>;
   constructor() {
-    this.guilds = new Cache(15 * 60 * 1000)
-    this.moderation = new Cache(15 * 60 * 1000)
+    this.guilds = new Cache(15 * 60 * 1000);
+    this.moderation = new Cache(15 * 60 * 1000);
+  }
+
+  // Defaults
+
+  get prefix() {
+    return 't!';
   }
 
   async setGuild(doc: GuildDoc): Promise<GuildDoc> {
@@ -48,7 +54,7 @@ export default class GuildDB {
   async getGuild(id: string): Promise<GuildDoc | null> {
     const fromCache = this.guilds.get(id);
     if (fromCache) return fromCache;
-    const doc: GuildDoc = await GuildModel.findOne({ id }).lean()
+    const doc: GuildDoc = await GuildModel.findOne({ id }).lean();
     if (doc) {
       this.guilds.set(id, doc);
       return doc;
@@ -56,8 +62,8 @@ export default class GuildDB {
   }
 
   async updateGuild(doc: GuildDoc): Promise<GuildDoc | null> {
-    this.guilds.set(doc.id, doc)
-    await GuildModel.findOneAndUpdate({ id: doc.id }, doc)
+    this.guilds.set(doc.id, doc);
+    await GuildModel.findOneAndUpdate({ id: doc.id }, doc);
     return;
   }
 
@@ -68,12 +74,12 @@ export default class GuildDB {
 
   async getModeration(gID: string, number?: number): Promise<ModerationDoc | ModerationDoc[] | null> {
     if (!number) {
-      const docs: ModerationDoc[] = await ModerationModel.find({ guildID: gID }).lean()
+      const docs: ModerationDoc[] = await ModerationModel.find({ guildID: gID }).lean();
       return docs;
     } else {
-      const fromCache = this.moderation.get(`${gID}${number}`)
+      const fromCache = this.moderation.get(`${gID}${number}`);
       if (fromCache) return fromCache;
-      const doc: ModerationDoc = await ModerationModel.findOne({ guildID: gID, number: number }).lean()
+      const doc: ModerationDoc = await ModerationModel.findOne({ guildID: gID, number: number }).lean();
       this.moderation.set(`${gID}${number}`, doc);
       return doc;
     }
@@ -83,7 +89,7 @@ export default class GuildDB {
     const data = await this.getModeration(doc.guildID, doc.number) as ModerationDoc;
     if (data) {
       const newData: ModerationDoc = await ModerationModel.findOneAndUpdate({ guildID: doc.guildID, number: doc.number }, doc).lean();
-      this.moderation.set(`${doc.guildID}${doc.number}`, newData)
+      this.moderation.set(`${doc.guildID}${doc.number}`, newData);
       return newData;
     } else return null;
   }
@@ -96,7 +102,7 @@ export default class GuildDB {
   // Get the prefix from the DB
   async getPrefix(guildID: string): Promise<string> {
     const guildData = await this.getGuild(guildID);
-    return guildData?.prefix
+    return guildData?.prefix || this.prefix;
   }
 
   // Update the prefix
@@ -110,7 +116,7 @@ export default class GuildDB {
   // Get the message cooldown
   async getMsgCooldown(guildID: string): Promise<number> {
     const guildData = await this.getGuild(guildID);
-    return guildData?.options.level.cooldown
+    return guildData?.options.level.cooldown;
   }
 
   // Update the message cooldown
@@ -123,7 +129,7 @@ export default class GuildDB {
 
   // Get whether or not to send the level message
   async getSendLevelMessage(guildID: string): Promise<boolean> {
-    const guildData = await this.getGuild(guildID)
+    const guildData = await this.getGuild(guildID);
     return guildData?.options.level.send_message;
   }
 
@@ -138,7 +144,7 @@ export default class GuildDB {
   // Get the XP-Multiplier
   async getXPMultplier(guildID: string) {
     const guildData = await this.getGuild(guildID);
-    return guildData?.options.level.xp_rate
+    return guildData?.options.level.xp_rate;
   }
 
   // Set the XP-Multplier
@@ -147,5 +153,25 @@ export default class GuildDB {
     guildData.options.level.xp_rate = multiplier;
     this.updateGuild(guildData);
     return;
+  }
+
+
+  async createGuild(guildID: string) {
+    await this.setGuild({
+      id: guildID,
+      prefix: this.prefix,
+      options: {
+        embeds: true,
+        noPermissions: true,
+        level: {
+          xp_rate: 1,
+          send_message: true,
+          default_color: '#07bb5b',
+          level_message: 'You are now level {{level}}!',
+          cooldown: 15
+        }
+      }
+    });
+    return true;
   }
 }

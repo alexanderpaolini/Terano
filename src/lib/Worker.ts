@@ -1,75 +1,75 @@
-import path from 'path';
-import fs from 'fs'
-
+// Other shit
+import Worker from 'discord-rose/dist/clustering/worker/Worker';
 import { promisify } from 'util';
-import redis from 'redis'
+import path from 'path';
+import fs from 'fs';
 
-import Worker from "discord-rose/dist/clustering/worker/Worker";
+// Redis?
+import redis from 'redis';
 
-import TeranoOptions from '../structures/TeranoOptions'
-
-import { RedisClient } from "redis";
-
-import userModel from '../database/models/users/users'
-import userLevelModel from '../database/models/users/levels'
-import userSettingsModel from '../database/models/users/settings'
-import guildModel from '../database/models/guilds/guilds'
-import guildModerationModel from '../database/models/guilds/moderation'
-
-import LevelMonitor from '../monitors/level'
-
+// Database
 import mongoose from 'mongoose';
 import GuildDB from '../database/guilds';
 import UserDB from '../database/users';
 
-import { colors } from '../structures/colors';
-import createLogger from '../utils/createLogger';
-import Responses from './Responses';
+// Database Models
+import userModel from '../database/models/users/users';
+import userLevelModel from '../database/models/users/levels';
+import userSettingsModel from '../database/models/users/settings';
+import guildModel from '../database/models/guilds/guilds';
+import guildModerationModel from '../database/models/guilds/moderation';
+
+// Monitors
+import LevelMonitor from '../monitors/level';
 import PrefixMonitor from '../monitors/prefix';
 
+// Structures
+import colors from '../structures/colors';
+import TeranoOptions from '../structures/TeranoOptions';
+
+// Lib
+import Responses from './Responses';
+import Embed from './Embed';
+
+// Utils
+import createLogger from '../utils/createLogger';
+
 export default class TeranoWorker extends Worker {
-  redis: RedisClient;
-  // logger: Logger;
+  redis: redis.RedisClient;
   logger: any;
   dbModels: any;
-  responses: typeof Responses
+  responses: typeof Responses;
   db: {
     guildDB: GuildDB,
     userDB: UserDB,
-    connection?: typeof mongoose
+    connection: typeof mongoose;
   };
   colors: typeof colors;
+  devMode: boolean;
   constructor(public opts: TeranoOptions) {
-    super()
-    this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow')
+    super();
+    this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
     this.responses = Responses;
 
     this.colors = colors;
 
-    // Init shit
-    this.db = {
-      guildDB: new GuildDB(),
-      userDB: new UserDB(),
-    };
-
-    this.loadCommands(path.resolve(__dirname, '../', './commands/'))
-    this.loadMonitors()
-    this.initMongo()
-    this.initRedis()
-    this.loadInit()
+    this.loadMonitors();
+    this.initMongo();
+    this.initRedis();
+    this.loadInit();
   }
 
   loadInit() {
-    const dir = path.resolve(__dirname, '../', './init/')
+    const dir = path.resolve(__dirname, '../', './init/');
     fs.readdir(dir, (err, files) => {
       if (err) return console.error(err.toString());
       else {
         files.forEach(file => {
           try {
-            fs.stat(path.resolve(__dirname, dir, file), (err, stats) => {
-              if (stats.isDirectory()) return this.loadCommands(`${dir}/${file}`);
+            fs.stat(path.resolve(__dirname, dir, file), (e, stats) => {
+              if (e) return console.error(err.toString());
               if (stats.isFile() && file.endsWith('.js')) {
-                this.logger.log('Loaded Init', `${file}`)
+                this.logger.log('Loaded Init', `${file}`);
                 const f = require(`${dir}/${file}`).default;
                 f(this);
               }
@@ -86,12 +86,18 @@ export default class TeranoWorker extends Worker {
   }
 
   async initMongo() {
-    this.db.connection = await mongoose.connect(this.opts.mongodb.connectURI, this.opts.mongodb.connectOptions)
+    const connection = await mongoose.connect(this.opts.mongodb.connectURI, this.opts.mongodb.connectOptions);
+    this.db = {
+      guildDB: new GuildDB(),
+      userDB: new UserDB(),
+      connection: connection
+    };
     this.logger.log('Connected to MongoDB');
 
-    this.dbModels = { userLevelModel, guildModel, guildModerationModel, userModel, userSettingsModel }
+    this.dbModels = { userLevelModel, guildModel, guildModerationModel, userModel, userSettingsModel };
   }
 
+  // Redis is required to run the bot even when NOTHING uses it.
   initRedis() {
     const client = redis.createClient(this.opts.redis);
     ['get', 'set', 'del', 'ttl', 'hget'].forEach(command => {
@@ -99,25 +105,5 @@ export default class TeranoWorker extends Worker {
     });
     this.logger.log('Connected to Redis at:', this.opts.redis.host + ':' + this.opts.redis.port);
     return client;
-  }
-
-  loadCommands(dir: string) {
-    fs.readdir(dir, (err, files) => {
-      if (err) return console.error(err.toString());
-      else {
-        files.forEach(file => {
-          try {
-            fs.stat(path.resolve(__dirname, dir, file), (err, stats) => {
-              if (stats.isDirectory()) return this.loadCommands(`${dir}/${file}`);
-              if (stats.isFile() && file.endsWith('.js')) {
-                this.logger.log('Loaded command', `${file}`)
-                const cmd = require(`${dir}/${file}`).default;
-                this.commands.add(cmd);
-              }
-            });
-          } catch (e) { }
-        });
-      }
-    });
   }
 }

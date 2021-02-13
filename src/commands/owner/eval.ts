@@ -20,14 +20,14 @@ export default {
 
       output = evaled.split(ctx.worker.options.token).join('[TOKEN REMOVED]');
     } catch (err) {
-      status = false
+      status = false;
       output = err;
     }
     try {
-      ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`)
+      ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`);
       return;
     } catch (err) {
-      ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`)
+      ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`);
       return;
     }
   }

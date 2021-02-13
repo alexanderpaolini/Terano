@@ -1,5 +1,8 @@
-export enum colors {
+enum colors {
   RED = 0xFF0000,
   ORANGE = 0xFFA500,
-  GREEN = 3066993
+  GREEN = 0x2ECC71,
+  PURPLE = 0xb649eb
 }
+
+export default colors;

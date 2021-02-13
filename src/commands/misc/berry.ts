@@ -8,4 +8,4 @@ export default {
   exec: async (ctx) => {
     ctx.reply(`<@142408079177285632>`);
   }
-} as CommandOptions
+} as CommandOptions;

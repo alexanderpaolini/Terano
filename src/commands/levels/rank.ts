@@ -1,6 +1,6 @@
 import CommandOptions from '../../structures/CommandOptions';
 
-import Canvas from 'canvas'
+import Canvas from 'canvas';
 
 export default {
   name: 'Rank',
@@ -10,7 +10,7 @@ export default {
   botPermissions: ['administrator', 'administrator'],
   exec: async (cmdCTX) => {
     const data = await cmdCTX.worker.db.userDB.getLevel(cmdCTX.message.author.id, cmdCTX.message.guild_id);
-    const settings = await cmdCTX.worker.db.userDB.getSettings(cmdCTX.message.author.id)
+    const settings = await cmdCTX.worker.db.userDB.getSettings(cmdCTX.message.author.id);
     const user = cmdCTX.message.author;
 
     const currLevel = data.level;
@@ -71,4 +71,4 @@ export default {
 
     cmdCTX.sendFile({ buffer: canvas.toBuffer('image/png'), name: 'rank.png' });
   }
-} as CommandOptions
+} as CommandOptions;

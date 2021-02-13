@@ -1,8 +1,8 @@
-import Embed from '../lib/Embed'
+import Embed from '../lib/Embed';
 import TeranoWorker from "../lib/Worker";
 
 export default class LevelMonitor {
-  cooldown: Set<string>
+  cooldown: Set<string>;
 
   constructor(public worker: TeranoWorker) {
     this.cooldown = new Set();
@@ -13,29 +13,15 @@ export default class LevelMonitor {
   async run(message: any) {
     if (!message?.author?.id || message.author.bot || !message.guild_id || this.cooldown.has(message.guild_id + message.author.id)) return;
 
-    const guildDoc = await this.worker.db.guildDB.getGuild(message.guild_id)
+    const guildDoc = await this.worker.db.guildDB.getGuild(message.guild_id);
     if (!guildDoc) {
-      await this.worker.db.guildDB.setGuild({
-        id: message.guild_id,
-        prefix: 't!',
-        options: {
-          embeds: true,
-          noPermissions: true,
-          level: {
-            xp_rate: 1,
-            send_message: true,
-            default_color: '#07bb5b',
-            level_message: 'You are now level {{level}}!',
-            cooldown: 15
-          }
-        }
-      })
+      await this.worker.db.guildDB.createGuild(message.guild_id);
       return;
     }
 
-    const userDoc = await this.worker.db.userDB.getLevel(message.author.id, message.guild_id)
+    const userDoc = await this.worker.db.userDB.getLevel(message.author.id, message.guild_id);
 
-    let xp = Number(userDoc.xp)
+    let xp = Number(userDoc.xp);
     xp += (Math.floor(Math.random() * 8) + 8) * guildDoc.options.level.xp_rate;
 
     if (xp > this.xpFromLevel(userDoc.level)) {
@@ -44,8 +30,8 @@ export default class LevelMonitor {
       if (guildDoc.options.level.send_message) this.sendUpdateMessage(message, userDoc.level, guildDoc);
     } else userDoc.xp = String(xp);
     await this.worker.db.userDB.updateLevel(message.author.id, message.guild_id, userDoc);
-    this.cooldown.add(message.guild_id + message.author.id)
-    setTimeout(() => { this.cooldown.delete(message.guild_id + message.author.id) }, guildDoc.options.level.cooldown * 1000)
+    this.cooldown.add(message.guild_id + message.author.id);
+    setTimeout(() => { this.cooldown.delete(message.guild_id + message.author.id); }, guildDoc.options.level.cooldown * 1000);
     return;
   }
 
@@ -63,11 +49,11 @@ export default class LevelMonitor {
     const embed = new Embed()
       .setColor('GREEN')
       .setAuthor(msg, `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png?size=128`, ``)
-      .obj
+      .obj;
     try {
-      this.worker.api.messages.send(message.channel_id, { embed: embed }, {
+      await this.worker.api.messages.send(message.channel_id, { embed: embed }, {
         channel_id: message.channel_id, guild_id: message.guild_id, message_id: message.id
-      })
+      });
     } catch (e) {
       this.worker.logger.error(e.toString());
     }
