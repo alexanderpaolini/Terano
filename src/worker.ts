@@ -52,12 +52,12 @@ worker.commands.middleware(async (ctx: CommandContext) => {
   return !await ctx.worker.db.userDB.getBlacklist(ctx.message.author.id);
 });
 
-// worker.commands.middleware(async (ctx: CommandContext) => {
-//   const perms = ctx.command.botPermissions
-//   const hasPerms = perms.every((perm: any) => ctx.myPerms(perm));
-//   worker.responses.tiny(ctx, worker.colors.RED, `I am missing one or more of the following permissions:\n  ${perms.join('\n  ')}`)
-//   return !hasPerms;
-// })
+worker.commands.middleware(async (ctx: CommandContext) => {
+  const perms = ctx.command.botPermissions;
+  const hasPerms = perms.every((perm: any) => ctx.myPerms(perm));
+  worker.responses.tiny(ctx, worker.colors.RED, `I am missing one or more of the following permissions:\n  ${perms.join('\n  ')}`);
+  return !hasPerms;
+});
 
 worker.commands.setPrefix(async (msg) => {
   return 't!';
