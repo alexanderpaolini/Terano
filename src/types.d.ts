@@ -14,9 +14,4 @@ declare module 'discord-rose/dist/typings/lib' {
   }
 
   type worker = TeranoWorker;
-
-  interface CommandContext {
-    // worker: TeranoWorker;
-    command: CommandOptions;
-  }
 }

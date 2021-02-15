@@ -10,17 +10,23 @@ export default {
   permissions: ['manageMessages'],
   botPermissions: [],
   exec: async (ctx) => {
+    // Get the cooldowns
     const newCooldown = Number(ctx.args[0]);
+    const oldCooldown = await ctx.worker.db.guildDB.getMsgCooldown(ctx.guild.id);
+
     if (!isNaN(newCooldown)) {
       if (newCooldown > 0) {
         if (newCooldown < 3600) {
-          const oldCooldown = await ctx.worker.db.guildDB.getMsgCooldown(ctx.guild.id);
+
+          // Update the cooldown in the DB
           await ctx.worker.db.guildDB.updateMsgCooldown(ctx.guild.id, newCooldown);
+
+          // Respond with success
           ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown} to **${newCooldown}**.`);
           return;
         } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `The XP-cooldown must be less than 1 hour.`);
       } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `The XP-cooldown must be greater than 0.`);
-    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `No XP-cooldown was given.`);
+    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown}**.`);
     return;
   }
 } as CommandOptions;

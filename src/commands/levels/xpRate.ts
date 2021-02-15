@@ -15,7 +15,7 @@ export default {
       if (newRate > 0) {
         if (newRate < 21) {
           const oldRate = await ctx.worker.db.guildDB.getXPMultplier(ctx.guild.id);
-          await ctx.worker.db.guildDB.updateXPMultplier(ctx.guild.id, newRate);
+          await ctx.worker.db.guildDB.setXPMultplier(ctx.guild.id, newRate);
           ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-Multplier from ${oldRate} to **${newRate}**.`);
           return;
         } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 20');

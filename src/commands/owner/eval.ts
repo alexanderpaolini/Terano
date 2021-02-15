@@ -15,22 +15,29 @@ export default {
   exec: async (ctx) => {
     let output: string;
     let status = true;
+
+    const worker = ctx.worker;
+
     try {
-      let evaled = eval(ctx.args.join(' '));
+      let toEval = ctx.args.join(' ').replace(/token/g, 'mem');
+      let evaled = eval(toEval);
 
       if (evaled instanceof Promise) evaled = await evaled;
-      evaled = inspect(evaled);
+      evaled = typeof evaled !== 'string' ? inspect(evaled) : evaled;
 
       output = evaled.split(ctx.worker.options.token).join('[TOKEN REMOVED]');
     } catch (err) {
       status = false;
       output = err;
     }
+
     try {
-      ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`);
+      await ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`).then(e => {
+        if (!e) throw new Error('Message Failed to Send');
+      });
       return;
     } catch (err) {
-      ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`);
+      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`);
       return;
     }
   }

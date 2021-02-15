@@ -12,6 +12,10 @@ const GuildSchema = new Schema({
       default_color: { type: String, default: '#07bb5b' },
       level_message: { type: String, default: 'You are now level {{level}}!' },
       cooldown: { type: String, default: 15 }
+    },
+    moderation: {
+      log_channel: { type: String, default: 'none' },
+      mute_role: { type: String, default: 'none' }
     }
   }
 });

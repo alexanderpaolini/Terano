@@ -4,13 +4,17 @@ import path from 'path';
 import createLogger from './utils/createLogger';
 
 const SHARDS = 1;
-const loggers = createLogger('Master', console as any, 'magenta');
 
 const master = new stinky.Master(path.resolve(__dirname, './worker.js'), {
   token: config.discord.token,
-  log: (...args: any) => { loggers.log(...args); },
+  log: (...args: any) => { createLogger('Master', console as any, 'magenta').debug(...args); },
   shards: SHARDS,
-  shardsPerCluster: Number.MAX_SAFE_INTEGER,
+  intents: ['GUILDS', 'GUILD_MESSAGES'],
+  cacheControl: {
+    guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon'],
+    members: ['guild_id', 'nick', 'user'],
+    channels: ['guild_id', 'nsfw', 'id', 'permission_overwrites']
+  }
 });
 
 master.start();

@@ -37,7 +37,7 @@ export default {
         .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
         .title('Commands')
         .footer('Developed by MILLION#1321')
-        .color(ctx.worker.colors.GREEN)
+        .color(ctx.worker.colors.PURPLE)
         .timestamp();
 
       categories.forEach((cat: string) => {

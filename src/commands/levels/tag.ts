@@ -19,7 +19,7 @@ export default {
           level: { color: '', picture: '', tag: '' }
         });
         userSettingsDoc.level.tag = tag;
-        await ctx.worker.db.userDB.updateSettings(ctx.message.author.id, userSettingsDoc);
+        await ctx.worker.db.userDB.updateSettings(userSettingsDoc);
         ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Set card tag to: **${tag}**`);
         return;
       } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Tag must be no longer than 20 characters.');

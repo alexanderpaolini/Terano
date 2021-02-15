@@ -6,4 +6,4 @@ export default function parseOptions(options) {
     else str += `&${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`;
   }
   return str;
-};
+}

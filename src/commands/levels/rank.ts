@@ -1,6 +1,7 @@
 import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import Canvas from 'canvas';
+import { APIGuildMember } from 'discord-api-types';
 
 export default {
   name: 'Rank',
@@ -10,11 +11,11 @@ export default {
   command: 'rank',
   aliases: ['card', 'level'],
   permissions: [],
-  botPermissions: ['administrator', 'administrator'],
+  botPermissions: [],
   exec: async (cmdCTX) => {
-    const data = await cmdCTX.worker.db.userDB.getLevel(cmdCTX.message.author.id, cmdCTX.message.guild_id);
-    const settings = await cmdCTX.worker.db.userDB.getSettings(cmdCTX.message.author.id);
-    const user = cmdCTX.message.author;
+    const user = (await cmdCTX.worker.api.members.get(cmdCTX.guild.id, (cmdCTX.args[0] || '').replace(/[<@!>]/g, '') as any).catch(() => null as APIGuildMember))?.user || cmdCTX.message.author;
+    const data = await cmdCTX.worker.db.userDB.getLevel(user.id, cmdCTX.message.guild_id);
+    const settings = await cmdCTX.worker.db.userDB.getSettings(user.id);
 
     const currLevel = data.level;
     const currXp = data.xp;

@@ -10,8 +10,11 @@ export default {
   permissions: ['manageMessages'],
   botPermissions: [],
   exec: async (ctx) => {
-    const sendMesasge = !(await ctx.worker.db.guildDB.getGuild(ctx.guild.id));
-    await ctx.worker.db.guildDB.updateSendLevelMessage(ctx.guild.id, sendMesasge);
+    // Get and reverse the current setting
+    const sendMesasge = !(await ctx.worker.db.guildDB.getSendLevelMessage(ctx.guild.id));
+    await ctx.worker.db.guildDB.setSendLevelMessage(ctx.guild.id, sendMesasge);
+
+    // Respond with success
     ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-up messages ${sendMesasge ? 'Enabled' : 'Disabled'}`);
     return;
   }

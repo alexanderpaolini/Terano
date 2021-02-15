@@ -51,9 +51,9 @@ export default class UserDB {
     } else return null;
   }
 
-  async updateSettings(id: string, doc: SettingsDoc): Promise<SettingsDoc> {
-    await SettingsModel.findOneAndUpdate({ id }, doc);
-    return await this.getSettings(id);
+  async updateSettings(doc: SettingsDoc): Promise<SettingsDoc> {
+    await SettingsModel.findOneAndUpdate({ id: doc.id }, doc);
+    return await this.getSettings(doc.id);
   }
 
   async setUser(id: string, doc: UserDoc): Promise<UserDoc> {
@@ -72,10 +72,10 @@ export default class UserDB {
     } else return null;
   }
 
-  async updateUser(id: string, doc: UserDoc): Promise<UserDoc> {
-    this.users.set(id, doc);
-    await UserModel.findOneAndUpdate({ id }, doc);
-    return await UserModel.findOneAndUpdate({ id }, doc).lean();
+  async updateUser(doc: UserDoc): Promise<UserDoc> {
+    this.users.set(doc.id, doc);
+    await UserModel.findOneAndUpdate({ id: doc.id }, doc);
+    return this.getUser(doc.id);
   }
 
   async setLevel(userID: string, guildID: string, doc: LevelDoc): Promise<LevelDoc> {
@@ -101,15 +101,18 @@ export default class UserDB {
     }
   }
 
-  async getAllLevel(guildID: string): Promise<LevelDoc[]> {
-    const arr: LevelDoc[] = await LevelModel.find({ guildID }).lean();
+  async getAllLevel(guildID?: string): Promise<LevelDoc[]> {
+    let arr: LevelDoc[];
+    if (guildID)
+      arr = await LevelModel.find({ guildID }).lean();
+    else arr = await LevelModel.find().lean();
     return arr.sort();
   }
 
-  async updateLevel(userID: string, guildID: string, doc: LevelDoc): Promise<LevelDoc> {
-    this.levels.set(`${guildID}${userID}`, doc);
-    await LevelModel.findOneAndUpdate({ userID, guildID }, doc);
-    return await LevelModel.findOneAndUpdate({ guildID, userID }, doc).lean();
+  async updateLevel(doc: LevelDoc): Promise<LevelDoc> {
+    this.levels.set(`${doc.guildID}${doc.userID}`, doc);
+    await LevelModel.findOneAndUpdate({ userID: doc.userID, guildID: doc.guildID }, doc);
+    return await this.getLevel(doc.userID, doc.guildID);
   }
 
   // Other functions
@@ -125,7 +128,7 @@ export default class UserDB {
     const userData = await this.getUser(userID);
     if (userData) {
       userData.owner = value;
-      await this.updateUser(userID, userData);
+      await this.updateUser(userData);
       return;
     } else {
       const data: UserDoc = { id: userID, owner: value, blacklisted: false };
@@ -143,7 +146,7 @@ export default class UserDB {
     const userData = await this.getUser(userID);
     if (userData) {
       userData.blacklisted = value;
-      await this.updateUser(userID, userData);
+      await this.updateUser(userData);
       return;
     } else {
       const data: UserDoc = { id: userID, owner: false, blacklisted: true };

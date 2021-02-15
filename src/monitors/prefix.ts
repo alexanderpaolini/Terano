@@ -1,4 +1,3 @@
-import Embed from "../lib/Embed";
 import TeranoWorker from "../lib/Worker";
 
 export default class PrefixMonitor {
@@ -11,11 +10,15 @@ export default class PrefixMonitor {
 
   async run(message: any) {
     if (message.content && message.guild_id && message.content.replace(this.regex, '') === this.worker.user.id) {
+
+      if (await this.worker.db.userDB.getBlacklist(message.author.id)) return;
       const prefix = (await this.worker.db.guildDB.getGuild(message.guild_id))?.prefix || 't!';
-      const embed = new Embed()
-        .setColor('GREEN')
-        .setDescription(`This guild's prefix is: **${prefix}**`)
-        .obj;
+
+      const embed = {
+        color: this.worker.colors.GREEN,
+        description: `This guild's prefix is: **${prefix}**`
+      };
+
       this.worker.api.messages.send(message.channel_id, { embed: embed });
       return;
     }

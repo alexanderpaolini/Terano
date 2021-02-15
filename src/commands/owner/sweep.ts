@@ -21,7 +21,7 @@ export default {
 
     ctx.worker.logger.log('Swept Database cache');
 
-    ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`);
+    setImmediate(() => ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`));
     return;
   }
 } as CommandOptions;

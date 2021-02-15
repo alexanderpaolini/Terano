@@ -10,9 +10,10 @@ export default {
   permissions: [],
   botPermissions: [],
   exec: async (ctx) => {
-    const yes = await ctx.worker.db.userDB.getAllLevel(ctx.guild.id);
 
-    const data = yes.sort((a, b) => {
+    const allLevels = await ctx.worker.db.userDB.getAllLevel(ctx.guild.id);
+
+    const data = allLevels.sort((a, b) => {
       if (a.level !== b.level) return (a.level - b.level);
       else return (Number(a.xp) - Number(b.xp));
     });

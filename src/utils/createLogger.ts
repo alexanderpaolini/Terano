@@ -1,7 +1,7 @@
 import separate from './separate';
 import colors from 'colors/safe';
 
-function format(m: string, c: string = 'yellow', len = 5) {
+function format(m: string, c: string = 'yellow', len = 7) {
   const str = m;
   return colors.bold(colors[c](`${separate(str, len)}`)) + colors.grey('|');
 }
@@ -19,7 +19,7 @@ export default function createLogger(m: string, logger: logger, c: string) {
   const err = format('ERROR', 'red');
   return {
     log: (...args: any) => { return logger.log(log, msg, ...args); },
-    warn: (...args: any) => { return logger.log(dbg, msg, ...args); },
+    debug: (...args: any) => { return logger.log(dbg, msg, ...args); },
     error: (...args: any) => { return logger.log(err, msg, ...args); }
   };
 }

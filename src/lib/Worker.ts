@@ -32,8 +32,13 @@ import TeranoOptions from '../structures/TeranoOptions';
 import Responses from './Responses';
 // import Embed from './Embed';
 
+
+// middlewares
+import flagsMiddleware from '@discord-rose/flags-middleware';
+
 // Utils
 import createLogger from '../utils/createLogger';
+import Moderation from './Moderation';
 
 export default class TeranoWorker extends Worker {
   redis: redis.RedisClient;
@@ -49,9 +54,12 @@ export default class TeranoWorker extends Worker {
   devMode: boolean;
   topgg: Api;
   statsInterval: NodeJS.Timeout;
+  moderation: Moderation;
   constructor(public opts: TeranoOptions) {
     super();
+    this.commands.middleware(flagsMiddleware());
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
+    this.moderation = new Moderation(this);
     this.responses = Responses;
 
     this.colors = colors;
@@ -111,6 +119,21 @@ export default class TeranoWorker extends Worker {
     return client;
   }
 
+  get shardStats(): any {
+    return this.shards.reduce((a, shard) => {
+      a[shard.id] = this.guilds.reduce((b, guild) => {
+        if (Number((BigInt(guild.id) >> BigInt(22)) % BigInt(this.options.shards)) !== shard.id) return b;
+        return {
+          ping: (this.shards.get(shard.id).ping || '?').toString(),
+          guilds: b.guilds + 1,
+          channels: b.channels + this.channels.filter(ch => ch.guild_id === guild.id).size,
+          roles: b.roles + this.guildRoles.get(guild.id).size
+        };
+      }, { guilds: 0, channels: 0, roles: 0, ping: '' });
+      return a;
+    }, {});
+  }
+
   get shardGuildCounts() {
     return this.guilds.reduce((a, b) => {
       const shard = Number((BigInt(b.id) >> BigInt(22)) % BigInt(this.options.shards));
@@ -132,5 +155,9 @@ export default class TeranoWorker extends Worker {
         });
       }
     }, 20 * 60 * 1000);
+  }
+
+  get mem(): any {
+    return Object.entries(process.memoryUsage()).reduce((T, [K, V]) => (T[K] = (V / (1024 ** 2)).toFixed(1) + 'MB', T), {});
   }
 }

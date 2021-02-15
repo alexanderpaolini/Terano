@@ -8,8 +8,9 @@ const ModerationSchema = new Schema({
     action: { type: String, required: true }, // WARN | MUTE | BAN
     reason: { type: String, required: true }, // String why
     moderator: { type: String, required: true }, // User ID
-    timestamp: { type: Date, required: true }
-  }
+    timestamp: { type: Date, required: true } // Date.now()
+  },
+  log_message: { type: String, required: true }
 });
 
 // type reason = 'WARN' | 'MUTE' | 'BAN' | 'TEMPBAN'
