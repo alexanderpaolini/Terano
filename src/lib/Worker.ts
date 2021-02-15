@@ -13,13 +13,6 @@ import mongoose from 'mongoose';
 import GuildDB from '../database/guilds';
 import UserDB from '../database/users';
 
-// Database Models
-import userModel from '../database/models/users/users';
-import userLevelModel from '../database/models/users/levels';
-import userSettingsModel from '../database/models/users/settings';
-import guildModel from '../database/models/guilds/guilds';
-import guildModerationModel from '../database/models/guilds/moderation';
-
 // Monitors
 import LevelMonitor from '../monitors/level';
 import PrefixMonitor from '../monitors/prefix';
@@ -43,7 +36,6 @@ import Moderation from './Moderation';
 export default class TeranoWorker extends Worker {
   redis: redis.RedisClient;
   logger: any;
-  dbModels: any;
   responses: typeof Responses;
   db: {
     guildDB: GuildDB,
@@ -105,8 +97,6 @@ export default class TeranoWorker extends Worker {
       connection: connection
     };
     this.logger.log('Connected to MongoDB');
-
-    this.dbModels = { userLevelModel, guildModel, guildModerationModel, userModel, userSettingsModel };
   }
 
   // Redis is required to run the bot even when NOTHING uses it.
