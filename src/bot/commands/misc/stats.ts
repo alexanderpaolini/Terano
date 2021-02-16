@@ -31,7 +31,7 @@ Guilds: ${cluster.guilds.toLocaleString()}
 
 ${Object.entries(cluster.shards).map((S: any) => `Shard ${S[0]}
   Guilds: ${S[1].guilds}
-  Ping: ${S[1].ping}ms
+  Latency: ${S[1].ping}ms
 `).join('\n')}
 \`\`\``, true);
     }

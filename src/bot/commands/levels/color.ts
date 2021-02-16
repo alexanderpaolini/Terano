@@ -1,6 +1,6 @@
 import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
-import colors from '../../utils/colors';
+import colors from '../../../utils/colors';
 
 export default {
   name: 'Color',

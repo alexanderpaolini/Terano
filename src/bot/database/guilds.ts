@@ -267,8 +267,8 @@ export default class GuildDB {
   async getMuteDocs(guildID?: string, userID?: string): Promise<MuteDoc[]> {
     let docs: MuteDoc[];
     if (guildID) {
-      if (userID) docs = await ModerationModel.find({ guildID, userID }).lean();
-      else docs = await ModerationModel.find({ guildID }).lean();
+      if (userID) docs = await MuteModel.find({ guildID, userID }).lean();
+      else docs = await MuteModel.find({ guildID }).lean();
     }
     else docs = await MuteModel.find().lean();
     return docs;

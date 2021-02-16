@@ -23,14 +23,13 @@ import TeranoOptions from '../structures/TeranoOptions';
 
 // Lib
 import Responses from './Responses';
-// import Embed from './Embed';
 
 
 // middlewares
 import flagsMiddleware from '@discord-rose/flags-middleware';
 
 // Utils
-import createLogger from '../utils/createLogger';
+import createLogger from '../../utils/createLogger';
 import Moderation from './Moderation';
 
 export default class TeranoWorker extends Worker {

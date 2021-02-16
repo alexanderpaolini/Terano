@@ -1,8 +1,8 @@
 import { CommandContext } from "discord-rose/dist/typings/lib";
 
 export default async (ctx: CommandContext) => {
-  const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
-  if (isOwner && ctx.flags.idc) return true;
+  // const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
+  // if (isOwner && ctx.flags.idc) return true;
 
   const perms = ctx.command.permissions;
   if (perms.length) {

@@ -1,4 +1,4 @@
-import config from './config.json';
+import config from '../config.json';
 import TeranoWorker from './lib/Worker';
 
 const worker = new TeranoWorker(config);

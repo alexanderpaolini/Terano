@@ -1,5 +1,5 @@
 import { bits } from 'discord-rose/dist/utils/Permissions';
-import TeranoWorker from "./lib/Worker";
+import TeranoWorker from "./bot/lib/Worker";
 
 declare module 'discord-rose/dist/typings/lib' {
   interface CommandOptions {

@@ -22,11 +22,11 @@ export default {
           await ctx.worker.db.guildDB.updateMsgCooldown(ctx.guild.id, newCooldown);
 
           // Respond with success
-          ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown} to **${newCooldown}**.`);
+          ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown}s to **${newCooldown}s**.`);
           return;
         } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `The XP-cooldown must be less than 1 hour.`);
-      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `The XP-cooldown must be greater than 0.`);
-    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown}**.`);
+      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `The XP-cooldown must be greater than 0 seconds.`);
+    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown}s**.`);
     return;
   }
 } as CommandOptions;

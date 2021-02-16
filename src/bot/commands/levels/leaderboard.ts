@@ -1,0 +1,54 @@
+import { APIGuildMember } from 'discord-api-types';
+import { CommandOptions } from 'discord-rose/dist/typings/lib';
+
+import fetch from 'node-fetch';
+
+export default {
+  name: 'Leaderboard',
+  usage: 'leaderboard',
+  description: 'View the guild leaderboard',
+  category: 'leveling',
+  command: 'leaderboard',
+  aliases: ['lb'],
+  permissions: [],
+  botPermissions: [],
+  exec: async (ctx) => {
+    ctx.send('Loading...').then(async msg => {
+      const allLevels = await ctx.worker.db.userDB.getAllLevel(ctx.guild.id);
+
+      const data = allLevels.sort((a, b) => {
+        if (a.level !== b.level) return (a.level - b.level);
+        else return (Number(a.xp) - Number(b.xp));
+      });
+
+      data.reverse();
+
+      const newDataArr = [];
+
+      for (const user of data) {
+        const userFetch = await ctx.worker.api.members.get(ctx.guild.id, user.userID as any).catch(() => null as APIGuildMember);
+        if (!userFetch) break;
+        newDataArr.push({
+          tag: `${userFetch.user.username}#${userFetch.user.discriminator}`,
+          pfp: `${userFetch.user.id},${userFetch.user.avatar}`,
+          level: user.level,
+          rank: data.indexOf(user) + 1,
+        });
+      }
+
+      fetch('http://localhost:3001/leaderboard', {
+        method: 'POST',
+        body: JSON.stringify({ data: newDataArr }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => res.buffer())
+        .then(buffer => {
+          ctx.worker.api.messages.delete(msg.channel_id, msg.id);
+          ctx.sendFile({ name: 'leaderboard.png', buffer });
+        });
+    });
+
+  }
+} as CommandOptions;
