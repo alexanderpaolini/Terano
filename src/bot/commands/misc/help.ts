@@ -19,7 +19,7 @@ export default {
       if (command) {
         ctx.embed
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
-          .description(`\`Command\`:${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n\`Aliases\`: ${command.aliases.join(', ')}\n${command.permissions.length > 0 ? command.permissions.join(', ') + '\n' : ''}\`Description\`:${command.description}`)
+          .description(`\`Command\`:${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n${command.aliases ? `\`Aliases\`: ${command.aliases.join(', ')}\n` : '' }${command.permissions  ? command.permissions.join(', ') + '\n' : ''}\`Description\`:${command.description}`)
           .footer('Developed by MILLION#1321')
           .color(ctx.worker.colors.GREEN)
           .timestamp()
@@ -31,7 +31,7 @@ export default {
       }
     } else {
       const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id);
-      const categories = ctx.worker.commands.commands.reduce((a, b) => a.includes(b.category) ? a : a.concat([b.category]), []);
+      const categories = ctx.worker.commands.commands.reduce((a, b) => a.includes(b.category) ? a : a.concat([b.category]), [] as string[]);
 
       const embed = ctx.embed
         .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
@@ -41,6 +41,7 @@ export default {
         .timestamp();
 
       categories.forEach((cat: string) => {
+        if(!cat) return;
         if (cat === 'owner' && !userIsOwner) return;
         const desc = ctx.worker.commands.commands.filter(x => x.category === cat).map(cmd_ => `\`${guildPrefix}${cmd_.command}\`: ${cmd_.description}`).join('\n');
         embed.field(cat.charAt(0).toUpperCase() + cat.substr(1), desc);

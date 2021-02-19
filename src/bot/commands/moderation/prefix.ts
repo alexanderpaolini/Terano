@@ -11,15 +11,17 @@ export default {
   botPermissions: [],
   exec: async (ctx) => {
     const prefix = ctx.args[0];
-    if (prefix) {
-      if (prefix.length < 21) {
-        const oldPrefx = await ctx.worker.db.guildDB.getPrefix(ctx.guild.id);
 
-        await ctx.worker.db.guildDB.updatePrefix(ctx.guild.id, prefix);
+    // Bruh my man is stupid
+    if (!prefix) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No prefix was given.');
+    if (prefix.length > 21) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Prefix length must be no greater than 20.');
+    
+    // Get and change the prefix
+    const oldPrefx = await ctx.worker.db.guildDB.getPrefix(ctx.guild.id);
+    await ctx.worker.db.guildDB.setPrefix(ctx.guild.id, prefix);
 
-        ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefx} to \`${prefix}\``);
-      } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Prefix length must be no greater than 20.');
-    } else ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No prefix was given.');
+    // Return success!
+    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefx} to \`${prefix}\``);
     return;
   }
 } as CommandOptions;

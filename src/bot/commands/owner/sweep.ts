@@ -13,11 +13,11 @@ export default {
   exec: async (ctx) => {
     const time = Date.now();
 
-    ctx.worker.db.guildDB.guilds.sweep(() => true);
-    ctx.worker.db.guildDB.moderation.sweep(() => true);
-    ctx.worker.db.userDB.levels.sweep(() => true);
-    ctx.worker.db.userDB.settings.sweep(() => true);
-    ctx.worker.db.userDB.users.sweep(() => true);
+    ctx.worker.db.guildDB.guilds.clear();
+    // ctx.worker.db.guildDB.moderation.clear();
+    ctx.worker.db.userDB.levels.clear();
+    ctx.worker.db.userDB.infos.clear();
+    // ctx.worker.db.userDB.settings.clear();
 
     ctx.worker.logger.log('Swept Database cache');
 

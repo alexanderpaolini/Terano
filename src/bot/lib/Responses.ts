@@ -1,8 +1,9 @@
 import { CommandContext } from 'discord-rose/dist/typings/lib';
 
 export default class Responses {
+  
   public static async getEmbed(ctx: CommandContext) {
-    return await ctx.worker.db.guildDB.getEmbed(ctx.guild.id);
+    return await ctx.worker.db.guildDB.getEmbeds(ctx.guild.id);
   }
 
   public static async normal(ctx: CommandContext, color: number, response: string, embed?: boolean) {
@@ -38,11 +39,11 @@ export default class Responses {
         .description(`\`\`\`${response}\`\`\``)
         .color(color)
         .send(true)
-        .then(x => true)
+        .then(x => x)
         .catch(x => false);
     } else {
       return ctx.reply(response)
-        .then(x => true)
+        .then(x => x)
         .catch(x => false);
     }
   }
@@ -59,12 +60,13 @@ export default class Responses {
         .description(response)
         .color(color)
         .send(true)
-        .then(x => true)
+        .then(x => x)
         .catch(x => false);
     } else {
       return ctx.reply(response)
-        .then(x => true)
+        .then(x => x)
         .catch(x => false);
     }
   }
+
 }

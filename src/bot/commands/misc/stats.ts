@@ -10,7 +10,6 @@ export default {
   botPermissions: [],
   owner: false,
   exec: async (ctx) => {
-
     const currentShard = Number((BigInt(ctx.guild.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards));
 
     const stats = await ctx.worker.comms.broadcastEval("const shit = { id: worker.comms.id, shards: worker.shardStats, memory: worker.mem, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0) }; shit;");

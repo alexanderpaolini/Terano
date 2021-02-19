@@ -1,8 +1,8 @@
 import express from 'express';
 
 // Routers
-import cardRouter from './card';
-import leaderboardRouter from './leaderboard';
+import cardRouter from './routes/card';
+import leaderboardRouter from './routes/leaderboard';
 
 const app = express();
 

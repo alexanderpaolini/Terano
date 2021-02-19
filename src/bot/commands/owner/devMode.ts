@@ -11,8 +11,8 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.worker.devMode) delete ctx.worker.devMode;
-    else ctx.worker.devMode = true;
-    ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `${ctx.worker.devMode ? 'Enabled' : 'Disabled'} developer mode`);
+    if (ctx.worker.devmode) ctx.worker.devmode = false;
+    else ctx.worker.devmode = true;
+    ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `${ctx.worker.devmode ? 'Enabled' : 'Disabled'} developer mode`);
   }
 } as CommandOptions;

@@ -10,11 +10,13 @@ export default {
   permissions: ['manageGuild'],
   botPermissions: [],
   exec: async (ctx) => {
-    let guildEmbed = await ctx.worker.db.guildDB.getEmbed(ctx.guild.id);
+    // Get and update the shit
+    let guildEmbed = await ctx.worker.db.guildDB.getEmbeds(ctx.guild.id);
     guildEmbed = !guildEmbed;
+    await ctx.worker.db.guildDB.setEmbeds(ctx.guild.id, guildEmbed);
 
-    await ctx.worker.db.guildDB.setEmbed(ctx.guild.id, guildEmbed);
-
+    // Return success?
     ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `${guildEmbed ? 'Enabled' : 'Disabled'} embed messages`);
+    return;
   }
 } as CommandOptions;

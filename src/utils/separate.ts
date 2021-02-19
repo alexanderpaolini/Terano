@@ -1,4 +1,4 @@
-export default function separate(str: string, to: number) {
+export default function separate(str: string, to: number): string {
   let res = str;
   let sw = 1;
   for (let i = 0; i < 100; i++) {

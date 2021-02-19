@@ -1,53 +1,45 @@
-import TeranoWorker from "../lib/Worker";
+import { Snowflake } from "discord-api-types";
+import Monitor from "../lib/Monitor";
 
-export default class LevelMonitor {
-  cooldown: Set<string>;
-
-  constructor(public worker: TeranoWorker) {
-    this.cooldown = new Set();
-    worker.on('MESSAGE_CREATE', this.run.bind(this));
-    worker.on('MESSAGE_UPDATE', this.run.bind(this));
-  }
+export default class PrefixMonitor extends Monitor {
+  cooldown = new Set();
 
   async run(message: any) {
-    if (!message?.author?.id || message.author.bot || !message.guild_id || this.cooldown.has(message.guild_id + message.author.id)) return;
-
-    if (await this.worker.db.userDB.getBlacklist(message.author.id)) return;
-
     const guildDoc = await this.worker.db.guildDB.getGuild(message.guild_id);
-    if (!guildDoc) {
-      await this.worker.db.guildDB.createGuild(message.guild_id);
-      return;
-    }
-
     const userDoc = await this.worker.db.userDB.getLevel(message.author.id, message.guild_id);
 
     let xp = Number(userDoc.xp);
-    xp += (Math.floor(Math.random() * 8) + 8) * guildDoc.options.level.xp_rate;
+    xp += (Math.floor(Math.random() * 8) + 8) * guildDoc.level.xp_multplier;
 
     if (xp > this.xpFromLevel(userDoc.level)) {
       userDoc.level++;
       userDoc.xp = String(xp - Number(userDoc.xp));
 
-      if (guildDoc.options.level.send_message) this.sendUpdateMessage(message, userDoc.level, guildDoc);
+      if (guildDoc.level.send_level_message) this.sendUpdateMessage(message, userDoc.level, guildDoc);
     } else userDoc.xp = String(xp);
 
     await this.worker.db.userDB.updateLevel(userDoc);
 
     this.cooldown.add(message.guild_id + message.author.id);
-    setTimeout(() => { this.cooldown.delete(message.guild_id + message.author.id); }, guildDoc.options.level.cooldown * 1000);
+    setTimeout(() => { this.cooldown.delete(message.guild_id + message.author.id); }, guildDoc.level.cooldown * 1000);
 
     return;
   }
 
-  async sendUpdateMessage(message: any, level: number, guildDoc: any) {
+  async restrictions(msg: any) {
+    if(!msg?.author?.id || msg.author.bot || !msg.guild_id || this.cooldown.has(msg.guild_id + msg.author.id)) return false;
+    if (await this.worker.db.userDB.getBlacklist(msg.author.id)) return false;
+    return true;
+  }
+
+  async sendUpdateMessage(message: any, level: number, guildDoc: GuildDoc) {
     const guild = this.worker.guilds.get(message.guild_id);
 
     // TODO: Fix this later
     // const member = this.worker.members.get(message.guild_id).get(message.author.id);
     const member: any = {};
 
-    const msg = guildDoc.options.level.level_message.replace(/{{(.+?)}}/g, (match: string) => {
+    const msg = guildDoc.level.level_message.replace(/{{(.+?)}}/g, (match: string) => {
       switch (match.slice(2, -2)) {
         case "tag": return `${message.author.username}#${message.author.discriminator}`;
 
@@ -58,7 +50,7 @@ export default class LevelMonitor {
         case "nickname": return member.nick || message.author.username;
 
         case "server":
-        case "guild": return guild.name;
+        case "guild": return guild!.name;
 
         case "lvl":
         case "level": return level;
@@ -66,7 +58,6 @@ export default class LevelMonitor {
         default: return match;
       }
     });
-
 
     const embed = {
       color: this.worker.colors.GREEN,
@@ -76,9 +67,7 @@ export default class LevelMonitor {
       }
     };
 
-    await this.worker.api.messages.send(message.channel_id, { embed: embed }, {
-      channel_id: message.channel_id, guild_id: message.guild_id, message_id: message.id
-    }).catch(err => this.worker.logger.error(err.toString()));
+    await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed }).catch(err => this.worker.logger.error(err.toString()));
   }
 
   xpFromLevel(level: number) {

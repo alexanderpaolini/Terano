@@ -17,7 +17,7 @@ export default {
       .color(ctx.worker.colors.PURPLE)
       .send(true)
       .then(msg => {
-        msg.embeds[0].author.name += ` (${(Date.now() - time).toFixed(2)}ms)`;
+        msg.embeds[0].author!.name += ` (${(Date.now() - time).toFixed(2)}ms)`;
         ctx.worker.api.messages.edit(msg.channel_id, msg.id, { embed: msg.embeds[0] });
       });
   }
