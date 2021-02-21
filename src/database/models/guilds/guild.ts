@@ -13,6 +13,7 @@ const GuildSchema = new Schema({
     send_level_message: { type: Boolean, default: false },
     level_message: { type: String, default: 'You are now level {{level}}!' },
     default_color: { type: String, default: '#07bb5b' },
+    level_roles: { type: Array, default: [] }
   },
   moderation: {
     log_channel: { type: String, default: 'none' },

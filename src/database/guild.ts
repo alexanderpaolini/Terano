@@ -252,7 +252,12 @@ export default class GuildDB {
    * @param guildID Guild ID
    * @param roleID Role ID
    */
-  async addLevelRole(guildID: string, roleID: string) {
-    throw new Error('Method not implemented.');
+  async addLevelRole(guildID: string, roleID: string, level: number) {
+    const guildData = await this.getGuild(guildID);
+    guildData.level.level_roles.push({
+      id: roleID,
+      level: level
+    })
+    await this.updateGuild(guildData);
   }
 }

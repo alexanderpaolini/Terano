@@ -2,7 +2,7 @@ import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import fetch from 'node-fetch';
 
-import { APIGuildMember, Snowflake } from 'discord-api-types';
+import { APIGuildMember, APIUser, Snowflake } from 'discord-api-types';
 
 export default {
   name: 'Rank',
@@ -18,7 +18,7 @@ export default {
     time: 5_60_1000
   },
   exec: async (ctx) => {
-    const user = (await ctx.worker.api.members.get(ctx.guild.id, (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIGuildMember))?.user || ctx.message.author;
+    const user = (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) || ctx.message.author;
     const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.guild.id);
     const settings = await ctx.worker.db.userDB.getSettings(user.id) || {} as SettingsDoc;
 

@@ -21,7 +21,7 @@
     "canvas": "^2.6.1",
     "colors": "^1.4.0",
     "discord-api-types": "^0.12.1",
-    "discord-rose": "0.0.13",
+    "discord-rose": "0.0.15",
     "express": "^4.17.1",
     "form-data": "^3.0.0",
     "mongoose": "^5.11.15",

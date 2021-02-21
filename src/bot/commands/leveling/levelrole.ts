@@ -8,7 +8,7 @@ export default {
   category: 'leveling',
   command: 'levelrole',
   aliases: ['lr'],
-  permissions: ['roles'],
+  permissions: ['manageRoles'],
   botPermissions: [],
   exec: async (ctx) => {
     // Get the level and do some good checks
@@ -18,6 +18,7 @@ export default {
     if (level < 1) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `The level must be greater than 0`);
 
     // Get the role
+    if(!ctx.args[1]) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No role was give.');
     const roleID = ctx.args[1].replace(/<@&>/g, '');
     if (!roleID) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No role was given.');
 
@@ -34,7 +35,7 @@ export default {
     if(role.position >= botHighest) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'I cannot give members this role.')
 
     // Actually do the shit, ya know
-    await ctx.worker.db.guildDB.addLevelRole(ctx.guild.id, role.id);
+    await ctx.worker.db.guildDB.addLevelRole(ctx.guild.id, role.id, level);
 
     // Respond with success
     ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Members will now get the role <@&${role.id}> when they are level \`${level}\``);

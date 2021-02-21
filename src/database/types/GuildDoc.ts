@@ -47,6 +47,10 @@ interface GuildDoc {
      * the default color of a rank card
      */
     default_color: string;
+    /**
+     * Automatic roles on levels
+     */
+    level_roles: LevelRole[];
   };
   /**
    * Moderation settings
@@ -66,6 +70,21 @@ interface GuildDoc {
     auto_role: AutoRole[]
   };
 }
+
+/**
+ * The auto role options
+ */
+interface LevelRole {
+  /**
+   * The ID of the string
+   */
+  id: string;
+  /**
+   * The level for it to be given on
+   */
+  level: number;
+}
+
 
 /**
  * The auto role options
