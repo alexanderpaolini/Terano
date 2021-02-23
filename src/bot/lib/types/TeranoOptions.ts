@@ -2,6 +2,7 @@ import { ConnectOptions } from "mongoose";
 import { ClientOpts } from "redis";
 
 export default interface TeranoOptions {
+  prod: boolean;
   mongodb: {
     connectURI: string;
     connectOptions: ConnectOptions;
@@ -18,4 +19,12 @@ export default interface TeranoOptions {
     }
   };
   port: number;
+  webhooks: {
+    [key: string]: Webhook,
+  }
+}
+
+export interface Webhook {
+  id: string,
+  token: string
 }

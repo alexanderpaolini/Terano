@@ -14,8 +14,8 @@ export default function loadFunctions(worker: TeranoWorker) {
           if (stats.isFile() && file.endsWith('.js')) {
             let cmd = require(`${dir}/${file}`).default;
             if(!cmd) return;
-            worker.logger.debug('Loaded command:', `${cmd.name}`);
             worker.commands.add(cmd);
+            worker.logger.debug('Loaded command:', `${cmd.name}`);
           }
         });
       }

@@ -6,6 +6,13 @@ export default class Responses {
     return await ctx.worker.db.guildDB.getEmbeds(ctx.guild.id);
   }
 
+  /**
+   * Send a normal message
+   * @param ctx The command context
+   * @param color The color of the embed
+   * @param response The message to respond
+   * @param embed Force embed
+   */
   public static async normal(ctx: CommandContext, color: number, response: string, embed?: boolean) {
     const e = await this.getEmbed(ctx);
 
@@ -29,6 +36,13 @@ export default class Responses {
     }
   }
 
+  /**
+   * Send a very small embed
+   * @param ctx The Command Context
+   * @param color The color of the embed
+   * @param response The message of the embed
+   * @param embed Force embed
+   */
   public static async tiny(ctx: CommandContext, color: number, response: string, embed?: boolean) {
     const e = await this.getEmbed(ctx);
 
@@ -48,6 +62,13 @@ export default class Responses {
     }
   }
 
+  /**
+   * Send a smaller embed
+   * @param ctx Command Context
+   * @param color The color of the embed
+   * @param response The message
+   * @param embed Force embed
+   */
   public static async small(ctx: CommandContext, color: number, response: string, embed?: boolean) {
     const e = await this.getEmbed(ctx);
 

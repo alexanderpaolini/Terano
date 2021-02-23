@@ -34,18 +34,17 @@ export default {
 
     const body = { color, level, xp, maxxp, picture, tag, usertag }
 
-    fetch(`http://localhost:${ctx.worker.opts.port}/card`, {
+    const response = await fetch(`http://localhost:${ctx.worker.opts.port}/card`, {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json'
       }
     })
-      .then(res => res.buffer())
-      .then(buffer => {
-        ctx.sendFile({ name: 'rank.png',buffer: Buffer.from(buffer) })
-        return;
-      })
+
+    const buffer = await response.buffer();
+
+    ctx.sendFile({ name: 'rank.png',buffer: Buffer.from(buffer) })
     return;
   }
 } as CommandOptions;

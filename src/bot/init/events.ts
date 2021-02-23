@@ -13,8 +13,8 @@ export default function loadFunctions(worker: TeranoWorker) {
           if (stats.isDirectory()) return loadEvents(`${dir}/${file}`);
           if (stats.isFile() && file.endsWith('.js')) {
             const event = require(`${dir}/${file}`).default;
-            worker.logger.log('Loaded event:', `${file}`);
             event(worker);
+            worker.logger.debug('Loaded event:', `${file}`);
           }
         });
       }

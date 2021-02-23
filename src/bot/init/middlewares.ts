@@ -13,7 +13,7 @@ export default function loadFunctions(worker: TeranoWorker) {
           if (stats.isDirectory()) return loadMiddleware(`${dir}/${file}`);
           if (stats.isFile() && file.endsWith('.js')) {
             const middleware = require(`${dir}/${file}`).default;
-            worker.logger.log('Loaded middleware:', `${file}`);
+            worker.logger.debug('Loaded middleware:', `${file}`);
             worker.commands.middleware(middleware);
           }
         });

@@ -6,6 +6,7 @@ export default {
   description: 'Berry is stinky.',
   category: 'misc',
   command: 'stinky',
+  aliases: ['jpbbitch'],
   permissions: [],
   botPermissions: [],
   owner: false,

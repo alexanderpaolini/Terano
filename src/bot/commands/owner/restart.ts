@@ -11,24 +11,23 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.flags.shard) {
+    console.log(ctx.flags.shard);
+    if (typeof ctx.flags.shard !== 'undefined') {
       const shard = parseInt(String(ctx.flags.shard));
 
       if (shard >= (ctx.worker.options.shards as number))
-        return ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Shard ${shard} does not exist.`);
+        return ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Shard ${ctx.flags.shard} does not exist.`);
     
       await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Restarting Shard ${shard}`);
       ctx.worker.comms.restartShard(shard);
-
-    } else if (ctx.flags.cluster) {
+    } else if (typeof ctx.flags.cluster !== 'undefined') {
       const cluster = parseInt(String(ctx.flags.cluster));
 
-      if (cluster >= Math.ceil((ctx.worker.options.shards as number) / (ctx.worker.options.shardsPerCluster || 5)))
-        return ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Cluster ${cluster} does not exist.`);
+      if (isNaN(cluster) || cluster >= Math.ceil((ctx.worker.options.shards as number) / (ctx.worker.options.shardsPerCluster || 5)))
+        return ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Cluster ${ctx.flags.cluster} does not exist.`);
 
       await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Restarting Cluster ${cluster}`);
       ctx.worker.comms.restartCluster(cluster.toString());
-
     } else {
       await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, 'Restarting...');
       

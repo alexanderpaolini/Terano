@@ -1,6 +1,7 @@
 // Basic shit
 import fs from 'fs';
 import path from 'path';
+import { Api } from '@top-gg/sdk';
 
 // Worker
 import { Worker } from 'discord-rose';
@@ -24,6 +25,7 @@ import Monitor from './Monitor';
 import colors from './Colors';
 import Responses from './Responses';
 import Moderation from './Moderation';
+import Webhooks from './Webhooks';
 
 export default class TeranoWorker extends Worker {
   logger: any;
@@ -32,12 +34,18 @@ export default class TeranoWorker extends Worker {
     userDB: new UserDB()
   }
   monitors: Monitor[] = [];
-  colors: typeof colors = colors;
-  responses: typeof Responses = Responses;
-  moderation: Moderation = new Moderation(this);
-  devmode: boolean = false;
+  colors = colors;
+  responses = Responses;
+  moderation = new Moderation(this);
+  webhooks = new Webhooks(this);
+  devmode = false;
+  topgg: Api | null = null;
+  statsInterval: NodeJS.Timeout | null = null;
+  prod: boolean;
   constructor(public opts: TeranoOptions) {
     super();
+    
+    this.prod = opts.prod
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
 
     // Connect to mongoose
@@ -50,6 +58,7 @@ export default class TeranoWorker extends Worker {
 
     this.loadInit();
     this.commands.middleware(flagsMiddleware())
+    if (this.prod) this.loadTOPGG();
   }
 
   /**
@@ -74,6 +83,21 @@ export default class TeranoWorker extends Worker {
         });
       }
     });
+  }
+
+  /**
+   * Load the top.gg API stats
+   */
+  loadTOPGG() {
+    this.logger.log('Posting stats to top.gg every 20 minutes')
+    this.topgg = new Api(this.opts.topgg.token);
+    this.statsInterval = setInterval(async () => {
+      const clusterStats = await this.comms.getStats()
+      this.topgg!.postStats({
+        serverCount: clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0),
+        shardCount: clusterStats.reduce((a, c) => a + c.shards.length, 0)
+      })
+    }, 20 * 60 * 1000);
   }
 
   /**

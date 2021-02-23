@@ -4,7 +4,7 @@ const GuildSchema = new Schema({
   id: { type: String, required: true, unique: true },
   options: {
     prefix: { type: String, default: 't!' },
-    embeds: { type: Boolean, default: false },
+    embeds: { type: Boolean, default: true },
     no_permissions: { type: Boolean, default: true },
   },
   level: {

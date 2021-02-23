@@ -42,6 +42,7 @@ router.post('/leaderboard', async (req, res) => {
     ctx.fillText(`Level: ${user.level}`, 122 + 84, 175 + diff + 50);
     ctx.fillText(`Rank: ${user.rank}`, 317 + 84, 175 + diff + 50);
 
+    // Increase the difference
     diff = diff + 120;
   }
 

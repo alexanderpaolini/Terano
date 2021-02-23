@@ -13,9 +13,8 @@ export default function loadFunctions(worker: TeranoWorker) {
           if (stats.isDirectory()) return loadMonitors(`${dir}/${file}`);
           if (stats.isFile() && file.endsWith('.js')) {
             const f = require(`${dir}/${file}`).default;
-            const monitor = new f(worker);
-            worker.monitors.push(monitor);
-            worker.logger.log('Loaded Monitor:', file)
+            new f(worker);
+            worker.logger.debug('Loaded Monitor:', file)
           }
         });
       }

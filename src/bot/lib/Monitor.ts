@@ -6,17 +6,29 @@ export default class Monitor {
     this.worker.on('MESSAGE_CREATE', this._run.bind(this))
   }
 
-  _run(data: APIMessage) {
+  /**
+   * Private function for handling
+   * @param data Message object
+   */
+  private _run(data: APIMessage) {
     this.restrictions(data).then(b => {
       if(!b) return;
       this.run(data);
     });
   }
 
+  /**
+   * The function to run
+   * @param {APIMessage} data Message object
+   */
   run(data: APIMessage): Promise<any> | any {
     return;
   }
 
+  /**
+   * Berry was annoying so I didn't actually comment this
+   * @param {APIMessage} data The message object
+   */
   async restrictions(data: APIMessage): Promise<boolean | null | undefined> {
     return true;
   }

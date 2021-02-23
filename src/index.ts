@@ -1,5 +1,5 @@
 // Config
-import * as config from './config.json';
+import config from './config.json';
 
 // Required shit
 import { Master } from 'discord-rose';
@@ -19,7 +19,7 @@ api.listen(config.port, () => {
 
   const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
     token: config.discord.token,
-    // log: (...args: any) => { logger.debug(...args); },
+    log: (...args: any) => { logger.debug(...args); },
     shards: SHARDS,
     intents: ['GUILDS', 'GUILD_MESSAGES'],
     cacheControl: {
