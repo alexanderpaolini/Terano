@@ -11,6 +11,10 @@ declare module 'discord-rose/dist/typings/lib' {
     botPermissions?: (keyof typeof bits)[];
     owner?: boolean;
     disabled?: boolean;
+    cooldown?: {
+      bucket: number,
+      time: number
+    }
   }
 
   type worker = TeranoWorker;

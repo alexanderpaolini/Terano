@@ -18,7 +18,7 @@ export default {
 
     // Make sure people aren't stupid
     if (newRate <= 0) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `The XP-Multiplier must be greater than 0.`);
-    if (newRate > 20) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 20');
+    if (newRate > 100) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 100');
 
     // Get and update the rate
     const oldRate = await ctx.worker.db.guildDB.getXPMultiplier(ctx.guild.id);

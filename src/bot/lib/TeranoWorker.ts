@@ -28,23 +28,21 @@ import Moderation from './Moderation';
 import Webhooks from './Webhooks';
 
 export default class TeranoWorker extends Worker {
-  logger: any;
-  db = {
-    guildDB: new GuildDB(),
-    userDB: new UserDB()
-  }
-  monitors: Monitor[] = [];
+  prod: boolean;
+  topgg: Api | null = null;
   colors = colors;
+  logger: any;
+  devmode = false;
+  webhooks = new Webhooks(this);
+  monitors: Monitor[] = [];
   responses = Responses;
   moderation = new Moderation(this);
-  webhooks = new Webhooks(this);
-  devmode = false;
-  topgg: Api | null = null;
   statsInterval: NodeJS.Timeout | null = null;
-  prod: boolean;
+  commandCooldowns = {} as { [key: string]: number };
+  db = { guildDB: new GuildDB(), userDB: new UserDB() };
   constructor(public opts: TeranoOptions) {
     super();
-    
+
     this.prod = opts.prod
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
 
@@ -91,15 +89,21 @@ export default class TeranoWorker extends Worker {
   loadTOPGG() {
     this.logger.log('Posting stats to top.gg every 20 minutes')
     this.topgg = new Api(this.opts.topgg.token);
-    this.statsInterval = setInterval(async () => {
-      const clusterStats = await this.comms.getStats()
-      this.topgg!.postStats({
-        serverCount: clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0),
-        shardCount: clusterStats.reduce((a, c) => a + c.shards.length, 0)
-      })
-    }, 20 * 60 * 1000);
+    this.statsInterval = setInterval(this.postTOPGG, 20 * 60 * 1000);
   }
 
+  /**
+   * Post top.gg stats
+   */
+  async postTOPGG() {
+    const clusterStats = await this.comms.getStats()
+    const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0)
+    const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0)
+    this.logger.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`)
+    if (this.topgg) this.topgg?.postStats({ serverCount, shardCount });
+    else this.logger.error('Posting to top.gg but not loaded.')
+  }
+  
   /**
    * A nicely formatted stats
    */

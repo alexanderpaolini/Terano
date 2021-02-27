@@ -14,6 +14,7 @@ export default {
 
     const cmd = ctx.args[0];
     const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`;
+    
     if (cmd) {
       const command = ctx.worker.commands.commands.find(e => e.command === cmd);
       if (command) {
