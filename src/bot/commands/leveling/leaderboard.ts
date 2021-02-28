@@ -26,6 +26,7 @@ export default {
         else return (Number(a.xp) - Number(b.xp));
       });
       data.reverse();
+      if(data.length > 8) data.length = 8;
 
       // Intialize the array that will be posted
       const newDataArr = [];
