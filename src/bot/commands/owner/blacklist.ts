@@ -14,7 +14,7 @@ export default {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '');
 
     if (!userID) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No user was given, please mention a user.');
-    if (userID == ctx.message.author.id) return; ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `You cannot blacklist yourself.`);
+    if (userID == ctx.message.author.id) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `You cannot blacklist yourself.`);
 
     const isBlacklisted = await ctx.worker.db.userDB.getBlacklist(userID);
     await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted);
