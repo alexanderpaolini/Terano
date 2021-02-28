@@ -34,6 +34,7 @@ router.post('/leaderboard', async (req, res) => {
     // Fill the user tag
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px sans-serif';
+    while (ctx.measureText(user.tag).width > 600) user.tag = `${user.tag.slice(0, -4)}...`;
     ctx.fillText(user.tag, 122 + 84, 175 + diff);
 
     // Fil the level and rank
