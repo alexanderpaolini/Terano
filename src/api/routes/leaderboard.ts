@@ -5,10 +5,10 @@ import Canvas from 'canvas';
 const router = Router();
 
 router.post('/leaderboard', async (req, res) => {
-  const users = req.body.data;
-  const hightPercentage = users.length / 8;
+  const users: any[] = req.body.data;
+  if(users.length > 8) users.length = 8;
 
-  const canvas = Canvas.createCanvas(800, 250 + 1000 * hightPercentage);
+  const canvas = Canvas.createCanvas(800, 250 + 1000);
   const ctx = canvas.getContext('2d');
 
   // Background
