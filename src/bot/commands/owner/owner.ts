@@ -23,7 +23,7 @@ export default {
     await ctx.worker.db.userDB.setOwner(userID, !isOwner)
 
     // Respond with success
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.ORANGE, `<@${userID}> is ${!isOwner ? 'no longer bot owner' : 'now bot owner'}.`);
+    ctx.worker.responses.normal(ctx, ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`);
     return;
   }
 } as CommandOptions;

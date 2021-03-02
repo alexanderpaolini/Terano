@@ -5,10 +5,10 @@ import Canvas from 'canvas';
 const router = Router();
 
 router.post('/leaderboard', async (req, res) => {
-  const users = req.body.data;
-  const hightPercentage = users.length / 8;
+  const users: any[] = req.body.data;
+  if(users.length > 8) users.length = 8;
 
-  const canvas = Canvas.createCanvas(800, 250 + 1000 * hightPercentage);
+  const canvas = Canvas.createCanvas(800, 250 + 1000);
   const ctx = canvas.getContext('2d');
 
   // Background
@@ -34,6 +34,7 @@ router.post('/leaderboard', async (req, res) => {
     // Fill the user tag
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px sans-serif';
+    while (ctx.measureText(user.tag).width > 510) user.tag = `${user.tag.slice(0, -4)}...`;
     ctx.fillText(user.tag, 122 + 84, 175 + diff);
 
     // Fil the level and rank
