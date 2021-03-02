@@ -1,8 +1,8 @@
-import { Cache } from 'discord-rose/dist/utils/Cache'
+import { Cache } from 'discord-rose/dist/utils/Cache';
 
-import LevelModel from './models/users/level'
-import InfoModel from './models/users/info'
-import UserModel from './models/users/user'
+import LevelModel from './models/users/level';
+import InfoModel from './models/users/info';
+import UserModel from './models/users/user';
 
 export default class UserDB {
   /**
@@ -50,7 +50,7 @@ export default class UserDB {
    * @param guildID Guild ID
    */
   async createLevel(userID: string, guildID: string): Promise<LevelDoc> {
-    await LevelModel.create({ userID, guildID }) as unknown as LevelDoc;
+    await LevelModel.create({ userID, guildID });
     return this.getLevel(userID, guildID);
   }
 
@@ -117,7 +117,7 @@ export default class UserDB {
    * @param id User ID
    */
   async createInfo(id: string): Promise<InfoDoc> {
-    await InfoModel.create({ id }) as unknown as InfoDoc
+    await InfoModel.create({ id });
     return this.getInfo(id);
   }
 
@@ -196,7 +196,7 @@ export default class UserDB {
    * @param id User ID
    */
   async createSettings(id: string) {
-    await UserModel.create({ id }) as unknown as LevelDoc;
+    await UserModel.create({ id });
     return this.getSettings(id);
   }
 
@@ -215,7 +215,7 @@ export default class UserDB {
    */
   async getColor(id: string) {
     const userSettings = await this.getSettings(id);
-    return userSettings.level.color
+    return userSettings.level.color;
   }
 
   /**

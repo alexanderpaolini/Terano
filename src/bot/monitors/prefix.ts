@@ -15,8 +15,8 @@ export default class PrefixMonitor extends Monitor {
 
   async restrictions(msg: any) {
     return msg.content &&
-     msg.guild_id &&
-      msg.content.replace(/[<@!>]/g, '')  === this.worker.user.id &&
+      msg.guild_id &&
+      msg.content.replace(/[<@!>]/g, '') === this.worker.user.id &&
       !(await this.worker.db.userDB.getBlacklist(msg.author.id));
   }
 }

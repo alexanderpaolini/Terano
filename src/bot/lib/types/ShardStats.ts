@@ -1,14 +1,14 @@
 interface ShardStat {
-  guilds: number,
-  channels: number,
-  roles: number,
-  ping: string
+  guilds: number;
+  channels: number;
+  roles: number;
+  ping: string;
 }
 
 interface ShardObject {
-  [key: number]: ShardStat
+  [key: number]: ShardStat;
 }
 
 interface ShardGuildObject {
-  [key: number]: number
+  [key: number]: number;
 }

@@ -3,7 +3,7 @@ import TeranoWorker from "./TeranoWorker";
 
 export default class Monitor {
   constructor(public worker: TeranoWorker) {
-    this.worker.on('MESSAGE_CREATE', this._run.bind(this))
+    this.worker.on('MESSAGE_CREATE', this._run.bind(this));
   }
 
   /**
@@ -12,7 +12,7 @@ export default class Monitor {
    */
   private _run(data: APIMessage) {
     this.restrictions(data).then(b => {
-      if(!b) return;
+      if (!b) return;
       this.run(data);
     });
   }

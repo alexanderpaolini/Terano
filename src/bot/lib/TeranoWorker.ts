@@ -38,24 +38,24 @@ export default class TeranoWorker extends Worker {
   responses = Responses;
   moderation = new Moderation(this);
   statsInterval: NodeJS.Timeout | null = null;
-  commandCooldowns = {} as { [key: string]: number };
+  commandCooldowns = {} as { [key: string]: number; };
   db = { guildDB: new GuildDB(), userDB: new UserDB() };
   constructor(public opts: TeranoOptions) {
     super();
 
-    this.prod = opts.prod
+    this.prod = opts.prod;
     this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
 
     // Connect to mongoose
-    mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions).then(() => { this.logger.log('Connected to MongoDB') })
+    mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions).then(() => { this.logger.log('Connected to MongoDB'); });
 
     this.db = {
       guildDB: new GuildDB(),
       userDB: new UserDB()
-    }
+    };
 
     this.loadInit();
-    this.commands.middleware(flagsMiddleware())
+    this.commands.middleware(flagsMiddleware());
     if (this.prod) this.loadTOPGG();
   }
 
@@ -87,7 +87,7 @@ export default class TeranoWorker extends Worker {
    * Load the top.gg API stats
    */
   loadTOPGG() {
-    this.logger.log('Posting stats to top.gg every 20 minutes')
+    this.logger.log('Posting stats to top.gg every 20 minutes');
     this.topgg = new Api(this.opts.topgg.token);
     this.statsInterval = setInterval(this.postTOPGG, 20 * 60 * 1000);
   }
@@ -96,14 +96,14 @@ export default class TeranoWorker extends Worker {
    * Post top.gg stats
    */
   async postTOPGG() {
-    const clusterStats = await this.comms.getStats()
-    const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0)
-    const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0)
-    this.logger.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`)
+    const clusterStats = await this.comms.getStats();
+    const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0);
+    const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0);
+    this.logger.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`);
     if (this.topgg) this.topgg?.postStats({ serverCount, shardCount });
-    else this.logger.error('Posting to top.gg but not loaded.')
+    else this.logger.error('Posting to top.gg but not loaded.');
   }
-  
+
   /**
    * A nicely formatted stats
    */

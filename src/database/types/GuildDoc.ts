@@ -67,7 +67,7 @@ interface GuildDoc {
     /**
      * The auto role options
      */
-    auto_role: AutoRole[]
+    auto_role: AutoRole[];
   };
 }
 

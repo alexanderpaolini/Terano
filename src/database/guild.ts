@@ -1,8 +1,8 @@
-import { Cache } from 'discord-rose/dist/utils/Cache'
+import { Cache } from 'discord-rose/dist/utils/Cache';
 
-import GuildModel from './models/guilds/guild'
-import ModerationModel from './models/guilds/moderation'
-import MuteModel from './models/guilds/mute'
+import GuildModel from './models/guilds/guild';
+import ModerationModel from './models/guilds/moderation';
+import MuteModel from './models/guilds/mute';
 
 export default class GuildDB {
   /**
@@ -18,7 +18,7 @@ export default class GuildDB {
    */
   async getGuild(id: string): Promise<GuildDoc> {
     // Check the cache first
-    const fromCache = this.guilds.get(id)
+    const fromCache = this.guilds.get(id);
     if (fromCache) return fromCache;
 
     // Then check the DB
@@ -79,7 +79,7 @@ export default class GuildDB {
    */
   async getEmbeds(id: string) {
     const guildData = await this.getGuild(id);
-    return guildData.options.embeds
+    return guildData.options.embeds;
   }
 
   /**
@@ -211,7 +211,7 @@ export default class GuildDB {
    */
   async getAutoRoles(id: string) {
     const guildData = await this.getGuild(id);
-    return guildData.moderation.auto_role
+    return guildData.moderation.auto_role;
   }
 
   /**
@@ -236,7 +236,7 @@ export default class GuildDB {
     return this.updateGuild(guildData);
   }
 
-  
+
   /**
    * Get a moderation Doc from the DB
    * @param guildID Guild ID
@@ -257,7 +257,7 @@ export default class GuildDB {
     guildData.level.level_roles.push({
       id: roleID,
       level: level
-    })
+    });
     await this.updateGuild(guildData);
   }
 }

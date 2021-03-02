@@ -5,7 +5,7 @@ export default async (ctx: CommandContext) => {
   if (isOwner && ctx.flags.idc) return true;
 
   const perms = ctx.command.botPermissions;
-  if(!perms) return;
+  if (!perms) return;
 
   const hasPerms = perms.every((perm: any) => ctx.myPerms(perm));
   if (!hasPerms) {

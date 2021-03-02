@@ -13,18 +13,17 @@ export default interface TeranoOptions {
   };
   topgg: {
     token: string;
-    webhook?: {
-      url: string;
+    webhook: {
       auth: string;
-    }
+    };
   };
   port: number;
   webhooks: {
     [key: string]: Webhook,
-  }
+  };
 }
 
 export interface Webhook {
   id: string,
-  token: string
+  token: string;
 }

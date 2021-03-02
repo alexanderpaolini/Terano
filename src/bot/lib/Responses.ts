@@ -1,9 +1,13 @@
 import { CommandContext } from 'discord-rose/dist/typings/lib';
 
 export default class Responses {
-  
+
+  /**
+   * Get whether or not a guild sends embeds
+   * @param ctx The Command Context
+   */
   public static async getEmbed(ctx: CommandContext) {
-    return await ctx.worker.db.guildDB.getEmbeds(ctx.guild.id);
+    return ctx.worker.db.guildDB.getEmbeds(ctx.guild.id);
   }
 
   /**

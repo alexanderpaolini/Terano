@@ -5,7 +5,7 @@ interface SettingsDoc {
   /**
    * The ID of the user
    */
-  id: string,
+  id: string;
   /**
    * Configuration of the rank card
    */
@@ -13,11 +13,11 @@ interface SettingsDoc {
     /**
      * The Tag displayed
      */
-    tag: string,
+    tag: string;
     /**
      * The color of the card (hex format)
      */
-    color: string,
+    color: string;
     /** 
      * The picture that will be displayed
      */

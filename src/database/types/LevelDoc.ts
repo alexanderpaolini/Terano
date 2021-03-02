@@ -5,15 +5,15 @@ interface LevelDoc {
   /**
    * The guild that this level corresponds to
    */
-  guildID: string,
+  guildID: string;
   /**
    * The user with the level
    */
-  userID: string,
+  userID: string;
   /**
    * How much xp they have
    */
-  xp: string,
+  xp: string;
   /**
    * Their level
    */

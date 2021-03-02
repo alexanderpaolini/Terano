@@ -1,5 +1,4 @@
 import { APIEmbed, APIGuild, Snowflake } from "discord-api-types";
-import { Embed } from "discord-rose/dist/structures/Embed";
 import TeranoWorker from "./TeranoWorker";
 import TeranoOptions, { Webhook } from "./types/TeranoOptions";
 
@@ -9,7 +8,7 @@ export default class Webhooks {
    */
   webhooks: {
     [key in keyof TeranoOptions['webhooks']]: Webhook
-  }
+  };
   /**
    * A webhook class for sending webhook messages
    * @param worker The Worker
@@ -23,7 +22,7 @@ export default class Webhooks {
    * @param error The Error to be sent
    */
   error(error: string) {
-    if (!this.worker.prod) return
+    if (!this.worker.prod) return;
     const embed: APIEmbed = {
       author: {
         name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
@@ -31,7 +30,7 @@ export default class Webhooks {
       },
       color: this.worker.colors.RED,
       description: `\`\`\`xl\n${error}\`\`\``
-    }
+    };
     // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.error.id as Snowflake, this.webhooks.error.token, { embeds: [embed] });
   }
@@ -41,7 +40,7 @@ export default class Webhooks {
    * @param guild The Guild from the event
    */
   guildJoin(guild: APIGuild) {
-    if (!this.worker.prod) return
+    if (!this.worker.prod) return;
     const embed: APIEmbed = {
       title: `Joined Guild`,
       author: {
@@ -53,7 +52,7 @@ export default class Webhooks {
       footer: {
         text: `Current Guild Count: ${this.worker.guilds.size}`
       }
-    }
+    };
     // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
   }
@@ -63,7 +62,7 @@ export default class Webhooks {
    * @param guild The Guild from the event
    */
   guildLeave(guild: APIGuild) {
-    if (!this.worker.prod) return
+    if (!this.worker.prod) return;
     const embed: APIEmbed = {
       title: `Left Guild`,
       author: {
@@ -75,7 +74,7 @@ export default class Webhooks {
       footer: {
         text: `Current Guild Count: ${this.worker.guilds.size}`
       }
-    }
+    };
     // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
   }
@@ -86,7 +85,7 @@ export default class Webhooks {
    * @param message The message to send
    */
   shard(color: number, message: string) {
-    if (!this.worker.prod) return
+    if (!this.worker.prod) return;
     const embed: APIEmbed = {
       title: `Cluster ${this.worker.comms.id}`,
       author: {
@@ -95,7 +94,7 @@ export default class Webhooks {
       },
       color: color,
       description: message,
-    }
+    };
     // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.shards.id as Snowflake, this.webhooks.shards.token, { embeds: [embed] });
   }
@@ -104,9 +103,9 @@ export default class Webhooks {
    * Send a vote event webhook
    * @param user The user ID from the vote event
    */
-  votes(user: string) {
-    if (!this.worker.prod) return
-    this.worker.api.users.get(user as Snowflake).then(user => {
+  votes(u: string) {
+    if (!this.worker.prod) return;
+    this.worker.api.users.get(u as Snowflake).then(user => {
       const embed: APIEmbed = {
         title: `User Voted`,
         author: {
@@ -115,9 +114,9 @@ export default class Webhooks {
         },
         color: this.worker.colors.PURPLE,
         description: `\`${user.username}#${user.discriminator}\` just voted!`,
-      }
+      };
       // @ts-ignore
       return this.worker.comms.sendWebhook(this.webhooks.votes.id as Snowflake, this.webhooks.votes.token, { embeds: [embed] });
-    })
+    });
   }
 }
