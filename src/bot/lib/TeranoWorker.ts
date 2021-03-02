@@ -96,12 +96,14 @@ export default class TeranoWorker extends Worker {
    * Post top.gg stats
    */
   async postTOPGG() {
+    if (!this.comms) return false;
     const clusterStats = await this.comms.getStats();
     const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0);
     const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0);
     this.logger.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`);
     if (this.topgg) this.topgg?.postStats({ serverCount, shardCount });
     else this.logger.error('Posting to top.gg but not loaded.');
+    return true;
   }
 
   /**
