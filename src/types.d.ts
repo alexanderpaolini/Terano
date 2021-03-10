@@ -13,9 +13,18 @@ declare module 'discord-rose/dist/typings/lib' {
     disabled?: boolean;
     cooldown?: {
       bucket: number,
-      time: number
-    }
+      time: number;
+    };
   }
 
   type worker = TeranoWorker;
+}
+
+declare module 'discord-rose/dist/clustering/ThreadComms' {
+  interface ThreadEvents {
+    test: {
+      send: string;
+      receive: boolean;
+    };
+  }
 }

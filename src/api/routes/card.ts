@@ -5,7 +5,7 @@ import Canvas from 'canvas';
 const router = Router();
 
 router.post('/card', async (req, res) => {
-  const { color, level, xp, maxxp, picture, tag, usertag } = req.body;
+  let { color, level, xp, maxxp, picture, tag, usertag } = req.body;
 
   const canvas = Canvas.createCanvas(850, 250);
   const ctx = canvas.getContext('2d');
@@ -23,10 +23,12 @@ router.post('/card', async (req, res) => {
 
   ctx.font = 'normal 32px sans-serif';
   ctx.fillStyle = '#ffffff';
+  while (ctx.measureText(usertag).width > 530) usertag = `${usertag.slice(0, -4)}...`;
   ctx.fillText(`${usertag}`, 275, canvas.height / 3.5);
 
   ctx.font = 'bold 32px sans-serif';
   ctx.fillStyle = color;
+  while (ctx.measureText(tag).width > 530) tag = `${tag.slice(0, -4)}...`;
   ctx.fillText(tag, 275, canvas.height / 1.35);
 
   const percentage = Math.floor(Number(xp) / Number(maxxp) * 100) / 100;

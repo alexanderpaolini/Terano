@@ -9,6 +9,7 @@ export default class Webhooks {
   webhooks: {
     [key in keyof TeranoOptions['webhooks']]: Webhook
   };
+
   /**
    * A webhook class for sending webhook messages
    * @param worker The Worker
@@ -31,7 +32,6 @@ export default class Webhooks {
       color: this.worker.colors.RED,
       description: `\`\`\`xl\n${error}\`\`\``
     };
-    // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.error.id as Snowflake, this.webhooks.error.token, { embeds: [embed] });
   }
 
@@ -53,7 +53,6 @@ export default class Webhooks {
         text: `Current Guild Count: ${this.worker.guilds.size}`
       }
     };
-    // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
   }
 
@@ -75,7 +74,6 @@ export default class Webhooks {
         text: `Current Guild Count: ${this.worker.guilds.size}`
       }
     };
-    // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
   }
 
@@ -95,7 +93,6 @@ export default class Webhooks {
       color: color,
       description: message,
     };
-    // @ts-ignore
     return this.worker.comms.sendWebhook(this.webhooks.shards.id as Snowflake, this.webhooks.shards.token, { embeds: [embed] });
   }
 
@@ -115,7 +112,6 @@ export default class Webhooks {
         color: this.worker.colors.PURPLE,
         description: `\`${user.username}#${user.discriminator}\` just voted!`,
       };
-      // @ts-ignore
       return this.worker.comms.sendWebhook(this.webhooks.votes.id as Snowflake, this.webhooks.votes.token, { embeds: [embed] });
     });
   }

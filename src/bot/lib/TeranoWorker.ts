@@ -40,6 +40,11 @@ export default class TeranoWorker extends Worker {
   statsInterval: NodeJS.Timeout | null = null;
   commandCooldowns = {} as { [key: string]: number; };
   db = { guildDB: new GuildDB(), userDB: new UserDB() };
+
+  /**
+   * Create the bot
+   * @param opts The options lol
+   */
   constructor(public opts: TeranoOptions) {
     super();
 
@@ -64,21 +69,17 @@ export default class TeranoWorker extends Worker {
    */
   loadInit() {
     const dir = path.resolve(__dirname, '../', './init/');
-    fs.readdir(dir, (err, files) => {
+    fs.readdir(dir, { withFileTypes: true }, (err, files) => {
       if (err) return console.error(err.toString());
       else {
-        files.forEach(file => {
+        for (const file of files) {
+          if (!file.isFile()) break;
           try {
-            fs.stat(path.resolve(__dirname, dir, file), (e, stats) => {
-              if (e) return console.error(e.toString());
-              if (stats.isFile() && file.endsWith('.js')) {
-                this.logger.log('Loaded Init', `${file}`);
-                const f = require(`${dir}/${file}`).default;
-                f(this);
-              }
-            });
+            const f = require(`${dir}/${file}`).default;
+            f(this);
+            this.logger.log('Loaded Init', `${file}`);
           } catch (e) { }
-        });
+        }
       }
     });
   }

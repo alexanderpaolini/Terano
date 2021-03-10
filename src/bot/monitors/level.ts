@@ -16,7 +16,7 @@ export default class PrefixMonitor extends Monitor {
       userDoc.xp = String(xp - Number(userDoc.xp));
 
       if (guildDoc.level.send_level_message) this.sendUpdateMessage(message, userDoc.level, guildDoc);
-      const role = guildDoc.level.level_roles.find(role => role.level === userDoc.level);
+      const role = guildDoc.level.level_roles.find(r => r.level === userDoc.level);
       if (role) await this.addUserRole(message, role);
     } else userDoc.xp = String(xp);
 

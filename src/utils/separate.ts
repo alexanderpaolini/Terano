@@ -8,4 +8,4 @@ export default function separate(str: string, to: number): string {
     sw = sw * -1;
   }
   return res;
-};
+}

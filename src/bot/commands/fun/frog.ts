@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 export default {
   name: 'frog',
   usage: 'frog',
-  description: 'FROG. (https://frogs.media)',
+  description: 'FROG. sourced from https://frogs.media',
   category: 'fun',
   command: 'frog',
   aliases: ['forg', 'froggers', 'og'],

@@ -38,7 +38,7 @@ export default class GuildDB {
    * @param id The ID of the guild
    */
   async createGuild(id: string): Promise<GuildDoc> {
-    await GuildModel.create({ id }) as unknown as GuildDoc;
+    await GuildModel.create({ id });
     return this.getGuild(id);
   }
 
@@ -189,6 +189,10 @@ export default class GuildDB {
     return this.updateGuild(guildData);
   }
 
+  /**
+   * Get the default level color of a guild
+   * @param id The Guild ID
+   */
   async getLevelColor(id: string) {
     const guildData = await this.getGuild(id);
     return guildData.level.default_color;
@@ -235,7 +239,6 @@ export default class GuildDB {
     guildData.moderation.auto_role = guildData.moderation.auto_role.filter(r => r.id !== role.id);
     return this.updateGuild(guildData);
   }
-
 
   /**
    * Get a moderation Doc from the DB
