@@ -73,12 +73,11 @@ export default class TeranoWorker extends Worker {
       if (err) return console.error(err.toString());
       else {
         for (const file of files) {
-          if (!file.isFile()) break;
-          try {
-            const f = require(`${dir}/${file}`).default;
-            f(this);
-            this.logger.log('Loaded Init', `${file}`);
-          } catch (e) { }
+          if (!file.isFile()) continue;
+          if (!file.name.endsWith('.js')) continue;
+          const f = require(`${dir}/${file.name}`).default;
+          f(this);
+          this.logger.log('Loaded Init', `${file.name}`);
         }
       }
     });
