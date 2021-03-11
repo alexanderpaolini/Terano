@@ -9,6 +9,7 @@ export default {
   permissions: [],
   botPermissions: [],
   owner: false,
+  cooldown: 5e3,
   exec: async (ctx) => {
     const currentShard = Number((BigInt(ctx.guild.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards));
 
@@ -42,5 +43,6 @@ Current
 \`\`\``);
 
     embed.send(true);
+    ctx.invokeCooldown();
   }
 } as CommandOptions;

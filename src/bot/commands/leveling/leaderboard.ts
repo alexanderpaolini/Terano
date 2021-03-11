@@ -12,10 +12,7 @@ export default {
   aliases: ['lb'],
   permissions: [],
   botPermissions: [],
-  cooldown: {
-    bucket: 1,
-    time: 5_60_1000
-  },
+  cooldown: 5e3,
   exec: async (ctx) => {
     // Send the loading message
     ctx.send('Loading...').then(async msg => {
@@ -26,7 +23,7 @@ export default {
         else return (Number(a.xp) - Number(b.xp));
       });
       data.reverse();
-      if(data.length > 8) data.length = 8;
+      if (data.length > 8) data.length = 8;
 
       // Intialize the array that will be posted
       const newDataArr = [];
@@ -37,7 +34,7 @@ export default {
         // Fetch the user, if none just continue
         const userFetch = await ctx.worker.api.members.get(ctx.guild.id, user.userID as Snowflake).catch(() => null as unknown as APIGuildMember);
         if (!userFetch || !userFetch.user) continue;
-        
+
         // Push the user to the array 
         newDataArr.push({
           tag: `${userFetch.user.username}#${userFetch.user.discriminator}`,
@@ -57,16 +54,15 @@ export default {
       }).catch(() => null);
 
       // Respond with an error kekw
-      if(!response || !response.ok) throw new Error('Internal Server Error')
+      if (!response || !response.ok) throw new Error('Internal Server Error');
 
       // Get the buffer
       const buffer = await response.buffer();
 
       // Delete the message and send the file
-      // @ts-ignore
       await ctx.worker.api.messages.delete(msg.channel_id, msg.id).catch(() => null);
       ctx.sendFile({ name: 'leaderboard.png', buffer });
-      return;
-    })
+      ctx.invokeCooldown();
+    });
   }
 } as CommandOptions;

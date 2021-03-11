@@ -13,10 +13,7 @@ export default {
   aliases: ['card', 'level'],
   permissions: [],
   botPermissions: [],
-  cooldown: {
-    bucket: 1,
-    time: 5_60_1000
-  },
+  cooldown: 5e3,
   exec: async (ctx) => {
     const user = (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) || ctx.message.author;
     const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.guild.id);
@@ -32,7 +29,7 @@ export default {
     const picture = settings?.level.picture || `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
     const color = settings?.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.guild.id);
 
-    const body = { color, level, xp, maxxp, picture, tag, usertag }
+    const body = { color, level, xp, maxxp, picture, tag, usertag };
 
     const response = await fetch(`http://localhost:${ctx.worker.opts.port}/card`, {
       method: 'POST',
@@ -40,11 +37,12 @@ export default {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    });
 
     const buffer = await response.buffer();
 
-    ctx.sendFile({ name: 'rank.png',buffer: Buffer.from(buffer) })
+    ctx.sendFile({ name: 'rank.png', buffer: Buffer.from(buffer) });
+    ctx.invokeCooldown();
     return;
   }
 } as CommandOptions;

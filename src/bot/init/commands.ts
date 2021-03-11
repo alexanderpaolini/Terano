@@ -1,23 +1,23 @@
 import TeranoWorker from '../lib/TeranoWorker';
 
-import { readdir, stat } from "fs";
+import { readdir } from "fs";
 import { resolve } from "path";
 
-export default function loadFunctions(worker: TeranoWorker) {
+export default function initFunction(worker: TeranoWorker) {
   function loadCommands(dir: string) {
-    readdir(dir, (err, files) => {
+    readdir(dir, { withFileTypes: true }, (err, files) => {
       if (err) return console.error(err.toString());
       for (const file of files) {
-        stat(resolve(dir, file), (e, stats) => {
-          if (e) return console.error(e.toString());
-          if (stats.isDirectory()) return loadCommands(`${dir}/${file}`);
-          if (stats.isFile() && file.endsWith('.js')) {
-            let cmd = require(`${dir}/${file}`).default;
-            if(!cmd) return;
-            worker.commands.add(cmd);
-            worker.logger.debug('Loaded command:', `${cmd.name}`);
-          }
-        });
+        if (file.isDirectory()) {
+          loadCommands(`${dir}/${file.name}`);
+          continue;
+        }
+        if (file.isFile() && file.name.endsWith('.js')) {
+          let cmd = require(`${dir}/${file.name}`).default;
+          if (!cmd) continue;
+          worker.commands.add(cmd);
+          worker.logger.debug('Loaded command:', cmd.name);
+        }
       }
     });
   }

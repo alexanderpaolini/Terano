@@ -1,22 +1,19 @@
 import TeranoWorker from "../lib/TeranoWorker";
 
-import { readdir, stat } from "fs";
+import { readdir } from "fs";
 import { resolve } from "path";
 
-export default function loadFunctions(worker: TeranoWorker) {
+export default function initFunction(worker: TeranoWorker) {
   function loadEvents(dir: string) {
-    readdir(dir, (err, files) => {
+    readdir(dir, { withFileTypes: true }, (err, files) => {
       if (err) return console.error(err.toString());
       for (const file of files) {
-        stat(resolve(dir, file), (e, stats) => {
-          if (e) return console.error(e.toString());
-          if (stats.isDirectory()) return loadEvents(`${dir}/${file}`);
-          if (stats.isFile() && file.endsWith('.js')) {
-            const event = require(`${dir}/${file}`).default;
-            event(worker);
-            worker.logger.debug('Loaded event:', `${file}`);
-          }
-        });
+        if (file.isDirectory()) return loadEvents(`${dir}/${file.name}`);
+        if (file.isFile() && file.name.endsWith('.js')) {
+          const event = require(`${dir}/${file.name}`).default;
+          event(worker);
+          worker.logger.debug('Loaded event:', file.name);
+        }
       }
     });
   }

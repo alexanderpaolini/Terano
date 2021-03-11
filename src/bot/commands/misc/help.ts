@@ -20,7 +20,7 @@ export default {
       if (command) {
         ctx.embed
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
-          .description(`\`Command\`:${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n${command.aliases ? `\`Aliases\`: ${command.aliases.join(', ')}\n` : '' }${command.permissions  ? command.permissions.join(', ') + '\n' : ''}\`Description\`:${command.description}`)
+          .description(`\`Command\`: ${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n${command.aliases ? `\`Aliases\`: ${command.aliases.join(', ')}\n` : '' }${command.permissions  ? command.permissions.join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
           .footer('Developed by MILLION#1321')
           .color(ctx.worker.colors.GREEN)
           .timestamp()
@@ -49,7 +49,6 @@ export default {
       });
 
       embed.send(true);
-      return;
     }
   }
 } as CommandOptions;
