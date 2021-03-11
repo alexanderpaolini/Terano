@@ -21,7 +21,7 @@ api.listen(config.port, () => {
     token: config.discord.token,
     log: (...args: any) => { logger.debug(...args); },
     shards: SHARDS,
-    intents: ['GUILDS', 'GUILD_MESSAGES'],
+    // intents: ['GUILDS', 'GUILD_MESSAGES'],
     cacheControl: {
       guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id'],
       members: ['nick', 'user'],

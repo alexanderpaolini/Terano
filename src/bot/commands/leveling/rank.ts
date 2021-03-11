@@ -2,7 +2,7 @@ import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import fetch from 'node-fetch';
 
-import { APIGuildMember, APIUser, Snowflake } from 'discord-api-types';
+import { APIUser, Snowflake } from 'discord-api-types';
 
 export default {
   name: 'Rank',

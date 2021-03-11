@@ -27,10 +27,10 @@ export default {
     if (!role) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Role not found.');
 
     // This shit sucks ngl
-    const botHighest = ctx.worker.guildRoles.get(ctx.guild.id)?.reduce((a, role) => {
-      if (!a) return role.position;
-      if (a > role.position) return a;
-      else return role.position;
+    const botHighest = ctx.worker.guildRoles.get(ctx.guild.id)?.reduce((a, r) => {
+      if (!a) return r.position;
+      if (a > r.position) return a;
+      else return r.position;
     }, 0) || 0;
     if (role.position >= botHighest) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'I cannot give members this role.');
 

@@ -36,12 +36,24 @@ function formatTime(time: number) {
 
 export default () => {
   const cooldowns: Collection<string, CooldownObject> = new Collection();
+  const guildProtecton: string[] = [];
 
   return (ctx: CommandContext) => {
+
+    if (guildProtecton.filter(e => e === ctx.guild.id).length > 40) {
+      ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.guild.id} excedeed ratelimit`)
+      return false;
+    }
+
+    guildProtecton.push(ctx.guild.id);
+    setTimeout(() => {
+      guildProtecton.splice(guildProtecton.indexOf(ctx.guild.id), 1);
+    }, 5000);
+
     if (!ctx.command.cooldown) {
       ctx.invokeCooldown = () => {
-        throw new Error(`cooldown does not exist on command ${ctx.command.command}`)
-      }
+        throw new Error(`cooldown does not exist on command ${ctx.command.command}`);
+      };
       return true;
     }
 
@@ -61,8 +73,6 @@ export default () => {
       ctx.worker.responses.small(ctx, ctx.worker.colors.RED, `You're on cooldown, try again in ${formatTime(timeRemaining)}`);
       return false;
     }
-
-    console.log(ctx.command.cooldown);
 
     ctx.invokeCooldown = () => {
       cooldowns.set(id, {

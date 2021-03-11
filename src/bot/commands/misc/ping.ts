@@ -9,7 +9,6 @@ export default {
   aliases: ['pong'],
   permissions: [],
   botPermissions: [],
-  cooldown: 3e3,
   exec: async (ctx) => {
     const time = Date.now();
     const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`;
@@ -21,6 +20,5 @@ export default {
         msg.embeds[0].author!.name += ` (${(Date.now() - time).toFixed(2)}ms)`;
         ctx.worker.api.messages.edit(msg.channel_id, msg.id, { embed: msg.embeds[0] });
       });
-    ctx.invokeCooldown();
   }
 } as CommandOptions;

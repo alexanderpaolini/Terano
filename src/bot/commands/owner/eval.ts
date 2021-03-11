@@ -16,8 +16,6 @@ export default {
     let output: string;
     let status = true;
 
-    const worker = ctx.worker;
-
     try {
       let toEval = ctx.args.join(' ').replace(/token/g, 'mem');
       let evaled = eval(toEval);

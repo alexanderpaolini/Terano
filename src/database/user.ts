@@ -41,7 +41,12 @@ export default class UserDB {
     }
 
     // Otherwise create a new one
-    return this.createLevel(userID, guildID);
+    return {
+      userID,
+      guildID,
+      xp: '0',
+      level : 0
+    };
   }
 
   /**
@@ -60,7 +65,7 @@ export default class UserDB {
    */
   async updateLevel(doc: LevelDoc): Promise<LevelDoc> {
     this.levels.set(`${doc.userID}${doc.guildID}`, doc);
-    return LevelModel.findOneAndUpdate({ userID: doc.userID, guildID: doc.guildID }, doc).lean() as unknown as LevelDoc;
+    return LevelModel.findOneAndUpdate({ userID: doc.userID, guildID: doc.guildID }, doc, { upsert: true }).lean() as unknown as LevelDoc;
   }
 
   /**
@@ -109,7 +114,11 @@ export default class UserDB {
     }
 
     // Otherwise create a new one
-    return this.createInfo(id);
+    return { 
+      id: id,
+      owner: false,
+      blacklisted: false
+    }
   }
 
   /**
@@ -127,8 +136,8 @@ export default class UserDB {
    */
   async updateInfo(doc: InfoDoc): Promise<InfoDoc> {
     this.infos.set(doc.id, doc);
-    return InfoModel.findOneAndUpdate({ id: doc.id }, doc).lean() as unknown as InfoDoc;
-  }
+    return InfoModel.findOneAndUpdate({ id: doc.id }, doc, { upsert: true }).lean() as unknown as InfoDoc;
+  } 
 
   /**
    * Get if a user is blacklisted
@@ -188,7 +197,14 @@ export default class UserDB {
     }
 
     // Otherwise create a new one
-    return this.createSettings(id);
+    return {
+      id: id,
+      level: {
+        tag: '',
+        color:'',
+        picture: ''
+      }
+    }
   }
 
   /**
@@ -206,7 +222,7 @@ export default class UserDB {
    */
   async updateSettings(doc: SettingsDoc) {
     this.settings.set(doc.id, doc);
-    return UserModel.findOneAndUpdate({ id: doc.id }, doc).lean() as unknown as LevelDoc;
+    return UserModel.findOneAndUpdate({ id: doc.id }, doc, { upsert: true }).lean() as unknown as LevelDoc;
   }
 
   /**
