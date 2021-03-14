@@ -8,7 +8,10 @@ export default function initFunction(worker: TeranoWorker) {
     readdir(dir, { withFileTypes: true }, (err, files) => {
       if (err) return console.error(err.toString());
       for (const file of files) {
-        if (file.isDirectory()) return loadEvents(`${dir}/${file.name}`);
+        if (file.isDirectory()) {
+          loadEvents(`${dir}/${file.name}`);
+          continue;
+        }
         if (file.isFile() && file.name.endsWith('.js')) {
           const event = require(`${dir}/${file.name}`).default;
           event(worker);

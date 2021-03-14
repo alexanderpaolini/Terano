@@ -39,7 +39,7 @@ export default {
         // Push the user to the array 
         newDataArr.push({
           tag: `${userFetch.user.username}#${userFetch.user.discriminator}`,
-          pfp: ctx.worker.utils.getAvatar(userFetch),
+          pfp: ctx.worker.utils.getAvatar(userFetch.user),
           level: user.level,
           rank: data.indexOf(user) + 1,
         });

@@ -25,9 +25,7 @@ export default {
           .color(ctx.worker.colors.GREEN)
           .timestamp()
           .send(true)
-          .catch(() => {
-
-          });
+          .catch(() => { });
         return;
       } else {
         ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `Command "${cmd}" not found.`);
@@ -53,9 +51,7 @@ export default {
 
       embed
         .send(true)
-        .catch(() => {
-
-        });
+        .catch(() => { });
     }
   }
 } as CommandOptions;

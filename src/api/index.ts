@@ -22,7 +22,6 @@ mongoose.connect(config.mongodb.connectURI, config.mongodb.connectOptions)
 
 app.set('trust-proxy', true);
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -2328,4 +2328,4 @@ export default {
   "zorba": "#a59b91",
   "zuccini": "#044022",
   "zumthor": "#edf6ff"
-} as { [key: string]: string }
+} as { [key: string]: string; }

@@ -28,10 +28,10 @@ export default {
     } else {
       // If custom flag get the color as a string
       const color = String(ctx.flags.custom);
-  
+
       // Update the string
       await ctx.worker.db.userDB.setColor(ctx.message.author.id, color);
-  
+
       // Return with success ezpz
       ctx.worker.responses.normal(ctx, Number('0x' + color.slice(1)), `Set card color to **${color}**`);
       ctx.invokeCooldown();
