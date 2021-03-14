@@ -42,7 +42,10 @@ Current
   Shard: ${currentShard}
 \`\`\``);
 
-    embed.send(true);
+    embed.send(true)
+      .catch(() => {
+
+      });
     ctx.invokeCooldown();
   }
 } as CommandOptions;

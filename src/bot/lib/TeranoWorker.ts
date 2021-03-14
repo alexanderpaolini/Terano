@@ -16,6 +16,7 @@ import mongoose from 'mongoose';
 
 // Utils
 import createLogger from '../../utils/logger';
+import utils from '../../utils';
 
 // Types
 import TeranoOptions from './types/TeranoOptions';
@@ -40,6 +41,7 @@ export default class TeranoWorker extends Worker {
   statsInterval: NodeJS.Timeout | null = null;
   commandCooldowns = {} as { [key: string]: number; };
   db = { guildDB: new GuildDB(), userDB: new UserDB() };
+  utils = utils;
 
   /**
    * Create the bot
@@ -61,6 +63,12 @@ export default class TeranoWorker extends Worker {
 
     this.loadInit();
     this.commands.middleware(flagsMiddleware());
+    this.commands.options({
+      bots: false,
+      caseInsensitiveCommand: true,
+      caseInsensitivePrefix: true,
+      mentionPrefix: true
+    });
     if (this.prod) this.loadTOPGG();
   }
 

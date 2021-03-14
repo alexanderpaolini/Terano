@@ -1,3 +1,4 @@
+import { APIUser, Snowflake } from 'discord-api-types';
 import { bits } from 'discord-rose/dist/utils/Permissions';
 import TeranoWorker from './bot/lib/TeranoWorker';
 
@@ -11,11 +12,11 @@ declare module 'discord-rose/dist/typings/lib' {
     botPermissions?: (keyof typeof bits)[];
     owner?: boolean;
     disabled?: boolean;
-    cooldown?: number
+    cooldown?: number;
   }
 
   interface CommandContext {
-    invokeCooldown: () => void
+    invokeCooldown: () => void;
   }
 
   type worker = TeranoWorker;
@@ -23,9 +24,9 @@ declare module 'discord-rose/dist/typings/lib' {
 
 declare module 'discord-rose/dist/clustering/ThreadComms' {
   interface ThreadEvents {
-    test: {
-      send: string;
-      receive: boolean;
+    FETCH_USER: {
+      send: Snowflake;
+      receive: APIUser;
     };
   }
 }

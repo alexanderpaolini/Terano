@@ -2,6 +2,7 @@ import { APIGuildMember, Snowflake } from 'discord-api-types';
 import { CommandOptions } from 'discord-rose/dist/typings/lib';
 
 import fetch from 'node-fetch';
+import NonFatalError from '../../lib/NonFatalError';
 
 export default {
   name: 'Leaderboard',
@@ -12,7 +13,7 @@ export default {
   aliases: ['lb'],
   permissions: [],
   botPermissions: [],
-  cooldown: 5e3,
+  cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message
     ctx.send('Loading...').then(async msg => {
@@ -38,14 +39,14 @@ export default {
         // Push the user to the array 
         newDataArr.push({
           tag: `${userFetch.user.username}#${userFetch.user.discriminator}`,
-          pfp: `${userFetch.user.id}/${userFetch.user.avatar}`,
+          pfp: ctx.worker.utils.getAvatar(userFetch),
           level: user.level,
           rank: data.indexOf(user) + 1,
         });
       }
 
       // Fetch the canvas
-      const response = await fetch(`http://localhost:${ctx.worker.opts.port}/leaderboard`, {
+      const response = await fetch(`http://localhost:${ctx.worker.opts.api.port}/leaderboard`, {
         method: 'POST',
         body: JSON.stringify({ data: newDataArr }),
         headers: {
@@ -54,7 +55,7 @@ export default {
       }).catch(() => null);
 
       // Respond with an error kekw
-      if (!response || !response.ok) throw new Error('Internal Server Error');
+      if (!response || !response.ok) throw new NonFatalError('Internal Server Error');
 
       // Get the buffer
       const buffer = await response.buffer();

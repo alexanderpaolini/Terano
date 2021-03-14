@@ -7,7 +7,7 @@ export default class PrefixMonitor extends Monitor {
   async run(message: any) {
     const guildDoc = await this.worker.db.guildDB.getGuild(message.guild_id);
     const userDoc = await this.worker.db.userDB.getLevel(message.author.id, message.guild_id);
-
+    
     let xp = Number(userDoc.xp);
     xp += (Math.floor(Math.random() * 8) + 8) * guildDoc.level.xp_multplier;
 

@@ -14,17 +14,20 @@ export default {
 
     const cmd = ctx.args[0];
     const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`;
-    
+
     if (cmd) {
       const command = ctx.worker.commands.commands.find(e => e.command === cmd);
       if (command) {
         ctx.embed
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
-          .description(`\`Command\`: ${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n${command.aliases ? `\`Aliases\`: ${command.aliases.join(', ')}\n` : '' }${command.permissions  ? command.permissions.join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
+          .description(`\`Command\`: ${command.command}\n\`Usage\`: ${guildPrefix}${command.usage}\n${command.aliases ? `\`Aliases\`: ${command.aliases.join(', ')}\n` : ''}${command.permissions ? command.permissions.join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
           .footer('Developed by MILLION#1321')
           .color(ctx.worker.colors.GREEN)
           .timestamp()
-          .send(true);
+          .send(true)
+          .catch(() => {
+
+          });
         return;
       } else {
         ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `Command "${cmd}" not found.`);
@@ -42,13 +45,17 @@ export default {
         .timestamp();
 
       categories.forEach((cat: string) => {
-        if(!cat) return;
+        if (!cat) return;
         if (cat === 'owner' && !userIsOwner) return;
         const desc = ctx.worker.commands.commands.filter(x => x.category === cat).map(cmd_ => `\`${guildPrefix}${cmd_.command}\`: ${cmd_.description}`).join('\n');
         embed.field(cat.charAt(0).toUpperCase() + cat.substr(1), desc);
       });
 
-      embed.send(true);
+      embed
+        .send(true)
+        .catch(() => {
+
+        });
     }
   }
 } as CommandOptions;

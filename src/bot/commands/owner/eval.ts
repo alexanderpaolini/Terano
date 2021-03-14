@@ -30,12 +30,13 @@ export default {
     }
 
     try {
-      await ctx.worker.responses.tiny(ctx, status ? ctx.worker.colors.GREEN : ctx.worker.colors.RED, `js\n${output}`).then(e => {
-        if (!e) throw new Error('Message Failed to Send');
-      });
+      await ctx.worker.responses.code(ctx, status ? ctx.worker.colors.PURPLE : ctx.worker.colors.RED, output.split('```').join('\\`\\`\\`'))
+        .then(e => {
+          if (!e) throw new Error('Message Failed to Send');
+        });
       return;
     } catch (err) {
-      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `js\n${err.toString()}`);
+      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `${err.toString()}`);
       return;
     }
   }

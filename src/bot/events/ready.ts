@@ -8,6 +8,7 @@ export default (worker: TeranoWorker) => {
       worker.setStatus('playing', 'Minecraft', 'online')
     }, 60 * 1000)
   });
+  
   worker.on('SHARD_READY', (shard) => {
     worker.webhooks.shard(worker.colors.GREEN, `Shard ${shard.id} is ready`)
   });

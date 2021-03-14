@@ -9,7 +9,7 @@ export default class PrefixMonitor extends Monitor {
       description: `This guild's prefix is: **${prefix}**`
     };
 
-    this.worker.api.messages.send(msg.channel_id, { embed: embed });
+    this.worker.api.messages.send(msg.channel_id, { embed: embed }).catch(() => { });
     return;
   }
 

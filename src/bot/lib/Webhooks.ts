@@ -1,4 +1,4 @@
-import { APIEmbed, APIGuild, Snowflake } from "discord-api-types";
+import { APIGuild, APIUnavailableGuild, Snowflake } from "discord-api-types";
 import TeranoWorker from "./TeranoWorker";
 import TeranoOptions, { Webhook } from "./types/TeranoOptions";
 
@@ -24,15 +24,16 @@ export default class Webhooks {
    */
   error(error: string) {
     if (!this.worker.prod) return;
-    const embed: APIEmbed = {
-      author: {
-        name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
-        icon_url: 'https://cdn.discordapp.com/attachments/733471377608147008/813572741230755880/error-handling.jpg'
-      },
-      color: this.worker.colors.RED,
-      description: `\`\`\`xl\n${error}\`\`\``
-    };
-    return this.worker.comms.sendWebhook(this.webhooks.error.id as Snowflake, this.webhooks.error.token, { embeds: [embed] });
+    return this.worker.comms.sendWebhook(this.webhooks.error.id as Snowflake, this.webhooks.error.token, {
+      embeds: [{
+        author: {
+          name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
+          icon_url: 'https://cdn.discordapp.com/attachments/733471377608147008/813572741230755880/error-handling.jpg'
+        },
+        color: this.worker.colors.RED,
+        description: `\`\`\`xl\n${error}\`\`\``
+      }]
+    });
   }
 
   /**
@@ -41,40 +42,42 @@ export default class Webhooks {
    */
   guildJoin(guild: APIGuild) {
     if (!this.worker.prod) return;
-    const embed: APIEmbed = {
-      title: `Joined Guild`,
-      author: {
-        name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
-        icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
-      },
-      color: this.worker.colors.GREEN,
-      description: `\`${guild.name}\` (${guild.id})`,
-      footer: {
-        text: `Current Guild Count: ${this.worker.guilds.size}`
-      }
-    };
-    return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
+    return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, {
+      embeds: [{
+        title: `Joined Guild`,
+        author: {
+          name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
+          icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
+        },
+        color: this.worker.colors.GREEN,
+        description: `\`${guild.name}\` (${guild.id})`,
+        footer: {
+          text: `Current Guild Count: ${this.worker.guilds.size}`
+        }
+      }]
+    });
   }
 
   /**
    * Send a guild leave webhook
    * @param guild The Guild from the event
    */
-  guildLeave(guild: APIGuild) {
+  guildLeave(guild: APIUnavailableGuild) {
     if (!this.worker.prod) return;
-    const embed: APIEmbed = {
-      title: `Left Guild`,
-      author: {
-        name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
-        icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
-      },
-      color: this.worker.colors.RED,
-      description: `\`${guild.name}\` (${guild.id})`,
-      footer: {
-        text: `Current Guild Count: ${this.worker.guilds.size}`
-      }
-    };
-    return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, { embeds: [embed] });
+    return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, {
+      embeds: [{
+        title: `Left Guild`,
+        author: {
+          name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
+          icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
+        },
+        color: this.worker.colors.RED,
+        description: `${guild.id}`,
+        footer: {
+          text: `Current Guild Count: ${this.worker.guilds.size}`
+        }
+      }]
+    });
   }
 
   /**
@@ -84,35 +87,16 @@ export default class Webhooks {
    */
   shard(color: number, message: string) {
     if (!this.worker.prod) return;
-    const embed: APIEmbed = {
-      title: `Cluster ${this.worker.comms.id}`,
-      author: {
-        name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
-        icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
-      },
-      color: color,
-      description: message,
-    };
-    return this.worker.comms.sendWebhook(this.webhooks.shards.id as Snowflake, this.webhooks.shards.token, { embeds: [embed] });
-  }
-
-  /**
-   * Send a vote event webhook
-   * @param user The user ID from the vote event
-   */
-  votes(u: string) {
-    if (!this.worker.prod) return;
-    this.worker.api.users.get(u as Snowflake).then(user => {
-      const embed: APIEmbed = {
-        title: `User Voted`,
+    return this.worker.comms.sendWebhook(this.webhooks.shards.id as Snowflake, this.webhooks.shards.token, {
+      embeds: [{
+        title: `Cluster ${this.worker.comms.id}`,
         author: {
           name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
-          icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813585465169018880/image0.png'
+          icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
         },
-        color: this.worker.colors.PURPLE,
-        description: `\`${user.username}#${user.discriminator}\` just voted!`,
-      };
-      return this.worker.comms.sendWebhook(this.webhooks.votes.id as Snowflake, this.webhooks.votes.token, { embeds: [embed] });
+        color: color,
+        description: message,
+      }]
     });
   }
 }

@@ -17,7 +17,9 @@ export default interface TeranoOptions {
       auth: string;
     };
   };
-  port: number;
+  api: {
+    port: number
+  }
   webhooks: {
     [key: string]: Webhook,
   };

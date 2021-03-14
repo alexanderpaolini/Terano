@@ -2,11 +2,16 @@ import { Router } from 'express';
 
 import Canvas from 'canvas';
 
+// Middleware
+import authentication from '../middleware/authentication';
+
 const router = Router();
+
+router.use(authentication());
 
 router.post('/leaderboard', async (req, res) => {
   const users: any[] = req.body.data;
-  if(users.length > 8) users.length = 8;
+  if (users.length > 8) users.length = 8;
 
   const canvas = Canvas.createCanvas(800, 250 + 1000);
   const ctx = canvas.getContext('2d');
@@ -28,7 +33,7 @@ router.post('/leaderboard', async (req, res) => {
   let diff = 100;
   for (const user of users) {
     // Do the canvas image 
-    const pfp = await Canvas.loadImage(`https://cdn.discordapp.com/avatars/${user.pfp}.png?size=128`);
+    const pfp = await Canvas.loadImage(user.pfp);
     ctx.drawImage(pfp, 82, 175 + diff - 40, 100, 100);
 
     // Fill the user tag

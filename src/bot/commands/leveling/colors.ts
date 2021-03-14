@@ -9,8 +9,6 @@ export default {
   category: 'leveling',
   command: 'color',
   aliases: ['colour'],
-  permissions: [],
-  botPermissions: [],
   exec: async (ctx) => {
     if (!ctx.flags.custom) {
       // Get the name of the color
