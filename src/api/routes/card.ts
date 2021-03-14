@@ -7,7 +7,7 @@ import authentication from '../middleware/authentication';
 
 const router = Router();
 
-router.use(authentication());
+router.all('*', authentication());
 
 router.post('/card', async (req, res) => {
   let { color, level, xp, maxxp, picture, tag, usertag } = req.body;

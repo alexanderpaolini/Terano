@@ -7,7 +7,7 @@ import authentication from '../middleware/authentication';
 
 const router = Router();
 
-router.use(authentication());
+router.all('*', authentication());
 
 router.post('/leaderboard', async (req, res) => {
   const users: any[] = req.body.data;

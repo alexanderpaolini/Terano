@@ -6,7 +6,7 @@ import { Webhook } from '@top-gg/sdk';
 import { Snowflake } from 'discord-api-types';
 
 const router = Router();
-const webhook = new Webhook(config.topgg.webhook.auth); // broski
+const webhook = new Webhook(config.topgg.webhook.auth);
 
 router.use(webhook.middleware());
 
