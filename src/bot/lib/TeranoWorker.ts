@@ -48,11 +48,6 @@ export default class TeranoWorker extends Worker {
     // Connect to mongoose
     mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions).then(() => { this.log('Connected to MongoDB'); });
 
-    this.db = {
-      guildDB: new GuildDB(),
-      userDB: new UserDB()
-    };
-
     this.loadInit();
     this.commands.middleware(flagsMiddleware());
     this.commands.options({
