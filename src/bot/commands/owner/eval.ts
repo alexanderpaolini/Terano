@@ -30,7 +30,7 @@ export default {
     }
 
     try {
-      await ctx.worker.responses.code(ctx, status ? ctx.worker.colors.PURPLE : ctx.worker.colors.RED, output.split('```').join('\\`\\`\\`'))
+      await ctx.worker.responses.code(ctx, status ? ctx.worker.colors.PURPLE : ctx.worker.colors.RED, output.toString().split('```').join('\\`\\`\\`'))
         .then(e => {
           if (!e) throw new Error('Message Failed to Send');
         });

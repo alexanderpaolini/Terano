@@ -1,37 +1,13 @@
 import { CommandContext } from "discord-rose/dist/typings/lib";
 
+import { formatTime } from '../../utils/index';
+
 import Collection from '@discordjs/collection';
 
 interface CooldownObject {
   time: number;
   timeout: number;
   createdMessage?: boolean;
-}
-
-function formatTime(time: number) {
-  let hours = 0;
-  let minutes = 0;
-  let seconds = 0;
-
-  // Hours
-  while (time > 3600000) {
-    hours++;
-    time = time - 3600000;
-  }
-
-  // Minutes
-  while (time > 60000) {
-    minutes++;
-    time = time - 60000;
-  }
-
-  // Seconds
-  while (time > 1000) {
-    seconds++;
-    time = time - 1000;
-  }
-
-  return `${hours ? `${hours} hour${hours > 1 ? 's' : ''}, ` : ''}${minutes ? `${minutes} minute${minutes > 1 ? 's' : ''}${hours ? ', and' : ' and'} ` : ''}${seconds > 1 ? seconds : 1} second${seconds > 1 ? 's' : ''}`;
 }
 
 export default () => {
@@ -41,7 +17,7 @@ export default () => {
   return (ctx: CommandContext) => {
 
     if (guildProtecton.filter(e => e === ctx.guild.id).length > 40) {
-      ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.guild.id} excedeed ratelimit`)
+      ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.guild.id} excedeed ratelimit`);
       return false;
     }
 
