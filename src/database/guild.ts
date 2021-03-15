@@ -2,7 +2,6 @@ import { Cache } from 'discord-rose/dist/utils/Cache';
 
 import GuildModel from './models/guilds/guild';
 import ModerationModel from './models/guilds/moderation';
-import MuteModel from './models/guilds/mute';
 
 export default class GuildDB {
   /**

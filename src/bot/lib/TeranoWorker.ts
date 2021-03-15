@@ -12,6 +12,7 @@ import flagsMiddleware from '@discord-rose/flags-middleware';
 // Database
 import GuildDB from '../../database/guild';
 import UserDB from '../../database/user';
+import VoteDB from '../../database/vote';
 import mongoose from 'mongoose';
 
 // Types
@@ -33,7 +34,7 @@ export default class TeranoWorker extends Worker {
   responses = Responses;
   statsInterval: NodeJS.Timeout | null = null;
   commandCooldowns = {} as { [key: string]: number; };
-  db = { guildDB: new GuildDB(), userDB: new UserDB() }
+  db = { guildDB: new GuildDB(), userDB: new UserDB(), voteDB: new VoteDB() }
 
   /**
    * Create the bot
