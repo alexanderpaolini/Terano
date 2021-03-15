@@ -7,9 +7,7 @@ import authentication from '../middleware/authentication';
 
 const router = Router();
 
-router.all('*', authentication());
-
-router.post('/card', async (req, res) => {
+router.post('/card', authentication(), async (req, res) => {
   let { color, level, xp, maxxp, picture, tag, usertag } = req.body;
 
   const canvas = Canvas.createCanvas(850, 250);
