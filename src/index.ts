@@ -5,15 +5,8 @@ import config from './config.json';
 import { Master } from 'discord-rose';
 import path from 'path';
 
-// Utils
-import createLogger from './utils/logger';
-
-// Create the logger for fancy logs
-const logger = createLogger('Master', console as any, 'magenta');
-
 const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
   token: config.discord.token,
-  log: (...args: any) => { logger.debug(...args); },
   shards: 'auto',
   intents: ['GUILDS', 'GUILD_MESSAGES'],
   cacheControl: {
@@ -24,7 +17,8 @@ const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
   }
 });
 
-master.spawnProcess('api', path.resolve(__dirname, './api/index.js'));
+// Spawn the API
+master.spawnProcess('API', path.resolve(__dirname, './api/index.js'));
 
 // Add the fetch user for custom threads
 master.handlers.on('FETCH_USER', async (cluster, data, resolve) => {

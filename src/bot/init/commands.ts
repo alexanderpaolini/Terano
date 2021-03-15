@@ -6,7 +6,7 @@ import { resolve } from "path";
 export default function initFunction(worker: TeranoWorker) {
   function loadCommands(dir: string) {
     readdir(dir, { withFileTypes: true }, (err, files) => {
-      if (err) return console.error(err.toString());
+      if (err) return worker.log(err.toString());
       for (const file of files) {
         if (file.isDirectory()) {
           loadCommands(`${dir}/${file.name}`);
@@ -16,10 +16,10 @@ export default function initFunction(worker: TeranoWorker) {
           let cmd = require(`${dir}/${file.name}`).default;
           if (!cmd) continue;
           worker.commands.add(cmd);
-          worker.logger.debug('Loaded command:', cmd.name);
         }
       }
     });
   }
   loadCommands(resolve(__dirname, '../', './commands'));
+  worker.log('Loaded Commands');
 }

@@ -2,6 +2,9 @@ import { APIMessage } from "discord-api-types";
 import TeranoWorker from "./TeranoWorker";
 
 export default class Monitor {
+  /**
+   * @param worker The worker
+   */
   constructor(public worker: TeranoWorker) {
     this.worker.on('MESSAGE_CREATE', this._run.bind(this));
   }

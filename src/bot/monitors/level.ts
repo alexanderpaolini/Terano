@@ -67,7 +67,7 @@ export default class PrefixMonitor extends Monitor {
       }
     };
 
-    await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed }).catch(err => this.worker.logger.error(err.toString()));
+    await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed }).catch(err => this.worker.log(err.toString()));
   }
 
   xpFromLevel(level: number) {
@@ -76,7 +76,7 @@ export default class PrefixMonitor extends Monitor {
 
   async addUserRole(message: any, role: LevelRole) {
     await this.worker.api.members.addRole(message.guild_id, message.author.id, role.id as Snowflake)
-      .catch(err => this.worker.logger.error(err.toString()));
+      .catch(err => this.worker.log(err.toString()));
 
     const embed = {
       color: this.worker.colors.GREEN,
@@ -87,6 +87,6 @@ export default class PrefixMonitor extends Monitor {
     };
 
     await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed })
-      .catch(err => this.worker.logger.error(err.toString()));
+      .catch(err => this.worker.log(err.toString()));
   }
 }

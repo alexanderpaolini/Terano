@@ -1,4 +1,5 @@
 import { CommandContext } from 'discord-rose/dist/typings/lib';
+import { getAvatar } from '../../utils';
 
 export default class Responses {
 
@@ -23,7 +24,7 @@ export default class Responses {
     if (ctx.flags.s || ctx.flags.silent) return true;
 
     if (e && !embed && !ctx.flags.noembed) {
-      const url = ctx.worker.utils.getAvatar(ctx.message.author);
+      const url = getAvatar(ctx.message.author);
       return ctx.embed
         .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
         .description(response)
@@ -105,7 +106,7 @@ export default class Responses {
     if (ctx.flags.s || ctx.flags.silent) return true;
 
     if (e && !embed && !ctx.flags.noembed) {
-      const url = ctx.worker.utils.getAvatar(ctx.message.author);
+      const url = getAvatar(ctx.message.author);
       return ctx.embed
         .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
         .description(response)

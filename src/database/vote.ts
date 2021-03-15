@@ -6,11 +6,7 @@ export default class VoteDB {
   /**
    * The Settings
    */
-  cache: Cache<string, VoteDoc> = new Cache(15 * 60 * 1000);
-
-  // Constructor goes here
-  // Placeholder
-  // Constructor goes here
+  cache: Cache<string, VoteDoc> = new Cache(0);
 
   /**
    * Get a VoteDoc

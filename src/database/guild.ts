@@ -10,8 +10,6 @@ export default class GuildDB {
    */
   guilds: Cache<string, GuildDoc> = new Cache(15 * 60 * 1000);
 
-  // Constructor goes here
-
   /**
    * Get a guild doc from the cache/DB
    * @param id The ID of the guild
@@ -113,6 +111,10 @@ export default class GuildDB {
     return this.updateGuild(guildData);
   }
 
+  /**
+   * Get a guild's XP Cooldown
+   * @param id Guild ID
+   */
   async getXPCooldown(id: string) {
     const guildData = await this.getGuild(id);
     return guildData.level.cooldown;

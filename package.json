@@ -23,7 +23,7 @@
     "canvas": "^2.6.1",
     "colors": "^1.4.0",
     "discord-api-types": "^0.12.1",
-    "discord-rose": "^0.2.0",
+    "discord-rose": "^1.1.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

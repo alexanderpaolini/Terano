@@ -14,34 +14,26 @@ import GuildDB from '../../database/guild';
 import UserDB from '../../database/user';
 import mongoose from 'mongoose';
 
-// Utils
-import createLogger from '../../utils/logger';
-import utils from '../../utils';
-
 // Types
 import TeranoOptions from './types/TeranoOptions';
 
 // Lib
 import Monitor from './Monitor';
-import colors from './Colors';
+import colors from './colors';
 import Responses from './Responses';
-import Moderation from './Moderation';
 import Webhooks from './Webhooks';
 
 export default class TeranoWorker extends Worker {
   prod: boolean;
   topgg: Api | null = null;
   colors = colors;
-  logger: any;
   devmode = false;
   webhooks = new Webhooks(this);
   monitors: Monitor[] = [];
   responses = Responses;
-  moderation = new Moderation(this);
   statsInterval: NodeJS.Timeout | null = null;
   commandCooldowns = {} as { [key: string]: number; };
-  db = { guildDB: new GuildDB(), userDB: new UserDB() };
-  utils = utils;
+  db = { guildDB: new GuildDB(), userDB: new UserDB() }
 
   /**
    * Create the bot
@@ -51,10 +43,9 @@ export default class TeranoWorker extends Worker {
     super();
 
     this.prod = opts.prod;
-    this.logger = createLogger(`Cluster ${this.comms.id}`, console as any, 'yellow');
 
     // Connect to mongoose
-    mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions).then(() => { this.logger.log('Connected to MongoDB'); });
+    mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions).then(() => { this.log('Connected to MongoDB'); });
 
     this.db = {
       guildDB: new GuildDB(),
@@ -78,14 +69,13 @@ export default class TeranoWorker extends Worker {
   loadInit() {
     const dir = path.resolve(__dirname, '../', './init/');
     fs.readdir(dir, { withFileTypes: true }, (err, files) => {
-      if (err) return console.error(err.toString());
+      if (err) return this.log(err.toString());
       else {
         for (const file of files) {
           if (!file.isFile()) continue;
           if (!file.name.endsWith('.js')) continue;
           const f = require(`${dir}/${file.name}`).default;
           f(this);
-          this.logger.log('Loaded Init', `${file.name}`);
         }
       }
     });
@@ -95,9 +85,9 @@ export default class TeranoWorker extends Worker {
    * Load the top.gg API stats
    */
   loadTOPGG() {
-    this.logger.log('Posting stats to top.gg every 20 minutes');
+    this.log('Posting stats to top.gg every 20 minutes');
     this.topgg = new Api(this.opts.topgg.token);
-    this.statsInterval = setInterval(this.postTOPGG, 20 * 60 * 1000);
+    this.statsInterval = setInterval(this.postTOPGG.bind(this), 20 * 60 * 1000);
   }
 
   /**
@@ -106,11 +96,16 @@ export default class TeranoWorker extends Worker {
   async postTOPGG() {
     if (!this.comms) return false;
     const clusterStats = await this.comms.getStats();
+
     const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0);
     const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0);
-    this.logger.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`);
-    if (this.topgg) this.topgg?.postStats({ serverCount, shardCount });
-    else this.logger.error('Posting to top.gg but not loaded.');
+
+    this.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`);
+    if (this.topgg) await this.topgg.postStats({ serverCount, shardCount });
+    else {
+      this.log('Posting to top.gg but not loaded.');
+      return false;
+    }
     return true;
   }
 

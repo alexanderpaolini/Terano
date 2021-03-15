@@ -17,8 +17,8 @@ app.comms = new Thread();
 app.VoteDB = new VoteDB();
 
 mongoose.connect(config.mongodb.connectURI, config.mongodb.connectOptions)
-  .then(() => { console.log('Connected to MongoDB'); })
-  .catch(() => { console.error('Failed connection to MongoDB'); });
+  .then(() => { app.comms.log('Connected to MongoDB'); })
+  .catch(() => { app.comms.log('MongoDB connction failed'); });
 
 app.set('trust-proxy', true);
 
@@ -30,5 +30,6 @@ app.use(leaderboardRouter);
 app.use(topggRouter);
 
 app.listen(config.api.port, () => {
-  console.log('Starting API on port', config.api.port);
+  app.comms.log(config.api.port)
+  app.comms.log('Starting on port', config.api.port);
 });

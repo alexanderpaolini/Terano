@@ -18,10 +18,6 @@ export default class UserDB {
    */
   settings: Cache<string, SettingsDoc> = new Cache(15 * 60 * 1000);
 
-  // Constructor goes here
-  // Placeholder
-  // Constructor goes here
-
   /**
    * Get a LevelDoc
    * @param userID User ID

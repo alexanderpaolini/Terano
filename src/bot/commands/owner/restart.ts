@@ -11,7 +11,6 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    console.log(ctx.flags.shard);
     if (typeof ctx.flags.shard !== 'undefined') {
       const shard = parseInt(String(ctx.flags.shard));
 

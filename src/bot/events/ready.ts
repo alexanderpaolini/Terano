@@ -2,7 +2,7 @@ import TeranoWorker from '../lib/TeranoWorker';
 
 export default (worker: TeranoWorker) => {
   worker.on('READY', () => {
-    worker.logger.log(`Ready as ${worker.user.username}#${worker.user.id} (${worker.user.id})`);
+    worker.log(`Ready as ${worker.user.username}#${worker.user.id} (${worker.user.id})`);
 
     setInterval(() => {
       worker.setStatus('playing', 'Minecraft', 'online')

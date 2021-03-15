@@ -19,7 +19,7 @@ export default {
     ctx.worker.db.userDB.infos.clear();
     // ctx.worker.db.userDB.settings.clear();
 
-    ctx.worker.logger.log('Swept Database cache');
+    ctx.worker.log('Swept Database cache');
 
     setImmediate(() => ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`));
     return;
