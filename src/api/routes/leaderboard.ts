@@ -7,9 +7,7 @@ import authentication from '../middleware/authentication';
 
 const router = Router();
 
-router.all('*', authentication());
-
-router.post('/leaderboard', async (req, res) => {
+router.post('/leaderboard', authentication(), async (req, res) => {
   const users: any[] = req.body.data;
   if (users.length > 8) users.length = 8;
 
