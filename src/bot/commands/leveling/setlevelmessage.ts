@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Level-Up Message',
@@ -11,16 +11,15 @@ export default {
   botPermissions: [],
   exec: async (ctx) => {
     // Get the new message
-    const message = ctx.args.join(' ');
+    const message = ctx.args.join(' ')
 
     // Make sure they aren't dumb
-    if (message.length >= 100) return ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-Up message must be shorter than 100 characters.`);
+    if (message.length >= 100) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, 'Level-Up message must be shorter than 100 characters.')
 
     // Update the settings
-    await ctx.worker.db.guildDB.setLevelMessage(ctx.guild.id, message);
+    await ctx.worker.db.guildDB.setLevelMessage(ctx.guild.id, message)
 
     // Respond with success
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-up message set to "${message}"`);
-    return;
+    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Level-up message set to "${message}"`)
   }
-} as CommandOptions;
+} as CommandOptions

@@ -1,4 +1,5 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { getAvatar } from '../../../utils'
 
 export default {
   name: 'Ping',
@@ -10,18 +11,18 @@ export default {
   permissions: [],
   botPermissions: [],
   exec: async (ctx) => {
-    const time = Date.now();
-    const url = `https://cdn.discordapp.com/avatars/${ctx.message.author.id}/${ctx.message.author.avatar}.png?size=128`;
+    const time = Date.now()
+    const url = getAvatar(ctx.message.author)
+
     ctx.embed
       .author('Pong!', url)
       .color(ctx.worker.colors.PURPLE)
       .send(true)
-      .then(msg => {
-        msg.embeds[0].author!.name += ` (${(Date.now() - time).toFixed(2)}ms)`;
-        ctx.worker.api.messages.edit(msg.channel_id, msg.id, { embed: msg.embeds[0] });
+      .then(async msg => {
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        ((msg.embeds[0] ?? {}).author ?? {}).name += ` (${(Date.now() - time).toFixed(2)}ms)`
+        await ctx.worker.api.messages.edit(msg.channel_id, msg.id, { embed: msg.embeds[0] })
       })
-      .catch(() => {
-
-      });
+      .catch(() => {})
   }
-} as CommandOptions;
+} as CommandOptions

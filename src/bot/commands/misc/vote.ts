@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Vote',
@@ -11,6 +11,6 @@ export default {
   botPermissions: [],
   owner: false,
   exec: async (ctx) => {
-    ctx.reply(`https://top.gg/bot/647256366280474626/vote`);
+    await ctx.reply('https://top.gg/bot/647256366280474626/vote')
   }
-} as CommandOptions;
+} as CommandOptions

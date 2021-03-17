@@ -1,11 +1,11 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const GuildSchema = new Schema({
   id: { type: String, required: true, unique: true },
   options: {
     prefix: { type: String, default: 't!' },
     embeds: { type: Boolean, default: true },
-    no_permissions: { type: Boolean, default: true },
+    no_permissions: { type: Boolean, default: true }
   },
   level: {
     cooldown: { type: String, default: 15 },
@@ -20,6 +20,6 @@ const GuildSchema = new Schema({
     mute_role: { type: String, default: 'none' },
     auto_role: { type: Array, default: [] }
   }
-});
+})
 
-export default model('guilds', GuildSchema);
+export default model('guilds', GuildSchema)

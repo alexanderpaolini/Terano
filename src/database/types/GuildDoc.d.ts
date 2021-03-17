@@ -5,7 +5,7 @@ interface GuildDoc {
   /**
    * Guild ID
    */
-  id: string;
+  id: string
   /**
    * Basic options
    */
@@ -13,16 +13,16 @@ interface GuildDoc {
     /**
      * Guild Prefix
      */
-    prefix: string;
+    prefix: string
     /**
      * Whether or not to send in embeds
      */
-    embeds: boolean;
+    embeds: boolean
     /**
      * Whether or not to send no-permissions messages
      */
-    no_permissions: boolean;
-  };
+    no_permissions: boolean
+  }
   /**
    * Leveling options
    */
@@ -30,28 +30,28 @@ interface GuildDoc {
     /**
      * The delay between gaining xp
      */
-    cooldown: number;
+    cooldown: number
     /**
      * The XP Multplier
      */
-    xp_multplier: number;
+    xp_multplier: number
     /**
      * Whether or not to send the level message
      */
-    send_level_message: boolean;
+    send_level_message: boolean
     /**
      * The Level-Up message to be sent
      */
-    level_message: string;
+    level_message: string
     /**
      * the default color of a rank card
      */
-    default_color: string;
+    default_color: string
     /**
      * Automatic roles on levels
      */
-    level_roles: LevelRole[];
-  };
+    level_roles: LevelRole[]
+  }
   /**
    * Moderation settings
    */
@@ -59,16 +59,16 @@ interface GuildDoc {
     /**
      * The id of the role to give when muting
      */
-    mute_role: string;
+    mute_role: string
     /**
      * The channel to send logs
      */
-    log_channel: string;
+    log_channel: string
     /**
      * The auto role options
      */
-    auto_role: AutoRole[];
-  };
+    auto_role: AutoRole[]
+  }
 }
 
 /**
@@ -78,13 +78,12 @@ interface LevelRole {
   /**
    * The ID of the string
    */
-  id: string;
+  id: string
   /**
    * The level for it to be given on
    */
-  level: number;
+  level: number
 }
-
 
 /**
  * The auto role options
@@ -93,9 +92,9 @@ interface AutoRole {
   /**
    * The ID of the role
    */
-  id: string;
+  id: string
   /**
    * How long to wait before giving it (in miliseconds)
    */
-  delay: number;
+  delay: number
 }

@@ -1,6 +1,6 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
-export default {
+const command: CommandOptions = {
   name: 'Sweep',
   usage: 'sweep',
   description: 'Sweep the database cache.',
@@ -11,17 +11,16 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    const time = Date.now();
+    const time = Date.now()
 
-    ctx.worker.db.guildDB.guilds.clear();
-    // ctx.worker.db.guildDB.moderation.clear();
-    ctx.worker.db.userDB.levels.clear();
-    ctx.worker.db.userDB.infos.clear();
-    // ctx.worker.db.userDB.settings.clear();
+    ctx.worker.db.guildDB.guilds.clear()
+    ctx.worker.db.userDB.levels.clear()
+    ctx.worker.db.userDB.infos.clear()
 
-    ctx.worker.log('Swept Database cache');
+    ctx.worker.log('Swept Database cache')
 
-    setImmediate(() => ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`));
-    return;
+    await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`)
   }
-} as CommandOptions;
+}
+
+export default command

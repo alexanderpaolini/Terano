@@ -1,12 +1,12 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const SettingsSchema = new Schema({
   id: { type: String, required: true, unique: true },
   level: {
     tag: { type: String, default: '' },
     color: { type: String, default: '' },
-    picture: { type: String, default: '' },
+    picture: { type: String, default: '' }
   }
-});
+})
 
-export default model('users.settings', SettingsSchema);
+export default model('users.settings', SettingsSchema)

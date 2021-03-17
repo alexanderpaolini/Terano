@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose'
 
 const ModerationSchema = new Schema({
   guildID: { type: String, required: true },
@@ -14,6 +14,6 @@ const ModerationSchema = new Schema({
     channel: { type: String, required: true },
     message: { type: String, required: true }
   }
-});
+})
 
-export default model('guilds.moderation', ModerationSchema);
+export default model('guilds.moderation', ModerationSchema)

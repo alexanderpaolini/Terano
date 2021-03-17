@@ -1,21 +1,21 @@
-import TeranoWorker from "../lib/TeranoWorker";
+import TeranoWorker from '../lib/TeranoWorker'
 
-import { readdir } from "fs";
-import { resolve } from "path";
+import { readdir } from 'fs'
+import { resolve } from 'path'
 
-export default function initFunction(worker: TeranoWorker) {
-  function loadMonitors(dir: string) {
+export default function initFunction (worker: TeranoWorker): void {
+  function loadMonitors (dir: string): void {
     readdir(dir, { withFileTypes: true }, (err, files) => {
-      if (err) return worker.log(err.toString());
+      if (err != null) return worker.log(err.message)
       for (const file of files) {
-        if (file.isDirectory()) return loadMonitors(`${dir}/${file.name}`);
+        if (file.isDirectory()) return loadMonitors(`${dir}/${file.name}`)
         if (file.isFile() && file.name.endsWith('.js')) {
-          const f = require(`${dir}/${file.name}`).default;
-          new f(worker);
+          const Monitor = require(`${dir}/${file.name}`).default // eslint-disable-line @typescript-eslint/no-var-requires
+          worker.monitors.push(new Monitor(worker))
         }
       }
-    });
+    })
   }
-  loadMonitors(resolve(__dirname, '../', './monitors'));
-  worker.log('Loaded Monitors');
+  loadMonitors(resolve(__dirname, '../', './monitors'))
+  worker.log('Loaded Monitors')
 }

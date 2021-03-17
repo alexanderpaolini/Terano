@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'XP Multiplier',
@@ -11,21 +11,20 @@ export default {
   botPermissions: [],
   exec: async (ctx) => {
     // Get the new rate
-    const newRate = Number(ctx.args[0]);
+    const newRate = Number(ctx.args[0])
 
     // Do the checks
-    if (isNaN(newRate)) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `No XP-Multiplier was given.`);
+    if (isNaN(newRate)) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No XP-Multiplier was given.')
 
     // Make sure people aren't stupid
-    if (newRate <= 0) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `The XP-Multiplier must be greater than 0.`);
-    if (newRate > 100) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 100');
+    if (newRate <= 0) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be greater than 0.')
+    if (newRate > 100) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'The XP-Multiplier must be no greater than 100')
 
     // Get and update the rate
-    const oldRate = await ctx.worker.db.guildDB.getXPMultiplier(ctx.guild.id);
-    await ctx.worker.db.guildDB.setXPMultiplier(ctx.guild.id, newRate);
+    const oldRate = await ctx.worker.db.guildDB.getXPMultiplier(ctx.guild.id)
+    await ctx.worker.db.guildDB.setXPMultiplier(ctx.guild.id, newRate)
 
     // Return success
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-Multplier from ${oldRate} to **${newRate}**.`);
-    return;
+    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-Multplier from ${oldRate} to **${newRate}**.`)
   }
-} as CommandOptions;
+} as CommandOptions

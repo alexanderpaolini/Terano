@@ -5,13 +5,13 @@ interface InfoDoc {
   /**
    * The ID of the user
    */
-  id: string;
+  id: string
   /**
    * Whether or not the user is an owner
    */
-  owner: boolean;
+  owner: boolean
   /**
    * Whether or not the user is blacklisted
    */
-  blacklisted: boolean;
+  blacklisted: boolean
 }

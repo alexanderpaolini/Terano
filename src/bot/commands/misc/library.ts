@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Library',
@@ -11,6 +11,6 @@ export default {
   botPermissions: [],
   owner: false,
   exec: async (ctx) => {
-    ctx.reply(`https://npm.im/discord-rose`);
+    await ctx.reply('https://npm.im/discord-rose')
   }
-} as CommandOptions;
+} as CommandOptions

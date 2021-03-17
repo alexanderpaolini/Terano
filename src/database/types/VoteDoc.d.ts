@@ -5,45 +5,45 @@ interface VoteDoc {
   /**
    * The ID of the user
    */
-  id: string;
+  id: string
   /**
    * The total amount of times the user has voted
    */
-  total_votes: number;
+  total_votes: number
   /**
    * How many votes the votes were worth (weekends are worth 2x)
    */
-  votes_worth: number;
+  votes_worth: number
   /**
    * Array of votes
    */
-  votes: Vote[];
+  votes: Vote[]
 }
 
 /**
- * A vote 
+ * A vote
  */
 interface Vote {
   /**
    * When the vote was made
    */
-  date: string,
+  date: string
   /**
    * How much it is worth (1: normal, 2: weekends)
    */
-  worth: 1 | 2,
+  worth: 1 | 2
   /**
    * How many votes before this
    */
-  number?: number,
+  number?: number
   /**
    * Query if there
    */
   query?: string | {
-    [key: string]: string;
-  },
+    [key: string]: string
+  }
   /**
    * Which bot it was for
    */
-  bot: string;
+  bot: string
 }

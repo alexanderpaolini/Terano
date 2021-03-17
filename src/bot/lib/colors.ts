@@ -20,4 +20,4 @@ enum colors {
   PURPLE = 0xb649eb
 }
 
-export default colors;
+export default colors

@@ -1,18 +1,20 @@
-import TeranoWorker from '../lib/TeranoWorker';
+import TeranoWorker from '../lib/TeranoWorker'
 
-export default (worker: TeranoWorker) => {
-  worker.on('GUILD_CREATE', (guild) => {
-    worker.log(`Joined Guild ${guild.name} (${guild.id})`);
+export default (worker: TeranoWorker): void => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  worker.on('GUILD_CREATE', async (guild) => {
+    worker.log(`Joined Guild ${guild.name} (${guild.id})`)
 
     // Database shit
-    worker.db.guildDB.createGuild(guild.id);
+    await worker.db.guildDB.createGuild(guild.id)
 
     // Send the Webhook
-    worker.webhooks.guildJoin(guild);
-  });
+    await worker.webhooks.guildJoin(guild)
+  })
 
-  worker.on('GUILD_DELETE', (guild) => {
-    worker.log(`Left Guild ${guild.id}`);
-    worker.webhooks.guildLeave(guild);
-  });
-};
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  worker.on('GUILD_DELETE', async (guild) => {
+    worker.log(`Left Guild ${guild.id}`)
+    await worker.webhooks.guildLeave(guild)
+  })
+}

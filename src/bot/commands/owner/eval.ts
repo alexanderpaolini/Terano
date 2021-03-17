@@ -1,6 +1,6 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
-import { inspect } from 'util';
+import { inspect } from 'util'
 
 export default {
   name: 'Eval',
@@ -13,31 +13,31 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    let output: string;
-    let status = true;
+    let output: string
+    let status = true
 
     try {
-      let toEval = ctx.args.join(' ').replace(/token/g, 'mem');
-      let evaled = eval(toEval);
+      const toEval = ctx.args.join(' ').replace(/token/g, 'mem')
+      // eslint-disable-next-line no-eval
+      let evaled = eval(toEval)
 
-      if (evaled instanceof Promise) evaled = await evaled;
-      evaled = typeof evaled !== 'string' ? inspect(evaled) : evaled;
+      if (evaled instanceof Promise) evaled = await evaled
+      evaled = typeof evaled !== 'string' ? inspect(evaled) : evaled
 
-      output = evaled.split(ctx.worker.options.token).join('[TOKEN REMOVED]');
+      output = evaled.split(ctx.worker.options.token).join('[TOKEN REMOVED]')
     } catch (err) {
-      status = false;
-      output = err;
+      status = false
+      output = err
     }
 
     try {
       await ctx.worker.responses.code(ctx, status ? ctx.worker.colors.PURPLE : ctx.worker.colors.RED, output.toString().split('```').join('\\`\\`\\`'))
         .then(e => {
-          if (!e) throw new Error('Message Failed to Send');
-        });
-      return;
+          if (!e) throw new Error('Message Failed to Send')
+        })
+      return
     } catch (err) {
-      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `${err.toString()}`);
-      return;
+      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, err.toString())
     }
   }
-} as CommandOptions;
+} as CommandOptions

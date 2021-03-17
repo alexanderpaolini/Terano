@@ -5,11 +5,11 @@ interface ModerationDoc {
 /**
  * The ID of the guild it was in
  */
-  guildID: string;
+  guildID: string
   /**
    * The case number
    */
-  number: number;
+  number: number
   /**
    * Info about it
    */
@@ -17,24 +17,24 @@ interface ModerationDoc {
     /**
      * Who was the action on
      */
-    member: string;
+    member: string
     /**
      * What was the acction
      */
-    action: 'BAN' | 'KICK' | 'MUTE' | 'WARN';
+    action: 'BAN' | 'KICK' | 'MUTE' | 'WARN'
     /**
      * What was the reason for the action
      */
-    reason: string;
-    /** 
+    reason: string
+    /**
      * The ID of the moderator who did the action
      */
-    moderator: string;
+    moderator: string
     /**
      * The timesampt of the action
      */
-    timestamp: string;
-  };
+    timestamp: string
+  }
   /**
    * The log stuff
    * This is for editing the message
@@ -43,10 +43,10 @@ interface ModerationDoc {
     /**
      * The channel ID
      */
-    channel: string;
+    channel: string
     /**
      * The message ID
      */
-    message: string;
-  };
+    message: string
+  }
 }

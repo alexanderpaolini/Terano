@@ -1,6 +1,8 @@
-import { APIGuild, APIUnavailableGuild, Snowflake } from "discord-api-types";
-import TeranoWorker from "./TeranoWorker";
-import TeranoOptions, { Webhook } from "./types/TeranoOptions";
+import { APIGuild, APIUnavailableGuild, Snowflake, APIMessage } from 'discord-api-types'
+
+import TeranoWorker from './TeranoWorker'
+
+import { TeranoOptions, Webhook } from './types/TeranoOptions'
 
 export default class Webhooks {
   /**
@@ -8,22 +10,22 @@ export default class Webhooks {
    */
   webhooks: {
     [key in keyof TeranoOptions['webhooks']]: Webhook
-  };
+  }
 
   /**
    * A webhook class for sending webhook messages
    * @param worker The Worker
    */
-  constructor(private worker: TeranoWorker) {
-    this.webhooks = worker.opts.webhooks;
+  constructor (private readonly worker: TeranoWorker) {
+    this.webhooks = worker.opts.webhooks
   }
 
   /**
    * Send an error webhook
    * @param error The Error to be sent
    */
-  error(error: string) {
-    if (!this.worker.prod) return;
+  error (error: string): Promise<APIMessage> | null {
+    if (!this.worker.prod) return null
     return this.worker.comms.sendWebhook(this.webhooks.error.id as Snowflake, this.webhooks.error.token, {
       embeds: [{
         author: {
@@ -33,18 +35,18 @@ export default class Webhooks {
         color: this.worker.colors.RED,
         description: `\`\`\`xl\n${error}\`\`\``
       }]
-    });
+    })
   }
 
   /**
    * Send a guild join webhook
    * @param guild The Guild from the event
    */
-  guildJoin(guild: APIGuild) {
-    if (!this.worker.prod) return;
+  guildJoin (guild: APIGuild): Promise<APIMessage> | null {
+    if (!this.worker.prod) return null
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, {
       embeds: [{
-        title: `Joined Guild`,
+        title: 'Joined Guild',
         author: {
           name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
           icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
@@ -55,18 +57,18 @@ export default class Webhooks {
           text: `Current Guild Count: ${this.worker.guilds.size}`
         }
       }]
-    });
+    })
   }
 
   /**
    * Send a guild leave webhook
    * @param guild The Guild from the event
    */
-  guildLeave(guild: APIUnavailableGuild) {
-    if (!this.worker.prod) return;
+  guildLeave (guild: APIUnavailableGuild): Promise<APIMessage> | null {
+    if (!this.worker.prod) return null
     return this.worker.comms.sendWebhook(this.webhooks.guilds.id as Snowflake, this.webhooks.guilds.token, {
       embeds: [{
-        title: `Left Guild`,
+        title: 'Left Guild',
         author: {
           name: `${this.worker.user.username}#${this.worker.user.discriminator}`,
           icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
@@ -77,7 +79,7 @@ export default class Webhooks {
           text: `Current Guild Count: ${this.worker.guilds.size}`
         }
       }]
-    });
+    })
   }
 
   /**
@@ -85,8 +87,8 @@ export default class Webhooks {
    * @param color The color (corresponding to the type of response)
    * @param message The message to send
    */
-  shard(color: number, message: string) {
-    if (!this.worker.prod) return;
+  shard (color: number, message: string): Promise<APIMessage> | null {
+    if (!this.worker.prod) return null
     return this.worker.comms.sendWebhook(this.webhooks.shards.id as Snowflake, this.webhooks.shards.token, {
       embeds: [{
         title: `Cluster ${this.worker.comms.id}`,
@@ -95,8 +97,8 @@ export default class Webhooks {
           icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png'
         },
         color: color,
-        description: message,
+        description: message
       }]
-    });
+    })
   }
 }

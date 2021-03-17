@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 import fetch from 'node-fetch'
 
@@ -14,9 +14,10 @@ export default {
   owner: false,
   exec: async (ctx) => {
     fetch('https://frogs.media/api/random')
-      .then(res => res.json())
-      .then(json => {
-        ctx.reply(json.url);
-      });
+      .then(async res => await res.json())
+      .then(async json => {
+        await ctx.reply(json.url)
+      })
+      .catch((err) => { throw new Error(err) })
   }
-} as CommandOptions;
+} as CommandOptions

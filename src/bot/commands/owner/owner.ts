@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Owner',
@@ -12,18 +12,17 @@ export default {
   owner: true,
   exec: async (ctx) => {
     // Get the user ID
-    const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '');
+    const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
 
     // Check if the user exists
-    if (!userID) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No user was given, please mention a user.');
-    if (userID === ctx.message.author.id) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, `You cannot remove yourself from owner.`);
+    if (!userID) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No user was given, please mention a user.')
+    if (userID === ctx.message.author.id) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'You cannot remove yourself from owner.')
 
     // Change the owner to the opposite
-    const isOwner = await ctx.worker.db.userDB.getOwner(userID);
+    const isOwner = await ctx.worker.db.userDB.getOwner(userID)
     await ctx.worker.db.userDB.setOwner(userID, !isOwner)
 
     // Respond with success
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`);
-    return;
+    await ctx.worker.responses.normal(ctx, ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`)
   }
-} as CommandOptions;
+} as CommandOptions

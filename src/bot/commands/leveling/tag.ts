@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Tag',
@@ -11,19 +11,18 @@ export default {
   botPermissions: [],
   exec: async (ctx) => {
     // Get the tag
-    let tag = ctx.args.join(' ');
+    const tag = ctx.args.join(' ')
 
     // Do the checks
-    if (!tag.length) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No tag was given.');
+    if (!tag.length) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No tag was given.')
 
     // Make sure people aren't stuid
-    if (tag.length > 30) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Tag must be no longer than 20 characters.');
+    if (tag.length > 30) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Tag must be no longer than 20 characters.')
 
     // Get the user settings
-    await ctx.worker.db.userDB.setTag(ctx.message.author.id, tag);
+    await ctx.worker.db.userDB.setTag(ctx.message.author.id, tag)
 
     // Return success
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Set card tag to: **${tag}**`);
-    return;
+    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Set card tag to: **${tag}**`)
   }
-} as CommandOptions;
+} as CommandOptions

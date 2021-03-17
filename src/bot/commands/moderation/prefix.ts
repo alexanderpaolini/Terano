@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib';
+import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 export default {
   name: 'Prefix',
@@ -10,18 +10,17 @@ export default {
   permissions: ['manageMessages'],
   botPermissions: [],
   exec: async (ctx) => {
-    const prefix = ctx.args[0];
+    const prefix = ctx.args[0]
 
     // Bruh my man is stupid
-    if (!prefix) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No prefix was given.');
-    if (prefix.length > 21) return ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Prefix length must be no greater than 20.');
-    
+    if (!prefix) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'No prefix was given.')
+    if (prefix.length > 21) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.RED, 'Prefix length must be no greater than 20.')
+
     // Get and change the prefix
-    const oldPrefx = await ctx.worker.db.guildDB.getPrefix(ctx.guild.id);
-    await ctx.worker.db.guildDB.setPrefix(ctx.guild.id, prefix);
+    const oldPrefx = await ctx.worker.db.guildDB.getPrefix(ctx.guild.id)
+    await ctx.worker.db.guildDB.setPrefix(ctx.guild.id, prefix)
 
     // Return success!
-    ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefx} to \`${prefix}\``);
-    return;
+    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefx} to \`${prefix}\``)
   }
-} as CommandOptions;
+} as CommandOptions
