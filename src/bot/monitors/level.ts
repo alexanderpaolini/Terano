@@ -23,7 +23,7 @@ export default class PrefixMonitor extends Monitor {
     await this.worker.db.userDB.updateLevel(userDoc)
 
     this.cooldown.add(`${message.guild_id as string}${message.author.id as string}`)
-    setTimeout(() => { this.cooldown.delete(`${message.guild_id as string}${message.author.id as string}`) }, guildDoc.level.cooldown * 1000)
+    setTimeout(() => { this.cooldown.delete(`${message.guild_id as string}${message.author.id as string}`) }, Number(guildDoc.level.cooldown) * 1000)
   }
 
   async restrictions (msg: any): Promise<boolean> {

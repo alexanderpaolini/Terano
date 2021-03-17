@@ -16,11 +16,11 @@ export default class GuildDB {
   async getGuild (id: string): Promise<GuildDoc> {
     // Check the cache first
     const fromCache = this.guilds.get(id)
-    if (fromCache != null) return fromCache
+    if (fromCache !== undefined) return fromCache
 
     // Then check the DB
     const fromDB: GuildDoc = await GuildModel.findOne({ id }).lean()
-    if (fromDB === null) {
+    if (fromDB !== null) {
       // Add it to the cache
       this.guilds.set(id, fromDB)
       return fromDB
@@ -112,7 +112,7 @@ export default class GuildDB {
    * Get a guild's XP Cooldown
    * @param id Guild ID
    */
-  async getXPCooldown (id: string): Promise<number> {
+  async getXPCooldown (id: string): Promise<string> {
     const guildData = await this.getGuild(id)
     return guildData.level.cooldown
   }
@@ -122,7 +122,7 @@ export default class GuildDB {
    * @param id Guild ID
    * @param cooldown The new XP cooldown
    */
-  async setXPCooldown (id: string, cooldown: number): Promise<GuildDoc> {
+  async setXPCooldown (id: string, cooldown: string): Promise<GuildDoc> {
     const guildData = await this.getGuild(id)
     guildData.level.cooldown = cooldown
     return await this.updateGuild(guildData)

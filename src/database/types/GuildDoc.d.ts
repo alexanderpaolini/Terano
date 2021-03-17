@@ -30,7 +30,7 @@ interface GuildDoc {
     /**
      * The delay between gaining xp
      */
-    cooldown: number
+    cooldown: string
     /**
      * The XP Multplier
      */

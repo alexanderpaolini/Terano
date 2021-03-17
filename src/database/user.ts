@@ -26,11 +26,11 @@ export default class UserDB {
   async getLevel (userID: string, guildID: string): Promise<LevelDoc> {
     // Check the cache first
     const fromCache = this.levels.get(`${userID}${guildID}`)
-    if (fromCache != null) return fromCache
+    if (fromCache !== undefined) return fromCache
 
     // Then check the DB
     const fromDB: LevelDoc = await LevelModel.findOne({ userID, guildID }).lean()
-    if (fromDB === null) {
+    if (fromDB !== null) {
       // Add it to the cache
       this.levels.set(`${userID}${guildID}`, fromDB)
       return fromDB
@@ -99,11 +99,11 @@ export default class UserDB {
   async getInfo (id: string): Promise<InfoDoc> {
     // Check the cache first
     const fromCache = this.infos.get(id)
-    if (fromCache != null) return fromCache
+    if (fromCache !== undefined) return fromCache
 
     // Then check the DB
     const fromDB: InfoDoc = await InfoModel.findOne({ id }).lean()
-    if (fromDB === null) {
+    if (fromDB !== null) {
       // Add it to the cache
       this.infos.set(id, fromDB)
       return fromDB
@@ -182,11 +182,11 @@ export default class UserDB {
   async getSettings (id: string): Promise<SettingsDoc> {
     // Check the cache first
     const fromCache = this.settings.get(id)
-    if (fromCache != null) return fromCache
+    if (fromCache !== undefined) return fromCache
 
     // Then check the DB
     const fromDB: SettingsDoc = await UserModel.findOne({ id }).lean()
-    if (fromDB === null) {
+    if (fromDB !== null) {
       // Add it to the cache
       this.settings.set(id, fromDB)
       return fromDB

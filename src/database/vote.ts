@@ -15,11 +15,11 @@ export default class VoteDB {
   async getVotes (id: string): Promise<VoteDoc> {
     // Check the cache first
     const fromCache = this.cache.get(id)
-    if (fromCache != null) return fromCache
+    if (fromCache !== undefined) return fromCache
 
     // Then check the DB
     const fromDB: VoteDoc = await VoteModel.findOne({ id }).lean()
-    if (fromDB === null) {
+    if (fromDB !== null) {
       // Add it to the cache
       this.cache.set(id, fromDB)
       return fromDB

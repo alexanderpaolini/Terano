@@ -21,7 +21,7 @@ export default {
     if (newCooldown < 0) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, 'The XP-cooldown must 0 seconds or greater.')
 
     // Update the cooldown in the DB
-    await ctx.worker.db.guildDB.setXPCooldown(ctx.guild.id, newCooldown)
+    await ctx.worker.db.guildDB.setXPCooldown(ctx.guild.id, String(newCooldown))
 
     // Respond with success
     await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown}s to **${newCooldown}s**.`)
