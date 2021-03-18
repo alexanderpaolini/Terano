@@ -28,5 +28,9 @@ declare module 'discord-rose/dist/clustering/ThreadComms' {
       send: Snowflake
       receive: APIUser
     }
+    INFLUX_VOTE: {
+      send: Snowflake
+      receive: null
+    }
   }
 }

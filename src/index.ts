@@ -19,6 +19,7 @@ const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
 
 // Spawn the API
 master.spawnProcess('API', path.resolve(__dirname, './api/index.js'))
+master.spawnProcess('Influx', path.resolve(__dirname, './influx/index.js'))
 
 // Add the fetch user for custom threads
 master.handlers.on('FETCH_USER', async (cluster, data, resolve) => {
