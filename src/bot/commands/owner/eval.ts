@@ -22,8 +22,6 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.message.author.id !== '142408079177285632') throw new NonFatalError('Bonk, no eval fo u')
-
     const worker = ctx.worker
 
     try {
