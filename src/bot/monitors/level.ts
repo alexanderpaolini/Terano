@@ -1,4 +1,5 @@
 import { APIGuild, Snowflake } from 'discord-api-types'
+import { getAvatar } from '../../utils'
 import Monitor from '../lib/Monitor'
 
 export default class PrefixMonitor extends Monitor {
@@ -17,6 +18,7 @@ export default class PrefixMonitor extends Monitor {
 
       if (guildDoc.level.send_level_message) await this.sendUpdateMessage(message, userDoc.level, guildDoc)
       const role = guildDoc.level.level_roles.find(r => r.level === userDoc.level)
+
       if (role != null) await this.addUserRole(message, role)
     } else userDoc.xp = String(xp)
 
@@ -61,7 +63,7 @@ export default class PrefixMonitor extends Monitor {
       color: this.worker.colors.GREEN,
       author: {
         name: msg,
-        icon_url: `https://cdn.discordapp.com/avatars/${message.author.id as string}/${message.author.avatar as string}.png?size=128`
+        icon_url: getAvatar(message.author)
       }
     }
 
@@ -74,17 +76,28 @@ export default class PrefixMonitor extends Monitor {
 
   async addUserRole (message: any, role: LevelRole): Promise<void> {
     await this.worker.api.members.addRole(message.guild_id, message.author.id, role.id as Snowflake)
-      .catch(err => this.worker.log(err.toString()))
-
-    const embed = {
-      color: this.worker.colors.GREEN,
-      author: {
-        name: `Congats on leveling up! You now have the role <@&${role.id}>`,
-        icon_url: `https://cdn.discordapp.com/avatars/${message.author.id as string}/${message.author.avatar as string}.png?size=128`
-      }
-    }
-
-    await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed })
-      .catch(err => this.worker.log(err.toString()))
+      .then(async () => {
+        void await this.worker.api.messages.send(message.channel_id as Snowflake, {
+          embed: {
+            color: this.worker.colors.GREEN,
+            author: {
+              name: `Congats on leveling up! You now have the role <@&${role.id}>`,
+              icon_url: getAvatar(message.author)
+            }
+          }
+        })
+          .catch(async err => { this.worker.log(err) })
+      })
+      .catch(async err => {
+        void await this.worker.api.messages.send(message.channel_id as Snowflake, {
+          embed: {
+            color: this.worker.colors.GREEN,
+            author: {
+              name: `Error: ${err as string}`,
+              icon_url: getAvatar(message.author)
+            }
+          }
+        })
+      })
   }
 }
