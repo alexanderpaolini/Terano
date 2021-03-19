@@ -4,12 +4,12 @@ export default class PrefixMonitor extends Monitor {
   async run (msg: any): Promise<void> {
     const prefix = await this.worker.db.guildDB.getPrefix(msg.guild_id)
 
-    const embed = {
-      color: this.worker.colors.GREEN,
-      description: `This guild's prefix is: **${prefix}**`
-    }
-
-    this.worker.api.messages.send(msg.channel_id, { embed: embed }).catch(() => { })
+    void await this.worker.api.messages.send(msg.channel_id, {
+      embed: {
+        color: this.worker.colors.GREEN,
+        description: `This guild's prefix is: **${prefix}**`
+      }
+    }).catch(() => { })
   }
 
   async restrictions (msg: any): Promise<boolean> {
