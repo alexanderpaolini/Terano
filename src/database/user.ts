@@ -1,4 +1,4 @@
-import { Cache } from 'discord-rose/dist/utils/Cache'
+import { Cache } from '@jpbberry/cache'
 
 import LevelModel from './models/users/level'
 import InfoModel from './models/users/info'

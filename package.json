@@ -19,6 +19,7 @@
     "@discord-rose/permissions-middleware": "^1.1.0",
     "@discordjs/opus": "^0.4.0",
     "@discordjs/voice": "0.0.2",
+    "@jpbberry/cache": "^1.0.4",
     "@top-gg/sdk": "^3.0.7",
     "canvas": "^2.6.1",
     "colors": "^1.4.0",

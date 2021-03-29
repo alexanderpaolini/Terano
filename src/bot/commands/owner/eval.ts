@@ -1,6 +1,6 @@
 import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
-import NonFatalError from '../../lib/NonFatalError'
+// import NonFatalError from '../../lib/NonFatalError'
 import util from 'util'
 
 function clean (text: string): string {
@@ -25,7 +25,7 @@ export default {
     const worker = ctx.worker
 
     try {
-      const code = ctx.args.join('\n')
+      const code = ctx.args.join(' ')
 
       let evaled: string | string[]
       if (ctx.flags.m) evaled = await worker.comms.masterEval(code)
@@ -33,19 +33,21 @@ export default {
       // eslint-disable-next-line no-eval
       else evaled = eval(code)
 
+      if (evaled instanceof Promise) evaled = await evaled
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      if (ctx.flags.last) last = evaled
+      if (ctx.flags.l) last = evaled
 
       if (typeof evaled !== 'string') { evaled = util.inspect(evaled) }
 
       void ctx.embed
-        .color(0x28bf62)
+        .color(ctx.worker.colors.GREEN)
         .title('Eval Successful')
         .description(`\`\`\`xl\n${evaled}\`\`\``)
         .send()
     } catch (err) {
       void ctx.embed
-        .color(0xdb0b0b)
+        .color(ctx.worker.colors.RED)
         .title('Eval Unsuccessful')
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)
         .send()

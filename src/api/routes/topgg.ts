@@ -3,7 +3,6 @@ import config from '../../config.json'
 import { Router } from 'express'
 
 import { Webhook } from '@top-gg/sdk'
-import { Snowflake } from 'discord-api-types'
 
 const router = Router()
 const webhook = new Webhook(config.topgg.webhook.auth)
@@ -14,7 +13,7 @@ router.use(webhook.middleware())
 router.post('/vote', async (req, res) => {
   if ((req.vote == null) || !req.vote.user) return res.status(400).json({ success: false })
 
-  const user = await req.app.comms.sendCommand('FETCH_USER', req.vote.user as Snowflake)
+  const user = await req.app.comms.sendCommand('FETCH_USER', req.vote.user)
 
   const votes = await req.app.VoteDB.getVotes(req.vote.user)
 
@@ -25,7 +24,7 @@ router.post('/vote', async (req, res) => {
     query: req.vote.query
   })
 
-  await req.app.comms.sendWebhook(config.webhooks.votes.id as `${bigint}`, config.webhooks.votes.token, {
+  await req.app.comms.sendWebhook(config.webhooks.votes.id, config.webhooks.votes.token, {
     embeds: [{
       title: 'User Voted',
       author: {

@@ -1,4 +1,4 @@
-import { APIGuildMember, Snowflake } from 'discord-api-types'
+import { APIGuildMember } from 'discord-api-types'
 import { CommandOptions } from 'discord-rose/dist/typings/lib'
 
 import fetch from 'node-fetch'
@@ -33,7 +33,7 @@ export default {
     // Loop through all users, getting the data from each
     for (const user of data) {
       // Fetch the user, if none just continue
-      const userFetch = await ctx.worker.api.members.get(ctx.guild.id, user.userID as Snowflake).catch(() => null as unknown as APIGuildMember)
+      const userFetch = await ctx.worker.api.members.get(ctx.guild.id, user.userID).catch(() => null as unknown as APIGuildMember)
       if (!userFetch || (userFetch.user == null)) continue
 
       // Push the user to the array
