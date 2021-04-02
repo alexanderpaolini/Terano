@@ -1,6 +1,5 @@
 import { CommandOptions } from 'discord-rose'
 
-// import NonFatalError from '../../lib/NonFatalError'
 import util from 'util'
 
 function clean (text: string): string {

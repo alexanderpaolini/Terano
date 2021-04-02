@@ -1,5 +1,4 @@
 import { CommandOptions } from 'discord-rose'
-import NonFatalError from '../../lib/NonFatalError'
 
 import fetch from 'node-fetch'
 
@@ -44,7 +43,7 @@ export default {
     })
 
     // Respond with an error kekw
-    if (!response || !response.ok) throw new NonFatalError('Internal Server Error')
+    if (!response || !response.ok) return ctx.error('Internal Server Error')
 
     const buffer = await response.buffer()
 

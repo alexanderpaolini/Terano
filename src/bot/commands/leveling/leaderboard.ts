@@ -3,7 +3,6 @@ import { CommandOptions } from 'discord-rose'
 
 import fetch from 'node-fetch'
 import { getAvatar } from '../../../utils'
-import NonFatalError from '../../lib/NonFatalError'
 
 export default {
   name: 'Leaderboard',
@@ -56,7 +55,7 @@ export default {
     }).catch(() => null)
 
     // Respond with an error kekw
-    if ((response == null) || !response.ok) throw new NonFatalError('Internal Server Error')
+    if ((response == null) || !response.ok) return ctx.error('Internal Server Error')
 
     // Get the buffer
     const buffer = await response.buffer()
