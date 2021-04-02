@@ -39,7 +39,7 @@ export default {
 
       // Push the user to the array
       newDataArr.push({
-        tag: `${userFetch.username as string}#${userFetch.discriminator as string}`,
+        tag: `${userFetch.username}#${userFetch.discriminator}`,
         pfp: getAvatar(userFetch),
         level: user.level,
         rank: Number(data.indexOf(user)) + 1

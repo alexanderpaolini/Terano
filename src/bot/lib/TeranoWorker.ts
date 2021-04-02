@@ -33,7 +33,7 @@ export default class TeranoWorker extends Worker {
   statsInterval: NodeJS.Timeout | null = null
   commandCooldowns: { [key: string]: number } = {}
   db = { guildDB: new GuildDB(), userDB: new UserDB(), voteDB: new VoteDB() }
-  status = { type: 'playing', name: 'Minecraft', status: '', url: undefined }
+  status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
 
   /**
    * Create the bot

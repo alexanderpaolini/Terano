@@ -22,14 +22,14 @@ export default {
         ctx.embed
           // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
-          .description(`\`Command\`: ${command.command as string}\n\`Usage\`: ${guildPrefix as string}${command.usage as string}\n${(command.aliases != null) ? `\`Aliases\`: ${(command.aliases as string[]).join(', ')}\n` : ''}${(command.permissions != null) ? (command.permissions as string[]).join(', ') + '\n' : ''}\`Description\`: ${command.description as string}`)
+          .description(`\`Command\`: ${command.command as string}\n\`Usage\`: ${guildPrefix}${command.usage}\n${(command.aliases != null) ? `\`Aliases\`: ${(command.aliases as string[]).join(', ')}\n` : ''}${(command.permissions != null) ? (command.permissions as string[]).join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
           .footer('Developed by MILLION#1321')
           .color(ctx.worker.colors.GREEN)
           .timestamp()
           .send(true)
           .catch(() => { })
       } else {
-        await ctx.tinyResponse(ctx.worker.colors.RED, `Command "${cmd as string}" not found.`)
+        await ctx.tinyResponse(ctx.worker.colors.RED, `Command "${cmd}" not found.`)
       }
     } else {
       const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
@@ -46,7 +46,7 @@ export default {
       categories.forEach((cat: string) => {
         if (!cat) return
         if (cat === 'owner' && !userIsOwner) return
-        const desc = ctx.worker.commands.commands?.filter(x => x.category === cat).map(cmd_ => `\`${guildPrefix as string}${cmd_.command as string}\`: ${cmd_.description as string}`).join('\n') ?? ''
+        const desc = ctx.worker.commands.commands?.filter(x => x.category === cat).map(cmd_ => `\`${guildPrefix}${cmd_.command as string}\`: ${cmd_.description}`).join('\n') ?? ''
         embed.field(cat.charAt(0).toUpperCase() + cat.substr(1), desc)
       })
 

@@ -2,7 +2,7 @@ import TeranoWorker from '../lib/TeranoWorker'
 
 export default (worker: TeranoWorker): void => {
   worker.on('READY', () => {
-    worker.log(`Ready as ${worker.user.username}#${worker.user.id} (${worker.user.id})`)
+    worker.log(`Ready as ${worker.user.username}#${worker.user.discriminator} (${worker.user.id})`)
 
     setInterval(() => {
       worker.setStatus(worker.status.type as any, worker.status.name, worker.status.type as any, worker.status.url)

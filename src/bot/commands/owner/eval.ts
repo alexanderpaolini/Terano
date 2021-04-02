@@ -51,6 +51,7 @@ export default {
         .title('Eval Unsuccessful')
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)
         .send()
+        .catch(() => {})
     }
   }
 } as CommandOptions

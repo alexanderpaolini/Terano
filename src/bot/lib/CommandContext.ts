@@ -11,14 +11,14 @@ export default class CMDCTX extends CommandContext {
    * Get whether or not a guild sends embeds
    */
   public async getEmbeds (): Promise<boolean> {
-    return this.worker.db.guildDB.getEmbeds(this.getID)
+    return await this.worker.db.guildDB.getEmbeds(this.getID)
   }
 
   /**
    * The real ID because this is how its gonna go
    */
   get getID (): Snowflake {
-    return this.guild?.id || this.message.author.id
+    return this.guild?.id ?? this.message.author.id
   }
 
   /**
@@ -34,7 +34,7 @@ export default class CMDCTX extends CommandContext {
 
     if (e && !embed && !this.flags.noembed) {
       const url = getAvatar(this.message.author)
-      return this.embed
+      return await this.embed
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         .author(this.message.author.username + ' | ' + this.command.name, url)
         .description(response)
@@ -63,7 +63,7 @@ export default class CMDCTX extends CommandContext {
     if (this.flags.silent || this.flags.s) return null
 
     if (e && !embed && !this.flags.noembed) {
-      return this.embed
+      return await this.embed
         .description(`\`\`\`${lang}\n${response}\`\`\``)
         .color(color)
         .send(true)
@@ -88,7 +88,7 @@ export default class CMDCTX extends CommandContext {
     if (this.flags.silent || this.flags.s) return null
 
     if (e && !embed && !this.flags.noembed) {
-      return this.embed
+      return await this.embed
         .author(response)
         .color(color)
         .send(true)
@@ -114,7 +114,7 @@ export default class CMDCTX extends CommandContext {
 
     if (e && !embed && !this.flags.noembed) {
       const url = getAvatar(this.message.author)
-      return this.embed
+      return await this.embed
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         .author(this.message.author.username + ' | ' + this.command.name, url)
         .description(response)

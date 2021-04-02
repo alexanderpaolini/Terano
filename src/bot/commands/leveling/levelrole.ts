@@ -13,18 +13,18 @@ export default {
   exec: async (ctx) => {
     // Get the level and do some good checks
     const level = parseInt(ctx.args[0])
-    if (!level) return ctx.normalResponse(ctx.worker.colors.RED, 'No level was given.')
-    if (isNaN(level)) return ctx.normalResponse(ctx.worker.colors.RED, 'The level must be a number')
-    if (level < 1) return ctx.normalResponse(ctx.worker.colors.RED, 'The level must be greater than 0')
+    if (!level) return await ctx.normalResponse(ctx.worker.colors.RED, 'No level was given.')
+    if (isNaN(level)) return await ctx.normalResponse(ctx.worker.colors.RED, 'The level must be a number')
+    if (level < 1) return await ctx.normalResponse(ctx.worker.colors.RED, 'The level must be greater than 0')
 
     // Get the role
-    if (!ctx.args[1]) return ctx.normalResponse(ctx.worker.colors.RED, 'No role was give.')
+    if (!ctx.args[1]) return await ctx.normalResponse(ctx.worker.colors.RED, 'No role was give.')
     const roleID = ctx.args[1].replace(/<@&>/g, '')
-    if (!roleID) return ctx.normalResponse(ctx.worker.colors.RED, 'No role was given.')
+    if (!roleID) return await ctx.normalResponse(ctx.worker.colors.RED, 'No role was given.')
 
     // Check if it exists
     const role = ctx.worker.guildRoles.get(ctx.getID)?.get(roleID as Snowflake)
-    if (!role) return ctx.normalResponse(ctx.worker.colors.RED, 'Role not found.')
+    if (!role) return await ctx.normalResponse(ctx.worker.colors.RED, 'Role not found.')
 
     // This shit sucks ngl
     const botHighest = ctx.worker.guildRoles.get(ctx.getID)?.reduce((a, r) => {

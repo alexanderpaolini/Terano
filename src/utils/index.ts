@@ -86,7 +86,11 @@ export function formatTime (time: number): string {
     time = time - 1000
   }
 
-  return `${hours === 0 ? `${hours} hour${hours > 1 ? 's' : ''}, ` : ''}${minutes === 0 ? `${minutes} minute${minutes > 1 ? 's' : ''}${hours === 0 ? ', and' : ' and'} ` : ''}${seconds > 1 ? seconds : 1} second${seconds > 1 ? 's' : ''}`
+  const h = `${hours === 0 ? '' : `${hours} hour${hours > 1 ? 's' : ''}, `}`
+  const m = `${minutes === 0 ? '' : `${minutes} minute${minutes > 1 ? 's' : ''}${hours === 0 ? ', and' : ' and'} `}`
+  const s = `${seconds > 1 ? seconds : 1} second${seconds > 1 ? 's' : ''}`
+
+  return h + m + s
 }
 
 /**

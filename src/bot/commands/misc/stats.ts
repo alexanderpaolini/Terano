@@ -40,7 +40,7 @@ ${Object.entries(cluster.shards).map((S: any) => `Shard ${S[0] as number}
 
     embed.description(`\`\`\`properties
 Current
-  Cluster: ${ctx.worker.comms.id as string}
+  Cluster: ${ctx.worker.comms.id}
   Shard: ${currentShard}
 \`\`\``)
 
