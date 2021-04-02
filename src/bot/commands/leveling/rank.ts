@@ -15,7 +15,7 @@ export default {
   aliases: ['card', 'level'],
   permissions: [],
   botPermissions: [],
-  cooldown: 9999e3,
+  cooldown: 9e3,
   exec: async (ctx) => {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||
