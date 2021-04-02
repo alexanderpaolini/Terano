@@ -22,8 +22,10 @@ master.spawnProcess('API', path.resolve(__dirname, './api/index.js'))
 master.spawnProcess('Influx', path.resolve(__dirname, './influx/index.js'))
 
 // Add the fetch user for custom threads
-master.handlers.on('FETCH_USER', async (cluster, data, resolve) => {
-  resolve(await master.rest.users.get(data).catch(x => false as any))
+master.handlers.on('FETCH_USER', (_cluster, data, resolve) => {
+  master.rest.users.get(data).catch(() => false as any)
+    .then(resolve)
+    .catch(e => { throw e })
 })
 
 void master.start()

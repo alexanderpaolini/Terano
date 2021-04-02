@@ -1,4 +1,4 @@
-import { CommandContext } from 'discord-rose/dist/typings/lib'
+import CommandContext from '../lib/CommandContext'
 
 import { formatTime } from '../../utils/index'
 
@@ -15,14 +15,14 @@ export default (): ((ctx: CommandContext) => {}) => {
   const guildProtecton: string[] = []
 
   return async (ctx: CommandContext) => {
-    if (guildProtecton.filter(e => e === ctx.guild.id).length > 40) {
-      await ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.guild.id} excedeed ratelimit`)
+    if (guildProtecton.filter(e => e === ctx.getID).length > 40) {
+      await ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.getID} excedeed ratelimit`)
       return false
     }
 
-    guildProtecton.push(ctx.guild.id)
+    guildProtecton.push(ctx.getID)
     setTimeout(() => {
-      guildProtecton.splice(guildProtecton.indexOf(ctx.guild.id), 1)
+      guildProtecton.splice(guildProtecton.indexOf(ctx.getID), 1)
     }, 5000)
 
     if (ctx.command.cooldown === undefined) {
@@ -32,7 +32,7 @@ export default (): ((ctx: CommandContext) => {}) => {
       return true
     }
 
-    const id = `${ctx.message.author.id}-${ctx.guild.id}-${ctx.command.command as string}`
+    const id = `${ctx.message.author.id as string}-${ctx.getID}-${ctx.command.command as string}`
     const currentCooldown = cooldowns.get(id)
 
     if (currentCooldown != null) {
@@ -45,13 +45,13 @@ export default (): ((ctx: CommandContext) => {}) => {
         currentCooldown.createdMessage = false
       }, 2000)
 
-      await ctx.worker.responses.small(ctx, ctx.worker.colors.RED, `You're on cooldown, try again in ${formatTime(timeRemaining)}`)
+      await ctx.smallResponse(ctx.worker.colors.RED, `You're on cooldown, try again in ${formatTime(timeRemaining)}`)
       return false
     }
 
     ctx.invokeCooldown = () => {
       cooldowns.set(id, {
-        time: Date.now() + (ctx.command.cooldown ?? 0),
+        time: Date.now() + Number(ctx.command.cooldown ?? 0),
         timeout: setTimeout(() => {
           cooldowns.delete(id)
         }, ctx.command.cooldown)

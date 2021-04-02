@@ -11,7 +11,7 @@ export default () => {
     const hasPerms = perms.every((perm: any) => ctx.myPerms(perm))
     if (hasPerms) return true
 
-    await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `I am missing one or more of the following permissions:\n  ${perms.join('\n  ')}`)
+    await ctx.tinyResponse(ctx.worker.colors.RED, `I am missing one or more of the following permissions:\n  ${perms.join('\n  ')}`)
     return false
   }
 }

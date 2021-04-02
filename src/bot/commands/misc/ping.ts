@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 import { getAvatar } from '../../../utils'
 
 export default {

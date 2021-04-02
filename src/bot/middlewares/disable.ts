@@ -5,7 +5,7 @@ export default () => {
     if (ctx.command.disabled ?? ctx.worker.devmode) {
       const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
       if (isOwner) return true
-      await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, 'This command is currently disabled.')
+      await ctx.tinyResponse(ctx.worker.colors.ORANGE, 'This command is currently disabled.')
       return false
     }
     return true

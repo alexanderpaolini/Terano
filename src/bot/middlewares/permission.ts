@@ -1,4 +1,4 @@
-import { CommandContext } from 'discord-rose/dist/typings/lib'
+import CommandContext from '../lib/CommandContext'
 
 export default () => {
   return async (ctx: CommandContext) => {
@@ -11,8 +11,8 @@ export default () => {
     const hasPerms = perms.every((perm: any) => ctx.hasPerms(perm))
     if (hasPerms) return true
 
-    const noPermissions = await ctx.worker.db.guildDB.getSendPermsMessage(ctx.guild.id)
-    if (noPermissions) await ctx.worker.responses.tiny(ctx, ctx.worker.colors.RED, `Missing Permissions. Required Permissions: ${perms.join(', ')}`)
+    const noPermissions = await ctx.worker.db.guildDB.getSendPermsMessage(ctx.getID)
+    if (noPermissions) await ctx.tinyResponse(ctx.worker.colors.RED, `Missing Permissions. Required Permissions: ${(perms as string[]).join(', ')}`)
     return false
   }
 }

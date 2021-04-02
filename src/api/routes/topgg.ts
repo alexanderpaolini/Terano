@@ -13,7 +13,7 @@ router.use(webhook.middleware())
 router.post('/vote', async (req, res) => {
   if ((req.vote == null) || !req.vote.user) return res.status(400).json({ success: false })
 
-  const user = await req.app.comms.sendCommand('FETCH_USER', req.vote.user)
+  const user = await req.app.comms.sendCommand('FETCH_USER', req.vote.user as any)
 
   const votes = await req.app.VoteDB.getVotes(req.vote.user)
 
@@ -24,7 +24,7 @@ router.post('/vote', async (req, res) => {
     query: req.vote.query
   })
 
-  await req.app.comms.sendWebhook(config.webhooks.votes.id, config.webhooks.votes.token, {
+  await req.app.comms.sendWebhook(config.webhooks.votes.id as any, config.webhooks.votes.token, {
     embeds: [{
       title: 'User Voted',
       author: {

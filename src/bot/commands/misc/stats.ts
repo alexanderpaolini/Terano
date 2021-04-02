@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 import { getAvatar } from '../../../utils'
 
 export default {
@@ -12,13 +12,14 @@ export default {
   owner: false,
   cooldown: 5e3,
   exec: async (ctx) => {
-    const currentShard = Number((BigInt(ctx.guild.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
+    const currentShard = Number((BigInt(ctx.getID) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
 
     const stats = await ctx.worker.comms.broadcastEval('const shit = { id: worker.comms.id, shards: worker.shardStats, memory: worker.mem, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0) }; shit;')
 
     const url = getAvatar(ctx.message.author)
 
     const embed = ctx.embed
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
       .color(ctx.worker.colors.PURPLE)
 
@@ -39,7 +40,7 @@ ${Object.entries(cluster.shards).map((S: any) => `Shard ${S[0] as number}
 
     embed.description(`\`\`\`properties
 Current
-  Cluster: ${ctx.worker.comms.id}
+  Cluster: ${ctx.worker.comms.id as string}
   Shard: ${currentShard}
 \`\`\``)
 
@@ -47,6 +48,7 @@ Current
       .catch(() => {
 
       })
-    ctx.invokeCooldown()
+
+    if (ctx.invokeCooldown) ctx.invokeCooldown()
   }
 } as CommandOptions

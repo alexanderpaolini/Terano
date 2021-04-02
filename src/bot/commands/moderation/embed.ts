@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 export default {
   name: 'Embeds',
@@ -11,11 +11,11 @@ export default {
   botPermissions: [],
   exec: async (ctx) => {
     // Get and update the shit
-    let guildEmbed = await ctx.worker.db.guildDB.getEmbeds(ctx.guild.id)
+    let guildEmbed = await ctx.worker.db.guildDB.getEmbeds(ctx.getID)
     guildEmbed = !guildEmbed
-    await ctx.worker.db.guildDB.setEmbeds(ctx.guild.id, guildEmbed)
+    await ctx.worker.db.guildDB.setEmbeds(ctx.getID, guildEmbed)
 
     // Return success?
-    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `${guildEmbed ? 'Enabled' : 'Disabled'} embed messages`)
+    await ctx.normalResponse(ctx.worker.colors.GREEN, `${guildEmbed ? 'Enabled' : 'Disabled'} embed messages`)
   }
 } as CommandOptions

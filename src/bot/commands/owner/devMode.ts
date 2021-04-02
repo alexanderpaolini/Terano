@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 export default {
   name: 'Dev Mode',
@@ -13,6 +13,6 @@ export default {
   exec: async (ctx) => {
     if (ctx.worker.devmode) ctx.worker.devmode = false
     else ctx.worker.devmode = true
-    await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `${ctx.worker.devmode ? 'Enabled' : 'Disabled'} developer mode`)
+    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `${ctx.worker.devmode ? 'Enabled' : 'Disabled'} developer mode`)
   }
 } as CommandOptions

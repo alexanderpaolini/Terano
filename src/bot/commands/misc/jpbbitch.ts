@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 export default {
   name: 'Berry',
@@ -13,6 +13,6 @@ export default {
   cooldown: 5e3,
   exec: async (ctx) => {
     await ctx.reply('<@142408079177285632>')
-    ctx.invokeCooldown()
+    ctx.invokeCooldown?.()
   }
 } as CommandOptions

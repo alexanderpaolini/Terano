@@ -285,9 +285,9 @@ export default class UserDB {
    * Get all of the levels, or all of the levels for a guild
    * @param guildID The Guild ID, optional
    */
-  async getAllLevels (guildID?: string | null): Promise<LevelDoc[]> {
+  async getAllLevels (guildID: string | null = null): Promise<LevelDoc[]> {
     let docs: LevelDoc[]
-    if (guildID === null) {
+    if (guildID != null) {
       docs = await LevelModel.find({ guildID }).lean()
     } else docs = await LevelModel.find().lean()
     return docs

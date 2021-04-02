@@ -18,7 +18,7 @@ import mongoose from 'mongoose'
 // Lib
 import Monitor from './Monitor'
 import colors from './colors'
-import Responses from './Responses'
+import CommandContext from './CommandContext'
 import Webhooks from './Webhooks'
 
 import { TeranoOptions } from './types/TeranoOptions'
@@ -30,7 +30,6 @@ export default class TeranoWorker extends Worker {
   devmode = false
   webhooks = new Webhooks(this)
   monitors: Monitor[] = []
-  responses = Responses
   statsInterval: NodeJS.Timeout | null = null
   commandCooldowns: { [key: string]: number } = {}
   db = { guildDB: new GuildDB(), userDB: new UserDB(), voteDB: new VoteDB() }
@@ -57,6 +56,7 @@ export default class TeranoWorker extends Worker {
       caseInsensitivePrefix: true,
       mentionPrefix: true
     })
+    this.commands.CommandContext = CommandContext
     if (this.prod) this.loadTOPGG()
   }
 

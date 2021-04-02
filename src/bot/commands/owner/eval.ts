@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 // import NonFatalError from '../../lib/NonFatalError'
 import util from 'util'
@@ -40,7 +40,7 @@ export default {
 
       if (typeof evaled !== 'string') { evaled = util.inspect(evaled) }
 
-      void ctx.embed
+      await ctx.embed
         .color(ctx.worker.colors.GREEN)
         .title('Eval Successful')
         .description(`\`\`\`xl\n${evaled}\`\`\``)

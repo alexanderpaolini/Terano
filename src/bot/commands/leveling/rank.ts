@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 import NonFatalError from '../../lib/NonFatalError'
 
 import fetch from 'node-fetch'
@@ -20,10 +20,10 @@ export default {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||
       ctx.message.author
-    const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.guild.id)
+    const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.getID)
     const settings = await ctx.worker.db.userDB.getSettings(user.id) || {} as SettingsDoc
 
-    const usertag = `${user.username}#${user.discriminator}`
+    const usertag = `${user.username as string}#${user.discriminator as string}`
 
     const level = data.level
     const xp = data.xp
@@ -31,11 +31,11 @@ export default {
 
     const tag = settings?.level.tag || '─────────────────'
     const picture = settings?.level.picture || getAvatar(user, 'png', 256)
-    const color = settings?.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.guild.id)
+    const color = settings?.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.getID)
 
     const body = { color, level, xp, maxxp, picture, tag, usertag }
 
-    const response = await fetch(`http://localhost:${ctx.worker.opts.api.port}/card`, {
+    const response = await fetch(`http://localhost:${String(ctx.worker.opts.api.port)}/card`, {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
@@ -49,6 +49,6 @@ export default {
     const buffer = await response.buffer()
 
     await ctx.sendFile({ name: 'rank.png', buffer: Buffer.from(buffer) })
-    ctx.invokeCooldown()
+    if (ctx.invokeCooldown) ctx.invokeCooldown()
   }
 } as CommandOptions

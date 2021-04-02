@@ -1,0 +1,131 @@
+
+import { APIMessage, Snowflake } from 'discord-api-types'
+import { CommandContext } from 'discord-rose'
+import { getAvatar } from '../../utils'
+
+export default class CMDCTX extends CommandContext {
+  flags: any
+  invokeCooldown?: () => void
+
+  /**
+   * Get whether or not a guild sends embeds
+   */
+  public async getEmbeds (): Promise<boolean> {
+    return this.worker.db.guildDB.getEmbeds(this.getID)
+  }
+
+  /**
+   * The real ID because this is how its gonna go
+   */
+  get getID (): Snowflake {
+    return this.guild?.id || this.message.author.id
+  }
+
+  /**
+   * Se nd a normal message
+   * @param color The color of the embed
+   * @param response The message to respond
+   * @param embed Force embed
+   */
+  async normalResponse (color: number, response: string, embed?: boolean): Promise<APIMessage | null> {
+    const e = await this.getEmbeds()
+
+    if (this.flags.s || this.flags.silent) return null
+
+    if (e && !embed && !this.flags.noembed) {
+      const url = getAvatar(this.message.author)
+      return this.embed
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        .author(this.message.author.username + ' | ' + this.command.name, url)
+        .description(response)
+        .footer('Developed by MILLION#1321')
+        .color(color)
+        .timestamp()
+        .send(true)
+        .then(x => x)
+        .catch(() => null)
+    } else {
+      return this.reply(response)
+        .then(x => x)
+        .catch(() => null)
+    }
+  }
+
+  /**
+   * Send a very small embed
+   * @param color The color of the embed
+   * @param response The message of the embed
+   * @param embed Force embed
+   */
+  async codeResponse (color: number, response: string, lang: string = 'js', embed?: boolean): Promise<APIMessage | null> {
+    const e = await this.getEmbeds()
+
+    if (this.flags.silent || this.flags.s) return null
+
+    if (e && !embed && !this.flags.noembed) {
+      return this.embed
+        .description(`\`\`\`${lang}\n${response}\`\`\``)
+        .color(color)
+        .send(true)
+        .then(x => x)
+        .catch(() => null)
+    } else {
+      return this.reply(`\`\`\`${lang}\n${response}\`\`\``)
+        .then((x) => x)
+        .catch(() => null)
+    }
+  }
+
+  /**
+   * Send a very small embed
+   * @param color The color of the embed
+   * @param response The message of the embed
+   * @param embed Force embed
+   */
+  async tinyResponse (color: number, response: string, embed?: boolean): Promise<APIMessage | null> {
+    const e = await this.getEmbeds()
+
+    if (this.flags.silent || this.flags.s) return null
+
+    if (e && !embed && !this.flags.noembed) {
+      return this.embed
+        .author(response)
+        .color(color)
+        .send(true)
+        .then(x => x)
+        .catch(() => null)
+    } else {
+      return this.reply(response)
+        .then(x => x)
+        .catch(() => null)
+    }
+  }
+
+  /**
+   * Send a smaller embed
+   * @param color The color of the embed
+   * @param response The message
+   * @param embed Force embed
+   */
+  async smallResponse (color: number, response: string, embed?: boolean): Promise<APIMessage | null> {
+    const e = await this.getEmbeds()
+
+    if (this.flags.s || this.flags.silent) return null
+
+    if (e && !embed && !this.flags.noembed) {
+      const url = getAvatar(this.message.author)
+      return this.embed
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        .author(this.message.author.username + ' | ' + this.command.name, url)
+        .description(response)
+        .color(color)
+        .send(true)
+        .then(x => x)
+        .catch(() => null)
+    } else {
+      return this.reply(response)
+        .then(x => x)
+        .catch(() => null)
+    }
+  }
+}

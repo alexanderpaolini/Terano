@@ -1,6 +1,8 @@
 import { APIUser, Snowflake } from 'discord-api-types'
 import { bits } from 'discord-rose/dist/utils/Permissions'
+
 import TeranoWorker from './bot/lib/TeranoWorker'
+import TeranoContext from './bot/lib/CommandContext'
 
 declare module 'discord-rose/dist/typings/lib' {
   interface CommandOptions {
@@ -15,9 +17,7 @@ declare module 'discord-rose/dist/typings/lib' {
     cooldown?: number
   }
 
-  interface CommandContext {
-    invokeCooldown: () => void
-  }
+  interface CommandContext extends TeranoContext { }
 
   type worker = TeranoWorker
 }

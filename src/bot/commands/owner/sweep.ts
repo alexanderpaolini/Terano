@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 const command: CommandOptions = {
   name: 'Sweep',
@@ -19,7 +19,7 @@ const command: CommandOptions = {
 
     ctx.worker.log('Swept Database cache')
 
-    await ctx.worker.responses.tiny(ctx, ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`)
+    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${Date.now() - time}ms`)
   }
 }
 

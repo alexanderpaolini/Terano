@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose/dist/typings/lib'
+import { CommandOptions } from 'discord-rose'
 
 export default {
   name: 'XP-Cooldown',
@@ -12,18 +12,18 @@ export default {
   exec: async (ctx) => {
     // Get the cooldowns
     const newCooldown = Number(ctx.args[0])
-    const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.guild.id)
+    const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)
 
     // Make sure its a number
-    if (isNaN(newCooldown)) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown}s**.`)
+    if (isNaN(newCooldown)) return ctx.normalResponse(ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown as string}s**.`)
 
     // Check To make sure people aren't stupid
-    if (newCooldown < 0) return await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, 'The XP-cooldown must 0 seconds or greater.')
+    if (newCooldown < 0) return ctx.normalResponse(ctx.worker.colors.GREEN, 'The XP-cooldown must 0 seconds or greater.')
 
     // Update the cooldown in the DB
-    await ctx.worker.db.guildDB.setXPCooldown(ctx.guild.id, String(newCooldown))
+    await ctx.worker.db.guildDB.setXPCooldown(ctx.getID, String(newCooldown))
 
     // Respond with success
-    await ctx.worker.responses.normal(ctx, ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown}s to **${newCooldown}s**.`)
+    await ctx.normalResponse(ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown as string}s to **${newCooldown}s**.`)
   }
 } as CommandOptions
