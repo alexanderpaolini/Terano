@@ -5,7 +5,7 @@ export default (worker: TeranoWorker): void => {
     worker.log(`Ready as ${worker.user.username}#${worker.user.id} (${worker.user.id})`)
 
     setInterval(() => {
-      worker.setStatus('playing', 'Minecraft', 'online')
+      worker.setStatus(worker.status.type as any, worker.status.name, worker.status.type as any, worker.status.url)
     }, 60 * 1000)
   })
 
