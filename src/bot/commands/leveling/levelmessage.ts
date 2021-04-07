@@ -15,6 +15,6 @@ export default {
     await ctx.worker.db.guildDB.setSendLevelMessage(ctx.getID, sendMesasge)
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.GREEN, `Level-up messages ${sendMesasge ? 'Enabled' : 'Disabled'}`)
+    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_LEVELMESSAGE_UPDATED', sendMesasge ? 'Enabled' : 'Disabled'))
   }
 } as CommandOptions

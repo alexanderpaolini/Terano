@@ -22,6 +22,7 @@ import CommandContext from './CommandContext'
 import Webhooks from './Webhooks'
 
 import { TeranoOptions } from './types/TeranoOptions'
+import LanguageHandler from './LanguageHandler'
 
 export default class TeranoWorker extends Worker {
   prod: boolean
@@ -34,6 +35,8 @@ export default class TeranoWorker extends Worker {
   commandCooldowns: { [key: string]: number } = {}
   db = { guildDB: new GuildDB(), userDB: new UserDB(), voteDB: new VoteDB() }
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
+
+  langs = new LanguageHandler(this)
 
   /**
    * Create the bot

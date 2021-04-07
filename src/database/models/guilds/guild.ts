@@ -5,7 +5,8 @@ const GuildSchema = new Schema({
   options: {
     prefix: { type: String, default: 't!' },
     embeds: { type: Boolean, default: true },
-    no_permissions: { type: Boolean, default: true }
+    no_permissions: { type: Boolean, default: true },
+    lang: { type: String, default: 'en-US' }
   },
   level: {
     cooldown: { type: String, default: 15 },

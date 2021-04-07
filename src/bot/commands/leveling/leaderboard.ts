@@ -16,7 +16,7 @@ export default {
   cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message
-    const msg = await ctx.send('Loading...')
+    const msg = await ctx.send(await ctx.lang('LOADING'))
     // Get all of the level data and sort it
     const allLevels = await ctx.worker.db.userDB.getAllLevels(ctx.getID)
     const data = allLevels.sort((a, b) => {

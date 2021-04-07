@@ -15,15 +15,15 @@ export default {
     const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)
 
     // Make sure its a number
-    if (isNaN(newCooldown)) return await ctx.normalResponse(ctx.worker.colors.GREEN, `Current XP-cooldown is **${oldCooldown}s**.`)
+    if (isNaN(newCooldown)) return ctx.error(await ctx.lang('CMD_COOLDOWN_CURRENT', oldCooldown))
 
     // Check To make sure people aren't stupid
-    if (newCooldown < 0) return await ctx.normalResponse(ctx.worker.colors.GREEN, 'The XP-cooldown must 0 seconds or greater.')
+    if (newCooldown < 0) return ctx.error(await ctx.lang('CMD_COOLDOWN_LOW'))
 
     // Update the cooldown in the DB
     await ctx.worker.db.guildDB.setXPCooldown(ctx.getID, String(newCooldown))
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.GREEN, `Changed XP-cooldown from ${oldCooldown}s to **${newCooldown}s**.`)
+    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_COOLDOWN_UPDATED', oldCooldown, String(newCooldown)))
   }
 } as CommandOptions

@@ -22,6 +22,10 @@ interface GuildDoc {
      * Whether or not to send no-permissions messages
      */
     no_permissions: boolean
+    /**
+     * What language to respond in
+     */
+    lang: string
   }
   /**
    * Leveling options

@@ -43,7 +43,7 @@ export default {
     })
 
     // Respond with an error kekw
-    if (!response || !response.ok) return ctx.error('Internal Server Error')
+    if (!response || !response.ok) return ctx.error(await ctx.lang('SERVER_ERROR'))
 
     const buffer = await response.buffer()
 

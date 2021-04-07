@@ -20,26 +20,24 @@ export default {
       const command = ctx.worker.commands.commands?.find(e => e.command === cmd)
       if (command != null) {
         ctx.embed
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
           .description(`\`Command\`: ${command.command as string}\n\`Usage\`: ${guildPrefix}${command.usage}\n${(command.aliases != null) ? `\`Aliases\`: ${(command.aliases as string[]).join(', ')}\n` : ''}${(command.permissions != null) ? (command.permissions as string[]).join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
-          .footer('Developed by MILLION#1321')
+          .footer(await ctx.lang('DEVELOPED_BY'))
           .color(ctx.worker.colors.GREEN)
           .timestamp()
           .send(true)
           .catch(() => { })
       } else {
-        await ctx.tinyResponse(ctx.worker.colors.RED, `Command "${cmd}" not found.`)
+        await ctx.error(await ctx.lang('CMD_HELP_NOCMD', cmd))
       }
     } else {
       const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
       const categories = ctx.worker.commands.commands?.reduce((a, b) => a.includes(b.category) ? a : a.concat([b.category]), [] as string[]) ?? []
 
       const embed = ctx.embed
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
         .title('Commands')
-        .footer('Developed by MILLION#1321')
+        .footer(await ctx.lang('DEVELOPED_BY'))
         .color(ctx.worker.colors.PURPLE)
         .timestamp()
 

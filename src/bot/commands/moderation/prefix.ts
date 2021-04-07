@@ -13,14 +13,14 @@ export default {
     const prefix = ctx.args[0]
 
     // Bruh my man is stupid
-    if (!prefix) return await ctx.normalResponse(ctx.worker.colors.RED, 'No prefix was given.')
-    if (prefix.length > 21) return await ctx.normalResponse(ctx.worker.colors.RED, 'Prefix length must be no greater than 20.')
+    if (!prefix) return ctx.error(await ctx.lang('CMD_PREFIX_CURRENT', ctx.prefix))
+    if (prefix.length > 21) return ctx.error(await ctx.lang('CMD_PREFIX_LONG'))
 
     // Get and change the prefix
     const oldPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.getID)
     await ctx.worker.db.guildDB.setPrefix(ctx.getID, prefix)
 
     // Return success!
-    await ctx.normalResponse(ctx.worker.colors.GREEN, `Changed prefix from ${oldPrefix} to \`${prefix}\``)
+    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_PREFIX_UPDATED', oldPrefix, prefix))
   }
 } as CommandOptions

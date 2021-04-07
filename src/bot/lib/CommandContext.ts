@@ -35,7 +35,6 @@ export default class CMDCTX extends CommandContext {
     if (e && !embed && !this.flags.noembed) {
       const url = getAvatar(this.message.author)
       return await this.embed
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         .author(this.message.author.username + ' | ' + this.command.name, url)
         .description(response)
         .footer('Developed by MILLION#1321')
@@ -115,7 +114,6 @@ export default class CMDCTX extends CommandContext {
     if (e && !embed && !this.flags.noembed) {
       const url = getAvatar(this.message.author)
       return await this.embed
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         .author(this.message.author.username + ' | ' + this.command.name, url)
         .description(response)
         .color(color)
@@ -127,5 +125,38 @@ export default class CMDCTX extends CommandContext {
         .then(x => x)
         .catch(() => null)
     }
+  }
+
+  /**
+   * Await a response to a message
+   * @param filter Filter to check before resolving
+   * @param timeout How long to wait
+   */
+  async awaitResponse (filter: (m: APIMessage) => {} = () => true, timeout: number = 15000): Promise<APIMessage> {
+    return await new Promise((resolve, reject) => {
+      const func = (m: APIMessage): void => {
+        if (!filter(m)) return
+        resolve(m)
+        this.worker.off('MESSAGE_CREATE', func)
+      }
+
+      this.worker.setMaxListeners(this.worker.getMaxListeners() + 1)
+      this.worker.on('MESSAGE_CREATE', func)
+
+      setTimeout(() => {
+        this.worker.off('MESSAGE_CREATE', func)
+        this.worker.setMaxListeners(this.worker.getMaxListeners() - 1)
+        reject(new Error('Response timeout exceeded'))
+      }, timeout)
+    })
+  }
+
+  /**
+   * Get the language string
+   * @param name The name of the string
+   * @param args A replacement string
+   */
+  async lang (name: string, ...args: string[]): Promise<string> {
+    return await this.worker.langs.getString(this.getID, name, ...args)
   }
 }

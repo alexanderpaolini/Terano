@@ -15,8 +15,8 @@ export default {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
 
     // Check if the user exists
-    if (!userID) return await ctx.normalResponse(ctx.worker.colors.RED, 'No user was given, please mention a user.')
-    if (userID === ctx.message.author.id) return await ctx.normalResponse(ctx.worker.colors.RED, 'You cannot remove yourself from owner.')
+    if (!userID) return ctx.error('No user was given, please mention a user.')
+    if (userID === ctx.message.author.id) return ctx.error('You cannot remove yourself from owner.')
 
     // Change the owner to the opposite
     const isOwner = await ctx.worker.db.userDB.getOwner(userID)

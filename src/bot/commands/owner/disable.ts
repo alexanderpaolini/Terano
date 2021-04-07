@@ -12,10 +12,10 @@ export default {
   owner: true,
   exec: async (ctx) => {
     const command = ctx.args[0]
-    if (!command) return await ctx.normalResponse(ctx.worker.colors.RED, 'No command was given, please include a command.')
+    if (!command) return ctx.error('No command was given, please include a command.')
 
     const cmd = ctx.worker.commands.commands?.find((c: CommandOptions) => c.command === command)
-    if (cmd == null) return ctx.normalResponse(ctx.worker.colors.RED, 'Command not found.')
+    if (cmd == null) return ctx.error('Command not found.')
 
     if (cmd.disabled) cmd.disabled = false
     else cmd.disabled = true

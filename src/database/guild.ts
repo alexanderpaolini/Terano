@@ -262,4 +262,23 @@ export default class GuildDB {
     })
     return await this.updateGuild(guildData)
   }
+
+  /**
+   * Get the language from the guild
+   * @param guildID Guild ID
+   */
+  async getLang (guildID: string): Promise<string> {
+    const guildData = await this.getGuild(guildID)
+    return guildData.options.lang
+  }
+
+  /**
+   * Get the language from the guild
+   * @param guildID Guild ID
+   */
+  async setLang (guildID: string, lang: string): Promise<GuildDoc> {
+    const guildData = await this.getGuild(guildID)
+    guildData.options.lang = lang
+    return await this.updateGuild(guildData)
+  }
 }

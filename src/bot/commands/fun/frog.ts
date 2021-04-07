@@ -18,6 +18,6 @@ export default {
       .then(async json => {
         await ctx.reply(json.url)
       })
-      .catch((err) => { throw new Error(err) })
+      .catch(ctx.error)
   }
 } as CommandOptions
