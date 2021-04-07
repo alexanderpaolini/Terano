@@ -10,6 +10,6 @@ export default class PrefixMonitor extends Monitor {
   }
 
   async restrictions (msg: APIMessage): Promise<boolean> {
-    return msg.channel_id === '810952830101356544' && !!msg.content.match(/(docs|build): (tsc|api docs) build/)
+    return msg.channel_id === '810952830101356544' && !!msg.embeds?.[0]?.description?.match(/(docs|build): (tsc|api docs) build/)
   }
 }
