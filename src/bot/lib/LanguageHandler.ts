@@ -2,6 +2,7 @@ import TeranoWorker from './TeranoWorker'
 
 import english from '../lang/en-US.json'
 import und from '../lang/undefined.json'
+import esp from '../lang/es-ES.json'
 
 export default class LanguageHandler {
   langs: Map<string, string> = new Map()
@@ -10,6 +11,7 @@ export default class LanguageHandler {
   constructor (private readonly worker: TeranoWorker) {
     this.cache.set('en-US', english)
     this.cache.set('undefined', und)
+    this.cache.set('es-ES', esp)
   }
 
   async getString (id: string, name: string, ...args: string[]): Promise<string> {
