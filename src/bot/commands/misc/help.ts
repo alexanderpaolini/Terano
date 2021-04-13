@@ -28,7 +28,7 @@ export default {
           .send(true)
           .catch(() => { })
       } else {
-        await ctx.error(await ctx.lang('CMD_HELP_NOCMD', cmd))
+        await ctx.respond('CMD_HELP_NOCMD', { error: true }, cmd)
       }
     } else {
       const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)

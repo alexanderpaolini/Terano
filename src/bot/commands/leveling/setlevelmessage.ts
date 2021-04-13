@@ -14,12 +14,12 @@ export default {
     const message = ctx.args.join(' ')
 
     // Make sure they aren't dumb
-    if (message.length >= 100) return ctx.error(await ctx.lang('CMD_LEVELMESSAGE_SHORT'))
+    if (message.length >= 100) return await ctx.respond('CMD_LEVELMESSAGE_SHORT', { error: true })
 
     // Update the settings
     await ctx.worker.db.guildDB.setLevelMessage(ctx.getID, message)
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_LEVELMESSAGE_SET', message))
+    await ctx.respond('CMD_LEVELMESSAGE_SET', {}, message)
   }
 } as CommandOptions

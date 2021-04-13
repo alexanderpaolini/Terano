@@ -16,7 +16,8 @@ export default {
   cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message
-    const msg = await ctx.send(await ctx.lang('LOADING'))
+    const msg = await ctx.respond('LOADING')
+    if (!msg) return
     // Get all of the level data and sort it
     const allLevels = await ctx.worker.db.userDB.getAllLevels(ctx.getID)
     const data = allLevels.sort((a, b) => {
@@ -55,7 +56,7 @@ export default {
     }).catch(() => null)
 
     // Respond with an error kekw
-    if ((response == null) || !response.ok) return ctx.error('Internal Server Error')
+    if ((response == null) || !response.ok) return await ctx.respond('SERVER_ERROR', { error: true })
 
     // Get the buffer
     const buffer = await response.buffer()

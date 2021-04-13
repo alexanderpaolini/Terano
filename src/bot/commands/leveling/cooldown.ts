@@ -10,20 +10,19 @@ export default {
   permissions: ['manageMessages'],
   botPermissions: [],
   exec: async (ctx) => {
+    // Make sure its a number
+    const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)
+    if (!ctx.args[0]) return await ctx.respond('CMD_COOLDOWN_CURRENT', {}, oldCooldown)
+
     // Get the cooldowns
     const newCooldown = Number(ctx.args[0])
-    const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)
-
-    // Make sure its a number
-    if (isNaN(newCooldown)) return ctx.error(await ctx.lang('CMD_COOLDOWN_CURRENT', oldCooldown))
-
     // Check To make sure people aren't stupid
-    if (newCooldown < 0) return ctx.error(await ctx.lang('CMD_COOLDOWN_LOW'))
+    if (newCooldown < 0 || isNaN(newCooldown)) return await ctx.respond('CMD_COOLDOWN_LOW', { error: true })
 
     // Update the cooldown in the DB
     await ctx.worker.db.guildDB.setXPCooldown(ctx.getID, String(newCooldown))
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_COOLDOWN_UPDATED', oldCooldown, String(newCooldown)))
+    await ctx.respond('CMD_COOLDOWN_UPDATED', {}, oldCooldown, String(newCooldown))
   }
 } as CommandOptions

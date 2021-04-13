@@ -13,18 +13,18 @@ export default {
   exec: async (ctx) => {
     // Get the level and do some good checks
     const level = parseInt(ctx.args[0])
-    if (!level) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOLEVEL'))
-    if (isNaN(level)) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOTNUM'))
-    if (level < 1) return ctx.error(await ctx.lang('CMD_LEVELROLE_TOOLOW'))
+    if (!level) return await ctx.respond('CMD_LEVELROLE_NOLEVEL', { error: true })
+    if (isNaN(level)) return await ctx.respond('CMD_LEVELROLE_NOTNUM', { error: true })
+    if (level < 1) return await ctx.respond('CMD_LEVELROLE_TOOLOW', { error: true })
 
     // Get the role
-    if (!ctx.args[1]) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOROLE'))
+    if (!ctx.args[1]) return await ctx.respond('CMD_LEVELROLE_NOROLE', { error: true })
     const roleID = ctx.args[1].replace(/<@&>/g, '')
-    if (!roleID) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOROLE'))
+    if (!roleID) return await ctx.respond('CMD_LEVELROLE_NOROLE', { error: true })
 
     // Check if it exists
     const role = ctx.worker.guildRoles.get(ctx.getID)?.get(roleID as Snowflake)
-    if (!role) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOTFOUND'))
+    if (!role) return await ctx.respond('CMD_LEVELROLE_NOTFOUND', { error: true })
 
     // This shit sucks ngl
     const botHighest = ctx.worker.guildRoles.get(ctx.getID)?.reduce((a, r) => {
@@ -32,12 +32,12 @@ export default {
       if (a > r.position) return a
       else return r.position
     }, 0) ?? 0
-    if (role.position >= botHighest) return ctx.error(await ctx.lang('CMD_LEVELROLE_NOPERMS'))
+    if (role.position >= botHighest) return await ctx.respond('CMD_LEVELROLE_NOPERMS', { error: true })
 
     // Actually do the shit, ya know
     await ctx.worker.db.guildDB.addLevelRole(ctx.getID, role.id, level)
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_LEVELROLE_SET', role.id, String(level)))
+    await ctx.respond('CMD_LEVELROLE_SET', {}, role.id, String(level))
   }
 } as CommandOptions

@@ -8,6 +8,11 @@
   "CMD_COLOR_UPDATED": "Se cambió el color de la tarjeta a **{0}** ({1})",
   "CMD_COLOR_UPDATEDCUSTOM": "Se cambió el color de la tarjeta a **{0}** ({1})",
 
+  "LANGUAGE": "Español (es-ES)",
+  "CURRENT_LANGUAGE": "Establecer idioma: `Español (es-ES)`",
+  "LANGUAGE_UPDATED": "El idioma cambió a: `Español (es-ES)`",
+  "NO_LANGUAGE": "`{0}` es no un idioma agregado",
+
   "CMD_COOLDOWN_CURRENT": "El enfriamiento del nivel es de **{0}s**.",
   "CMD_COOLDOWN_LOW": "El tiempo de reutilización del nivel debe ser de {0} segundos o más.",
   "CMD_COOLDOWN_UPDATED": "Se cambió el tiempo de reutilizacion del nivel de `{0}`s a `{1}`s.",

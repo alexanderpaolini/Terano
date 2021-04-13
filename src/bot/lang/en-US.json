@@ -3,10 +3,15 @@
   "SERVER_ERROR": "Internal Server Error",
   "DEVELOPED_BY": "Developed by MILLION#1321" ,
 
+  "LANGUAGE": "English (en-US)",
+  "CURRENT_LANGUAGE": "Current language: `English (en-US)`",
+  "LANGUAGE_UPDATED": "Language updated to: `English (en-US)`",
+  "NO_LANGUAGE": "`{0}` is not a supported language",
+
   "CMD_COLOR_NONE": "No color was given.",
   "CMD_COLOR_UNKNOWN": "I don't know the color `{0}`.",
   "CMD_COLOR_UPDATED": "Set card color to **{0}** ({1})",
-  "CMD_COLOR_UPDATEDCUSTOM": "Set card color to **{0}** ({1})",
+  "CMD_COLOR_UPDATEDCUSTOM": "Set card color to **{0}**",
 
   "CMD_COOLDOWN_CURRENT": "Current XP-cooldown is **{0}s**.",
   "CMD_COOLDOWN_LOW": "The XP-cooldown must 0 seconds or greater.",

@@ -16,6 +16,6 @@ export default {
     await ctx.worker.db.guildDB.setEmbeds(ctx.getID, guildEmbed)
 
     // Return success?
-    await ctx.normalResponse(ctx.worker.colors.GREEN, await ctx.lang('CMD_EMBEDS_UPDATED', guildEmbed ? 'Enabled' : 'Disabled'))
+    await ctx.respond('CMD_EMBEDS_UPDATED', {}, guildEmbed ? 'Enabled' : 'Disabled')
   }
 } as CommandOptions
