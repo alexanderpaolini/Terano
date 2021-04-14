@@ -14,6 +14,9 @@ const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
     members: ['nick', 'user'],
     channels: ['nsfw', 'permission_overwrites'],
     roles: ['permissions']
+  },
+  log: (msg, cluster) => {
+    console.log(new Date().toLocaleString(), `${cluster ? `Cluster ${cluster.id}${' '.repeat(master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1) - cluster.id.length)}` : `Master ${' '.repeat(master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1) + 1)}`} | ${msg}`)
   }
 })
 
