@@ -1,13 +1,7 @@
 import { APIUser } from 'discord-api-types'
 
 import colors from 'colors/safe'
-
-interface logger {
-  log: (...args: any[]) => {}
-  warn: (...args: any[]) => {}
-  error: (...args: any[]) => {}
-  debug: (...args: any[]) => {}
-}
+import { Cluster } from 'discord-rose'
 
 /**
  * Function to escape code [stolen from here](https://stackoverflow.com/questions/39542872/escaping-discord-subset-of-markdown)
@@ -25,38 +19,7 @@ export function escapeMarkdown (text: string): string {
  */
 export function getAvatar (user: APIUser, type: string = 'png', size: number = 128): string {
   if (user.avatar !== null) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${type}?size=${size}`
-  return `https://cdn.discordapp.com/embed/avatars/${BigInt(user.discriminator) % BigInt(5)}.png`
-}
-
-/**
- * Format the string
- * @param m Message
- * @param c Color
- * @param len Length
- */
-export function format (m: string, c: string = 'yellow', len = 7): string {
-  const str = m
-  // @ts-expect-error
-  return colors.bold(colors[c](`${separate(str, len)}`)) + colors.grey('|')
-}
-
-/**
- * Create a logger
- * @param m Message
- * @param logger Logger
- * @param c Color
- */
-export function createLogger (m: string, logger: logger, c: string): logger {
-  const msg = format(m, c, 13)
-  const log = format('LOG', 'green')
-  const dbg = format('DEBUG', 'magenta')
-  const err = format('ERROR', 'red')
-  return {
-    log: (...args: any) => { return logger.log(log, msg, ...args) },
-    debug: (...args: any) => { return logger.log(dbg, msg, ...args) },
-    warn: (...args: any) => { return logger.warn(dbg, msg, ...args) },
-    error: (...args: any) => { return logger.log(err, msg, ...args) }
-  }
+  return `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`
 }
 
 /**
@@ -108,4 +71,31 @@ export function separate (str: string, to: number): string {
     sw = sw * -1
   }
   return res
+}
+
+/**
+ * Get a formatted date
+ * @param time A date
+ */
+export function getTime (time: Date): string {
+  const hours = time.getHours().toString().padStart(2, '0') + 'h'
+  const minutes = time.getMinutes().toString().padStart(2, '0') + 'm'
+  const seconds = time.getSeconds().toString().padStart(2, '0') + 's'
+  return `${hours}:${minutes}:${seconds}`
+}
+
+/**
+ * Log function for master
+ * @param cluster Cluster
+ * @param length How long the longest name is
+ * @param msg what to actually log
+ */
+export function log (cluster: Cluster | undefined, length: number, msg: string): void {
+  const separator = '|'
+  const date = getTime(new Date())
+  const c = cluster
+    ? `Cluster ${cluster.id}${' '.repeat(length - cluster.id.length)}`
+    : `Master ${' '.repeat(length + 1)}`
+
+  console.log(colors.yellow(date), separator, colors.red(c.toUpperCase()), separator, msg)
 }

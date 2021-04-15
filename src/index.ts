@@ -5,6 +5,8 @@ import config from './config.json'
 import { Master } from 'discord-rose'
 import path from 'path'
 
+import { log } from './utils'
+
 const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
   token: config.discord.token,
   shards: 'auto',
@@ -16,7 +18,7 @@ const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
     roles: ['permissions']
   },
   log: (msg, cluster) => {
-    console.log(new Date().toLocaleString(), `${cluster ? `Cluster ${cluster.id}${' '.repeat(master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1) - cluster.id.length)}` : `Master ${' '.repeat(master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1) + 1)}`} | ${msg}`)
+    log(cluster, master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1), msg)
   }
 })
 

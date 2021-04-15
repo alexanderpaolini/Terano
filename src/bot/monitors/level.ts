@@ -98,6 +98,7 @@ export default class PrefixMonitor extends Monitor {
             }
           }
         })
+          .catch(async err_ => { this.worker.log(err_) })
       })
   }
 }

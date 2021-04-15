@@ -9,12 +9,13 @@ worker.commands.prefix(async (msg: any) => {
   return await worker.db.guildDB.getPrefix(id)
 })
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 worker.commands.error(async (ctx, err) => {
   const embed = ctx.embed
 
   if (err.nonFatal) {
     embed
-      .author(ctx.message.member?.nick ?? ctx.message.author.username + ' | ' + ctx.command.name, getAvatar(ctx.message.author))
+      .author(ctx.message.member?.nick ?? `${ctx.message.author.username} | ${String(ctx.command.command)}`)
       .title(err.message)
   } else {
     embed
@@ -26,8 +27,4 @@ worker.commands.error(async (ctx, err) => {
     .send(true)
     .then(() => { })
     .catch(() => { })
-
-  if (err.nonFatal) return
-
-  ctx.worker.webhooks.error(err.message)?.catch(() => { })
 })
