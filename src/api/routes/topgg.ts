@@ -3,35 +3,36 @@ import config from '../../config.json'
 import { Router } from 'express'
 
 import { Webhook } from '@top-gg/sdk'
+import { Snowflake } from 'discord-rose'
 
 const router = Router()
 const webhook = new Webhook(config.topgg.webhook.auth)
 
-router.use(webhook.middleware())
-
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.post('/vote', async (req, res) => {
-  if ((req.vote == null) || !req.vote.user) return res.status(400).json({ success: false })
+router.post('/vote', webhook.listener(async (vote, req, res) => {
+  if (!req || !res) return
 
-  const user = await req.app.comms.sendCommand('FETCH_USER', req.vote.user as any)
+  const user = await req.app.api.users.get(vote.user as Snowflake)
 
-  const votes = await req.app.VoteDB.getVotes(req.vote.user)
+  if (!user) return
 
-  await req.app.VoteDB.addVote(req.vote.user, {
-    bot: req.vote.bot ?? 'none',
+  const votes = await req.app.VoteDB.getVotes(vote.user)
+
+  await req.app.VoteDB.addVote(vote.user, {
+    bot: vote.bot ?? 'none',
     date: new Date().toString(),
-    worth: req.vote.isWeekend ? 2 : 1,
-    query: req.vote.query
+    worth: vote.isWeekend ? 2 : 1,
+    query: vote.query
   })
 
   await req.app.comms.sendWebhook(config.webhooks.votes.id as any, config.webhooks.votes.token, {
     embeds: [{
       title: 'User Voted',
       author: {
-        name: req.vote.type === 'test' ? 'Test DBL Vote Webhook' : 'DBL Vote Webhook',
+        name: vote.type === 'test' ? 'Test DBL Vote Webhook' : 'DBL Vote Webhook',
         icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813585465169018880/image0.png'
       },
-      color: req.vote.type === 'test' ? 16711680 : 11946475,
+      color: vote.type === 'test' ? 16711680 : 11946475,
       description: `\`${user.username}#${user.discriminator}\` just voted!`,
       footer: {
         text: `They have voted ${votes.total_votes} time${votes.total_votes > 1 ? 's' : ''}!`
@@ -40,6 +41,6 @@ router.post('/vote', async (req, res) => {
   })
 
   res.json({ success: true })
-})
+}))
 
 export default router

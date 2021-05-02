@@ -14,6 +14,7 @@ export default {
     const message = ctx.args.join(' ')
 
     // Make sure they aren't dumb
+    if (message.length < 1) return await ctx.respond('CMD_LEVELMESSAGE_CURRENT', {}, await ctx.worker.db.guildDB.getLevelMessage(ctx.getID))
     if (message.length >= 100) return await ctx.respond('CMD_LEVELMESSAGE_SHORT', { error: true })
 
     // Update the settings

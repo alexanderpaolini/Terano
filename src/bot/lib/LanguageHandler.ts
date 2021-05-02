@@ -1,15 +1,15 @@
 import TeranoWorker from './TeranoWorker'
 
-import english from '../lang/en-US.json'
-import und from '../lang/undefined.json'
-import esp from '../lang/es-ES.json'
+import eng from '../lang/en-US'
+import und from '../lang/undefined'
+import esp from '../lang/es-ES'
 
 export default class LanguageHandler {
   langs: Map<string, string> = new Map()
-  cache: Map<string, { [key: string]: string }> = new Map()
+  cache: Map<string, Language> = new Map()
 
   constructor (private readonly worker: TeranoWorker) {
-    this.cache.set('en-US', english)
+    this.cache.set('en-US', eng)
     this.cache.set('undefined', und)
     this.cache.set('es-ES', esp)
   }
@@ -17,6 +17,7 @@ export default class LanguageHandler {
   async getString (id: string, name: string, ...args: string[]): Promise<string> {
     const guildLang = await this.getLang(id)
     const string = this.cache.get(guildLang)?.[name] ?? 'undefined'
+    if (typeof string === 'function') return string(...args)
     return this.formatString(string, ...args)
   }
 

@@ -4,8 +4,9 @@
   "description": "bot written with discord-rose",
   "main": "dist/index.js",
   "scripts": {
-    "test": "cd src/ && nodemom",
-    "start": "cd src/ && node"
+    "test": "nodemon .",
+    "start": "node .",
+    "prestart": "tsc"
   },
   "keywords": [
     "discord-rose"
@@ -19,8 +20,8 @@
     "@discord-rose/permissions-middleware": "^1.1.0",
     "@discordjs/opus": "^0.4.0",
     "@jpbberry/cache": "^1.0.4",
-    "@top-gg/sdk": "^3.0.7",
-    "canvas": "^2.6.1",
+    "@top-gg/sdk": "^3.1.1",
+    "canvas": "^2.7.0",
     "colors": "^1.4.0",
     "discord-api-types": "latest",
     "discord-rose": "github:discord-rose/discord-rose#build",

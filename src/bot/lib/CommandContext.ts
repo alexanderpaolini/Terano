@@ -193,6 +193,7 @@ export default class CMDCTX extends CommandContext {
     if (this.flags.nomention) options.mention = false
 
     const response = await this.embed
+      .author(this.message.member?.nick ?? `${this.message.author.username} | ${String(this.command.name)}`, getAvatar(this.message.author))
       .description(message)
       .color(options.color ?? (options.error ? this.worker.colors.RED : this.worker.colors.GREEN))
       .send(options.reply, !!options.mention)

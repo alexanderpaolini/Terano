@@ -17,6 +17,7 @@ export default {
   category: 'owner',
   command: 'eval',
   aliases: ['ev'],
+  flags: ['b', 'm', 's', 'l'],
   permissions: [],
   botPermissions: [],
   owner: true,
@@ -39,12 +40,16 @@ export default {
 
       if (typeof evaled !== 'string') { evaled = util.inspect(evaled) }
 
+      if (ctx.flags.s || ctx.flags.silent) return
+
       await ctx.embed
         .color(ctx.worker.colors.GREEN)
         .title('Eval Successful')
         .description(`\`\`\`xl\n${evaled}\`\`\``)
         .send()
     } catch (err) {
+      if (ctx.flags.s || ctx.flags.silent) return
+
       void ctx.embed
         .color(ctx.worker.colors.RED)
         .title('Eval Unsuccessful')

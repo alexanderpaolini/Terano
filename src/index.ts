@@ -10,7 +10,13 @@ import { log } from './utils'
 const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
   token: config.discord.token,
   shards: 'auto',
-  intents: ['GUILDS', 'GUILD_MESSAGES'],
+  // I don't actually have access to these
+  // Therfore I need to apply for them
+  intents: config.prod ? ['GUILD_MESSAGES', 'GUILDS'] : 32767,
+  cache: {
+    users: true,
+    members: true
+  },
   cacheControl: {
     guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id'],
     members: ['nick', 'user'],
@@ -25,12 +31,5 @@ const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
 // Spawn the API
 master.spawnProcess('API', path.resolve(__dirname, './api/index.js'))
 master.spawnProcess('Influx', path.resolve(__dirname, './influx/index.js'))
-
-// Add the fetch user for custom threads
-master.handlers.on('FETCH_USER', (_cluster, data, resolve) => {
-  master.rest.users.get(data).catch(() => false as any)
-    .then(resolve)
-    .catch(e => { throw e })
-})
 
 void master.start()

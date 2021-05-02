@@ -1,4 +1,4 @@
-import { Thread } from 'discord-rose'
+import { Thread, RestManager } from 'discord-rose'
 import VoteDB from '../database/vote'
 
 declare global {
@@ -6,6 +6,7 @@ declare global {
     interface Application {
       comms: Thread
       VoteDB: VoteDB
+      api: RestManager
     }
   }
 }

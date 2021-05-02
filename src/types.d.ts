@@ -1,4 +1,4 @@
-import { APIUser, Snowflake } from 'discord-api-types'
+import { Snowflake } from 'discord-api-types'
 import { bits } from 'discord-rose/dist/utils/Permissions'
 
 import TeranoWorker from './bot/lib/TeranoWorker'
@@ -24,10 +24,6 @@ declare module 'discord-rose/dist/typings/lib' {
 
 declare module 'discord-rose/dist/clustering/ThreadComms' {
   interface ThreadEvents {
-    FETCH_USER: {
-      send: Snowflake
-      receive: APIUser
-    }
     INFLUX_VOTE: {
       send: Snowflake
       receive: null

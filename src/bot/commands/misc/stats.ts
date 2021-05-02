@@ -19,7 +19,6 @@ export default {
     const url = getAvatar(ctx.message.author)
 
     const embed = ctx.embed
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
       .color(ctx.worker.colors.PURPLE)
 

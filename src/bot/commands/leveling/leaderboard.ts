@@ -34,13 +34,15 @@ export default {
     // Loop through all users, getting the data from each
     for (const user of data) {
       // Fetch the user, if none just continue
-      const userFetch = await ctx.worker.api.users.get(user.userID as Snowflake).catch(() => null as unknown as APIUser)
-      if (!userFetch || (userFetch == null)) continue
+      const user_ = ctx.worker.users.get(user.userID as Snowflake) ??
+        ctx.worker.members.get(ctx.getID)?.get(user.userID as Snowflake)?.user ??
+        await ctx.worker.api.users.get(user.userID as Snowflake).catch(() => null as unknown as APIUser)
+      if (!user_) continue
 
       // Push the user to the array
       newDataArr.push({
-        tag: `${userFetch.username}#${userFetch.discriminator}`,
-        pfp: getAvatar(userFetch),
+        tag: `${user_.username}#${user_.discriminator}`,
+        pfp: getAvatar(user_),
         level: user.level,
         rank: Number(data.indexOf(user)) + 1
       })
