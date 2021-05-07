@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import config from '../../config.json'
+
 import { Router } from 'express'
 
 const router = Router()
 
-const redirect = encodeURIComponent('http://51.81.82.25:3002/callback')
-const CLIENT_ID = '647256366280474626'
+const redirect = encodeURIComponent(`${config.website.host}/callback`)
 
 router.get('/login', (req, res) => {
-  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=email%20connections%20guilds%20identify`)
+  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${config.website.client_id}&redirect_uri=${redirect}&response_type=code&scope=${config.website.scopes.join('%20')}`)
 })
 
 router.get('/callback', async (req, res) => {
@@ -22,18 +23,14 @@ router.get('/callback', async (req, res) => {
   res.redirect('/user')
 })
 
-router.get('/user', async (req, res) => {
-  const token = req.cookies?.token
-  if (!token) return res.redirect('/login')
-
-  const user = await req.app.oauth2.db.getAuth(token).catch(() => null)
-  if (!user) return res.redirect('/login')
-
-  res.render('user.ejs', { user })
+router.get('/logout', async (req, res) => {
+  res.clearCookie('token')
+  res.redirect('/home')
 })
 
-router.get('/*', (req, res) => {
-  res.render('index.ejs', { test: 'test' })
+router.get('/*', async (req, res) => {
+  const user = await req.app.oauth2.db.getAuth(req.cookies?.token ?? '').catch(() => null)
+  res.render('index.ejs', { user: user })
 })
 
 export default router

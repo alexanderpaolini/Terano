@@ -6,7 +6,8 @@
   "scripts": {
     "test": "nodemon .",
     "start": "node .",
-    "prestart": "tsc && cp ./src/api/views/ ./dist/api/ -r"
+    "prestart": "tsc && cp ./src/api/views/ ./dist/api/ -r",
+    "ejs": "cp ./src/api/views/ ./dist/api/ -r && cp ./src/api/public ./dist/api -r"
   },
   "keywords": [
     "discord-rose"

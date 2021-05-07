@@ -7,7 +7,6 @@ import express from 'express'
 import mongoose from 'mongoose'
 import path from 'path'
 import VoteDB from '../database/vote'
-import session from 'express-session'
 import cookieParser from 'cookie-parser'
 
 import { Thread, RestManager } from 'discord-rose'
@@ -26,13 +25,11 @@ mongoose.connect(config.mongodb.connectURI, config.mongodb.connectOptions)
 app.set('trust-proxy', true)
 app.set('views', path.join(__dirname, '/views'))
 
+app.use('/', express.static(path.join(__dirname, '/public')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-app.use(session({
-  secret: 'aaa'
-}))
 app.use(cardRouter)
 app.use(leaderboardRouter)
 app.use(topggRouter)

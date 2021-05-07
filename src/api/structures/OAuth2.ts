@@ -1,9 +1,13 @@
+import config from '../../config.json'
+
 import OAuth2DB from '../../database/oauth2'
 
-import Crypto from 'crypto'
-import { Application } from 'express'
 import qs from 'qs'
+import Crypto from 'crypto'
+
 import { APIUser, RESTPostOAuth2AccessTokenResult, RESTPostOAuth2AccessTokenURLEncodedData } from 'discord-api-types'
+import { Application } from 'express'
+
 import { OAuth2Doc } from '../../database/types/OAuth2Doc'
 
 export class OAuth2 {
@@ -46,18 +50,18 @@ export class OAuth2 {
     return { user, doc }
   }
 
-  async getBearer (code: string, host = 'http://51.81.82.25:3002/callback'): Promise<RESTPostOAuth2AccessTokenResult | false> {
+  async getBearer (code: string, host = `${config.website.host}/callback`): Promise<RESTPostOAuth2AccessTokenResult | false> {
     const user = await this.app.api.request('POST', '/oauth2/token', {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: {
-        client_id: '647256366280474626',
-        client_secret: 'L0zn78ufGzkdSNZ5zW2iut3Eec3kmDUe',
-        code,
+        client_id: config.website.client_id,
+        client_secret: config.website.client_secret,
+        code: code,
         grant_type: 'authorization_code',
         redirect_uri: host,
-        scope: 'identify email connections guilds'
+        scope: config.website.scopes.join(' ')
       } as RESTPostOAuth2AccessTokenURLEncodedData,
       parser: qs.stringify
     })

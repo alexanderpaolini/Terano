@@ -1,0 +1,14 @@
+<head>
+  <link rel="stylesheet" href="/stylesheet.css" />
+</head>
+
+<div class="navbar">
+  <a class="active" href="/">Home</a>
+  <a href="https://github.com/Million900o/terano-rose">GitHub</a>
+  <% if (user) { %>
+    <a class="right" href="/dashboard">Dashboard</a>
+    <a href="logout" >Logout</a>
+  <% } else { %>
+    <a class="right" href="/login">Login</a>
+  <% } %>
+</div>
