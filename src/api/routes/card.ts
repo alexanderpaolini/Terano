@@ -3,7 +3,7 @@ import { Router } from 'express'
 import Canvas from 'canvas'
 
 // Middleware
-import authentication from '../middleware/authentication'
+import authentication from '../middleware/internalAuth'
 
 const router = Router()
 

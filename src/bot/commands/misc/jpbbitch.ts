@@ -12,7 +12,7 @@ export default {
   owner: false,
   cooldown: 5e3,
   exec: async (ctx) => {
-    await ctx.reply('<@142408079177285632>')
+    await ctx.reply('<@277183033344524288>')
     ctx.invokeCooldown?.()
   }
 } as CommandOptions
