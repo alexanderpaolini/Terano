@@ -25,20 +25,22 @@ router.post('/vote', webhook.listener(async (vote, req, res) => {
     query: vote.query
   })
 
-  await req.app.comms.sendWebhook(config.webhooks.votes.id as any, config.webhooks.votes.token, {
-    embeds: [{
-      title: 'User Voted',
-      author: {
-        name: vote.type === 'test' ? 'Test DBL Vote Webhook' : 'DBL Vote Webhook',
-        icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813585465169018880/image0.png'
-      },
-      color: vote.type === 'test' ? 16711680 : 11946475,
-      description: `\`${user.username}#${user.discriminator}\` just voted!`,
-      footer: {
-        text: `They have voted ${votes.total_votes} time${votes.total_votes > 1 ? 's' : ''}!`
-      }
-    }]
-  })
+  if (config.webhooks?.votes) {
+    await req.app.comms.sendWebhook(config.webhooks.votes.id as any, config.webhooks.votes.token, {
+      embeds: [{
+        title: 'User Voted',
+        author: {
+          name: vote.type === 'test' ? 'Test DBL Vote Webhook' : 'DBL Vote Webhook',
+          icon_url: 'https://cdn.discordapp.com/attachments/813578636162367559/813585465169018880/image0.png'
+        },
+        color: vote.type === 'test' ? 16711680 : 11946475,
+        description: `\`${user.username}#${user.discriminator}\` just voted!`,
+        footer: {
+          text: `They have voted ${votes.total_votes} time${votes.total_votes > 1 ? 's' : ''}!`
+        }
+      }]
+    })
+  }
 
   res.json({ success: true })
 }))
