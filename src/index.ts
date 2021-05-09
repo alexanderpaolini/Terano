@@ -7,7 +7,7 @@ import path from 'path'
 
 import { log } from './utils'
 
-const master = new Master(path.resolve(__dirname, './bot/worker.js'), {
+const master = new Master(path.resolve(__dirname, './bot/index.js'), {
   token: config.discord.token,
   shards: 'auto',
   // I don't actually have access to these

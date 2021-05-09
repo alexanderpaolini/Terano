@@ -1,4 +1,4 @@
-import TeranoWorker from '../lib/TeranoWorker'
+import TeranoWorker from '../structures/TeranoWorker'
 
 import { readdir } from 'fs'
 import { resolve } from 'path'

@@ -1,4 +1,4 @@
-import CommandContext from '../lib/CommandContext'
+import CommandContext from '../structures/CommandContext'
 
 import { formatTime } from '../../utils/index'
 

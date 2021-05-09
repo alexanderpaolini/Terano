@@ -1,6 +1,6 @@
 import { APIGuild, Snowflake } from 'discord-api-types'
 import { getAvatar } from '../../utils'
-import Monitor from '../lib/Monitor'
+import Monitor from '../structures/Monitor'
 
 export default class PrefixMonitor extends Monitor {
   cooldown = new Set()

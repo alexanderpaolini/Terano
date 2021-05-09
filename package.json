@@ -18,7 +18,7 @@
     "@discord-rose/admin-middleware": "^1.1.0",
     "@discord-rose/cooldown-middleware": "^1.1.0",
     "@discord-rose/flags-middleware": "^1.0.2",
-    "@discord-rose/permissions-middleware": "^1.1.0",
+    "@discord-rose/permissions-middleware": "github:BowsiePup/permissions-middleware",
     "@jpbberry/cache": "^1.0.4",
     "@top-gg/sdk": "^3.1.1",
     "canvas": "^2.7.0",

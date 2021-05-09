@@ -1,4 +1,4 @@
-import Monitor from '../lib/Monitor'
+import Monitor from '../structures/Monitor'
 
 export default class PrefixMonitor extends Monitor {
   async run (msg: any): Promise<void> {

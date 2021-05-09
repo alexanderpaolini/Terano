@@ -1,4 +1,4 @@
-import TeranoWorker from '../lib/TeranoWorker'
+import TeranoWorker from '../structures/TeranoWorker'
 
 export default (worker: TeranoWorker): void => {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises

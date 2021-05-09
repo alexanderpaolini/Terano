@@ -8,6 +8,7 @@ import { Worker } from 'discord-rose'
 
 // Required middlewares
 import flagsMiddleware from '@discord-rose/flags-middleware'
+import permissionsMiddleware from '@discord-rose/permissions-middleware'
 
 // Database
 import GuildDB from '../../database/guild'
@@ -23,6 +24,7 @@ import Webhooks from './Webhooks'
 
 import { TeranoOptions } from './types/TeranoOptions'
 import LanguageHandler from './LanguageHandler'
+import { getAvatar } from '../../utils'
 
 export default class TeranoWorker extends Worker {
   prod: boolean
@@ -53,14 +55,36 @@ export default class TeranoWorker extends Worker {
       .catch(() => { this.log('MongoDB connection failed') })
 
     this.loadInit()
+
+    this.commands.CommandContext = CommandContext
     this.commands.middleware(flagsMiddleware())
+    this.commands.middleware(permissionsMiddleware())
     this.commands.options({
       bots: false,
       caseInsensitiveCommand: true,
       caseInsensitivePrefix: true,
       mentionPrefix: true
     })
-    this.commands.CommandContext = CommandContext
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.commands.error(async (ctx, err) => {
+      const embed = ctx.embed
+
+      if (err.nonFatal) {
+        embed
+          .author(ctx.message.member?.nick ?? `${ctx.message.author.username} | ${String(ctx.command.command)}`,
+            getAvatar(ctx.message.author))
+          .description(err.message)
+      } else {
+        embed
+          .author('Error: ' + err.message, getAvatar(ctx.message.author))
+      }
+
+      embed
+        .color(ctx.worker.colors.RED)
+        .send(true)
+        .then(() => { })
+        .catch(() => { })
+    })
     if (this.prod) this.loadTOPGG()
   }
 
