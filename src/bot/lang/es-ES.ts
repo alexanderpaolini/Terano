@@ -3,6 +3,13 @@ export default {
   SERVER_ERROR: 'Error de servidor interno',
   DEVELOPED_BY: 'Hecho por MILLION#1321',
 
+  COOLDOWN: (time: string) => `Este comando se encuentra actualmente en enfriamiento.\nInténtelo de nuevo en ${
+    time
+      .replace('hour', 'hora')
+      .replace('minute', 'minuto')
+      .replace('second', 'segundo')
+    }`,
+
   CMD_COLOR_NONE: 'No se proporcionó color.',
   CMD_COLOR_UNKNOWN: 'No se el color verde `{0}`.',
   CMD_COLOR_UPDATED: 'Se cambió el color de la tarjeta a **{0}** ({1})',
@@ -11,13 +18,14 @@ export default {
   LANGUAGE: 'Español (es-ES)',
   CURRENT_LANGUAGE: 'Establecer idioma: `Español (es-ES)`',
   LANGUAGE_UPDATED: 'El idioma cambió a: `Español (es-ES)`',
-  NO_LANGUAGE: '`{0}` es no un idioma agregado',
+  NO_LANGUAGE: (lang: string, langs: string[]) => `\`${lang}\` es no un idioma agregado.\nIdiomas admitidos: ${langs.map(x => '`' + x + '`').join(', ')}`,
 
   CMD_COOLDOWN_CURRENT: 'El enfriamiento del nivel es de **{0}s**.',
-  CMD_COOLDOWN_LOW: 'El tiempo de reutilización del nivel debe ser de {0} segundos o más.',
+  CMD_COOLDOWN_LOW: 'El tiempo de reutilización del nivel debe ser de 0 segundos o más.',
   CMD_COOLDOWN_UPDATED: 'Se cambió el tiempo de reutilizacion del nivel de `{0}`s a `{1}`s.',
 
-  CMD_LEVELMESSAGE_UPDATED: 'Subir de nivel los mensajes establecidos en {0}',
+  CMD_LEVELMESSAGE_ENABLED: 'Subir de nivel los mensajes establecidos en activado',
+  CMD_LEVELMESSAGE_DISABLED: 'Subir de nivel los mensajes establecidos en discapacitado',
 
   CMD_LEVELROLE_NOLEVEL: 'No se dio ningún nivel',
   CMD_LEVELROLE_NOTNUM: 'El nivel debe ser un númbero',
@@ -37,11 +45,12 @@ export default {
   CMD_RATE_NONE: 'No se proporciono ninguna tasa de cambió de nivel',
   CMD_RATE_HIGH: 'La tasa de cambió de nivel debe ser mayor que 0',
   CMD_RATE_LOW: 'La tasa de cambió de nivel debe ser menos a 100',
-  CMD_RATE_UPDATED: 'Se cambió la tasa de cambo de nivel de {0} a {1}',
+  CMD_RATE_UPDATED: (old: string, newer: string) => `Se cambió la tasa de cambo de nivel de ${old} a ${newer}`,
 
-  CMD_HELP_NOCMD: 'Comando `{0}` no encontrado',
+  CMD_HELP_NOCMD: (cmd: string) => `Comando ${cmd} no encontrado`,
 
-  CMD_EMBEDS_UPDATED: 'Mensajes incrustados {0}',
+  CMD_EMBEDS_ENABLED: 'Mensajes incrustados activado',
+  CMD_EMBEDS_DISABLED: 'Mensajes incrustados discapacitado',
 
   CMD_PREFIX_CURRENT: 'Prefijo actual: `{0}`',
   CMD_PREFIX_LONG: 'La longitud del prefijo debe tener menos de 20 caracteres',

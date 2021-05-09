@@ -50,7 +50,7 @@ export default {
     } catch (err) {
       if (ctx.flags.s || ctx.flags.silent) return
 
-      void ctx.embed
+      ctx.embed
         .color(ctx.worker.colors.RED)
         .title('Eval Unsuccessful')
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)

@@ -45,7 +45,7 @@ export default (): ((ctx: CommandContext) => {}) => {
         currentCooldown.createdMessage = false
       }, 2000)
 
-      await ctx.smallResponse(ctx.worker.colors.RED, `You're on cooldown, try again in ${formatTime(timeRemaining)}`)
+      await ctx.respond('COOLDOWN', { error: true }, formatTime(timeRemaining))
       return false
     }
 

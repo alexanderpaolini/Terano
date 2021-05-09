@@ -15,7 +15,8 @@ export default {
     guildEmbed = !guildEmbed
     await ctx.worker.db.guildDB.setEmbeds(ctx.getID, guildEmbed)
 
-    // Return success?
-    await ctx.respond('CMD_EMBEDS_UPDATED', {}, guildEmbed ? 'Enabled' : 'Disabled')
+    guildEmbed
+      ? await ctx.respond('CMD_EMBEDS_ENABLED')
+      : await ctx.respond('CMD_EMBEDS_DISABLED')
   }
 } as CommandOptions

@@ -3,21 +3,24 @@ export default {
   SERVER_ERROR: 'Internal Server Error',
   DEVELOPED_BY: 'Developed by MILLION#1321',
 
+  COOLDOWN: (time: string) => `This command is currently on cooldown.\nPlease try again in ${time}`,
+
   LANGUAGE: 'English (en-US)',
   CURRENT_LANGUAGE: 'Current language: `English (en-US)`',
   LANGUAGE_UPDATED: 'Language updated to: `English (en-US)`',
-  NO_LANGUAGE: '`{0}` is not a supported language',
+  NO_LANGUAGE: (lang: string, langs: string[]) => `\`${lang}\` is not a supported language.\nSupported languages: ${langs.map(x => '`' + x + '`').join(', ')}`,
 
   CMD_COLOR_NONE: 'No color was given.',
-  CMD_COLOR_UNKNOWN: "I don't know the color `{0}`.",
-  CMD_COLOR_UPDATED: 'Set card color to **{0}** ({1})',
-  CMD_COLOR_UPDATEDCUSTOM: 'Set card color to **{0}**',
+  CMD_COLOR_UNKNOWN: (color: string) => `I don't know the color \`${color}\``,
+  CMD_COLOR_UPDATED: (color: string, name: string) => `Set card color to **${color}** (${name})`,
+  CMD_COLOR_UPDATEDCUSTOM: (color: string) => `Set card color to **${color}**`,
 
-  CMD_COOLDOWN_CURRENT: 'Current XP-cooldown is **{0}s**.',
+  CMD_COOLDOWN_CURRENT: (cooldown: string) => `Current XP-cooldown is **${cooldown}s**.`,
   CMD_COOLDOWN_LOW: 'The XP-cooldown must 0 seconds or greater.',
-  CMD_COOLDOWN_UPDATED: 'Changed XP-cooldown from `{0}`s to `{1}`s.',
+  CMD_COOLDOWN_UPDATED: (old: string, newer: string) => `Changed XP-cooldown from \`${old}\`s to \`${newer}\`s.`,
 
-  CMD_LEVELMESSAGE_UPDATED: 'Level-Up messages {0}',
+  CMD_LEVELMESSAGE_ENABLED: 'Level-Up messages enabled',
+  CMD_LEVELMESSAGE_DISABLED: 'Level-Up messages disabled',
 
   CMD_LEVELROLE_NOLEVEL: 'No level was given',
   CMD_LEVELROLE_NOTNUM: 'The level must be a number',
@@ -25,26 +28,27 @@ export default {
   CMD_LEVELROLE_NOROLE: 'No role was given.',
   CMD_LEVELROLE_NOTFOUND: 'Role was not found',
   CMD_LEVELROLE_NOPERMS: 'I cannot give members this role',
-  CMD_LEVELROLE_SET: 'Members will now get the role <@&{0}> when they are level `{0}`',
+  CMD_LEVELROLE_SET: (role: string, level: string) => `Members will now get the role <@&${role}> when they are level \`${level}\``,
 
   CMD_LEVELMESSAGE_SHORT: 'Level-Up message must be shorter than 100 characters',
   CMD_LEVELMESSAGE_CURRENT: (msg: string) => `Current Level-Up message: \`${msg}\``,
-  CMD_LEVELMESSAGE_SET: 'Level-Up message set to `{0}`',
+  CMD_LEVELMESSAGE_SET: (msg: string) => `Level-Up message set to \`${msg}\``,
 
   CMD_TAG_NONE: 'No tag was given',
   CMD_TAG_LONG: 'Tag must be no longer than thirty (30) characters',
-  CMD_TAG_UPDATED: 'Tag updated to `{0}`',
+  CMD_TAG_UPDATED: (tag: string) => `Tag updated to \`${tag}\``,
 
   CMD_RATE_NONE: 'No XP-Multiplier was given',
   CMD_RATE_HIGH: 'The XP-Multiplier must be greater than 0',
   CMD_RATE_LOW: 'The XP-Multiplier must be no greater than 100',
-  CMD_RATE_UPDATED: 'Changed XP-Multiplier from {0} to {1}',
+  CMD_RATE_UPDATED: (old: string, newer: string) => `Changed XP-Multiplier from \`${old}\` to \`${newer}\``,
 
-  CMD_HELP_NOCMD: 'Command `{0}` not found',
+  CMD_HELP_NOCMD: (cmd: string) => `Command \`${cmd}\` not found`,
 
-  CMD_EMBEDS_UPDATED: '{0} embeded messages',
+  CMD_EMBEDS_ENABLED: 'Enabled embeded messages',
+  CMD_EMBEDS_DISABLED: 'Disabled embeded messages',
 
-  CMD_PREFIX_CURRENT: 'Current prefix: `{0}`',
+  CMD_PREFIX_CURRENT: (prefix: string) => `Current prefix: \`${prefix}\``,
   CMD_PREFIX_LONG: 'Prefix length must be no greater than 20 characters',
-  CMD_PREFIX_UPDATED: 'Changed prefix from `{0}` to `{1}`'
+  CMD_PREFIX_UPDATED: (old: string, newer: string) => `Changed prefix from \`${old}\` to \`${newer}\``
 } as Language

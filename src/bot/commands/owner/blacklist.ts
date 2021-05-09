@@ -13,8 +13,8 @@ export default {
   exec: async (ctx) => {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
 
-    if (!userID) return ctx.error('No user was given, please mention a user.')
-    if (userID === ctx.message.author.id) return ctx.error('You cannot blacklist yourself.')
+    if (!userID) return await ctx.error('No user was given, please mention a user.')
+    if (userID === ctx.message.author.id) return await ctx.error('You cannot blacklist yourself.')
 
     const isBlacklisted = await ctx.worker.db.userDB.getBlacklist(userID)
     await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted)

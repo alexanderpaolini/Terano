@@ -11,7 +11,7 @@ export default {
   botPermissions: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.flags.safe) return ctx.error(ctx.args.join(' '))
+    if (ctx.flags.safe) return await ctx.error(ctx.args.join(' '))
     throw new Error(ctx.args.join(' '))
   }
 } as CommandOptions
