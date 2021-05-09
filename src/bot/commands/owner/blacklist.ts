@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'blacklist',
   aliases: ['bl'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')

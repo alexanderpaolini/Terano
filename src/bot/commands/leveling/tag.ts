@@ -7,8 +7,8 @@ export default {
   category: 'leveling',
   command: 'tag',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   exec: async (ctx) => {
     // Get the tag
     const tag = ctx.args.join(' ')

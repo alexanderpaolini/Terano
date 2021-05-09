@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'throw',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     if (ctx.flags.safe) return await ctx.error(ctx.args.join(' '))

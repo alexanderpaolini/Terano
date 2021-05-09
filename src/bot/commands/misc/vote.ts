@@ -7,8 +7,8 @@ export default {
   category: 'misc',
   command: 'vote',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: false,
   exec: async (ctx) => {
     await ctx.reply('https://top.gg/bot/647256366280474626/vote')

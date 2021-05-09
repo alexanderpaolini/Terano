@@ -12,8 +12,8 @@ export default {
   category: 'leveling',
   command: 'rank',
   aliases: ['card', 'level'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   cooldown: 9e3,
   exec: async (ctx) => {
     const user =

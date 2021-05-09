@@ -7,8 +7,8 @@ export default {
   category: 'leveling',
   command: 'xpcooldown',
   aliases: ['cooldown'],
-  permissions: ['manageMessages'],
-  botPermissions: [],
+  userPerms: ['manageMessages'],
+  myPerms: [],
   exec: async (ctx) => {
     // Make sure its a number
     const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)

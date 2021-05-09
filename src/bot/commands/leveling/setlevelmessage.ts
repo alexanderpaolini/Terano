@@ -7,8 +7,8 @@ export default {
   category: 'leveling',
   command: 'setlevelmessage',
   aliases: ['slm'],
-  permissions: ['manageMessages'],
-  botPermissions: [],
+  userPerms: ['manageMessages'],
+  myPerms: [],
   exec: async (ctx) => {
     // Get the new message
     const message = ctx.args.join(' ')

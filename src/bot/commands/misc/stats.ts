@@ -7,8 +7,8 @@ export default {
   description: 'Get the bot\'s stats.',
   category: 'misc',
   command: 'stats',
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: false,
   cooldown: 5e3,
   exec: async (ctx) => {

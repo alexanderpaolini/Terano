@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'devmode',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     if (ctx.worker.devmode) ctx.worker.devmode = false

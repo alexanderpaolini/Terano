@@ -11,8 +11,8 @@ export default {
   category: 'leveling',
   command: 'leaderboard',
   aliases: ['lb'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message

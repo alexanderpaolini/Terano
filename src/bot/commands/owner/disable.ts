@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'disable',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     const command = ctx.args[0]

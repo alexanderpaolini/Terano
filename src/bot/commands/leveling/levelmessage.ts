@@ -7,8 +7,8 @@ export default {
   category: 'leveling',
   command: 'levelmessage',
   aliases: ['lm'],
-  permissions: ['manageMessages'],
-  botPermissions: [],
+  userPerms: ['manageMessages'],
+  myPerms: [],
   exec: async (ctx) => {
     // Get and reverse the current setting
     const sendMesasge = !(await ctx.worker.db.guildDB.getSendLevelMessage(ctx.getID))

@@ -7,8 +7,8 @@ export default {
   category: 'leveling',
   command: 'xpmultiplier',
   aliases: ['xprate'],
-  permissions: ['manageMessages'],
-  botPermissions: [],
+  userPerms: ['manageMessages'],
+  myPerms: [],
   exec: async (ctx) => {
     // Get the new rate
     const newRate = Number(ctx.args[0])

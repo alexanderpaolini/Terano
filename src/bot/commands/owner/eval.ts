@@ -18,8 +18,8 @@ export default {
   command: 'eval',
   aliases: ['ev'],
   flags: ['b', 'm', 's', 'l'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     const worker = ctx.worker

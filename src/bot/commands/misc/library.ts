@@ -7,8 +7,8 @@ export default {
   category: 'misc',
   command: 'library',
   aliases: ['lib'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: false,
   exec: async (ctx) => {
     await ctx.reply('https://npm.im/discord-rose')

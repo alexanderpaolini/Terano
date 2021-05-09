@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'owner',
   aliases: ['owo'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     // Get the user ID

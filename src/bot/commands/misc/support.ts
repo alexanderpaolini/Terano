@@ -7,8 +7,8 @@ export default {
   category: 'misc',
   command: 'support',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: false,
   exec: async (ctx) => {
     await ctx.reply('https://discord.gg/YzWsDrs2kw')

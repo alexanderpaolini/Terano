@@ -8,8 +8,8 @@ export default {
   category: 'leveling',
   command: 'levelrole',
   aliases: ['lr'],
-  permissions: ['manageRoles'],
-  botPermissions: [],
+  userPerms: ['manageRoles'],
+  myPerms: [],
   exec: async (ctx) => {
     // Get the level and do some good checks
     const level = parseInt(ctx.args[0])

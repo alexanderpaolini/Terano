@@ -7,8 +7,8 @@ export default {
   category: 'moderation',
   command: 'embeds',
   aliases: [],
-  permissions: ['manageGuild'],
-  botPermissions: [],
+  userPerms: ['manageGuild'],
+  myPerms: [],
   exec: async (ctx) => {
     // Get and update the shit
     let guildEmbed = await ctx.worker.db.guildDB.getEmbeds(ctx.getID)

@@ -7,8 +7,8 @@ export default {
   category: 'moderation',
   command: 'lang',
   aliases: ['language'],
-  permissions: ['manageGuild'],
-  botPermissions: [],
+  userPerms: ['manageGuild'],
+  myPerms: [],
   exec: async (ctx) => {
     if (!ctx.args[0]) return await ctx.respond('CURRENT_LANGUAGE')
     const lang = ctx.args[0]

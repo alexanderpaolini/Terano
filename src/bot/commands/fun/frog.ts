@@ -9,8 +9,8 @@ export default {
   category: 'fun',
   command: 'frog',
   aliases: ['forg', 'froggers', 'og'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: false,
   exec: async (ctx) => {
     fetch('https://frogs.media/api/random')

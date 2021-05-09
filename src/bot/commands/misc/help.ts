@@ -8,8 +8,8 @@ export default {
   category: 'misc',
   command: 'help',
   aliases: ['yardım', 'yardim'],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   exec: async (ctx) => {
     const guildPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.getID)
 
@@ -21,7 +21,7 @@ export default {
       if (command != null) {
         ctx.embed
           .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
-          .description(`\`Command\`: ${command.command as string}\n\`Usage\`: ${guildPrefix}${command.usage}\n${(command.aliases != null) ? `\`Aliases\`: ${(command.aliases as string[]).join(', ') + '\n'}` : ''}${(command.permissions != null) ? (command.permissions as string[]).join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
+          .description(`\`Command\`: ${command.command as string}\n\`Usage\`: ${guildPrefix}${command.usage}\n${(command.aliases != null) ? `\`Aliases\`: ${(command.aliases as string[]).join(', ') + '\n'}` : ''}${(command.userPerms != null) ? (command.userPerms as string[]).join(', ') + '\n' : ''}\`Description\`: ${command.description}`)
           .footer(await ctx.lang('DEVELOPED_BY'))
           .color(ctx.worker.colors.GREEN)
           .timestamp()

@@ -7,8 +7,7 @@ const command: CommandOptions = {
   category: 'owner',
   command: 'sweep',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
   owner: true,
   exec: async (ctx) => {
     const time = Date.now()

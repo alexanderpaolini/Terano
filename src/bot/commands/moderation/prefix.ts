@@ -7,8 +7,8 @@ export default {
   category: 'moderation',
   command: 'prefix',
   aliases: [],
-  permissions: ['manageMessages'],
-  botPermissions: [],
+  userPerms: ['manageMessages'],
+  myPerms: [],
   exec: async (ctx) => {
     const prefix = ctx.args[0]
 

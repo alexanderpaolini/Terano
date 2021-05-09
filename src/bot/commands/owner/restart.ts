@@ -7,8 +7,8 @@ export default {
   category: 'owner',
   command: 'restart',
   aliases: [],
-  permissions: [],
-  botPermissions: [],
+  userPerms: [],
+  myPerms: [],
   owner: true,
   exec: async (ctx) => {
     if (typeof ctx.flags.shard !== 'undefined') {
