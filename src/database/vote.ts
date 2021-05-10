@@ -1,29 +1,23 @@
-import { Cache } from '@jpbberry/cache'
+import { Schema, model } from 'mongoose'
 
-import VoteModel from './models/users/vote'
+const voteSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  total_votes: { type: Number, default: 1 },
+  votes_worth: { type: Number, default: 1 },
+  votes: { type: Array, default: [] }
+})
+
+const voteModel = model('users.votes', voteSchema)
 
 export default class VoteDB {
-  /**
-   * The Settings
-   */
-  cache: Cache<string, VoteDoc> = new Cache(0)
-
   /**
    * Get a VoteDoc
    * @param id User ID
    */
   async getVotes (id: string): Promise<VoteDoc> {
-    // Check the cache first
-    const fromCache = this.cache.get(id)
-    if (fromCache !== undefined) return fromCache
-
     // Then check the DB
-    const fromDB: VoteDoc = await VoteModel.findOne({ id }).lean()
-    if (fromDB !== null) {
-      // Add it to the cache
-      this.cache.set(id, fromDB)
-      return fromDB
-    }
+    const fromDB: VoteDoc = await voteModel.findOne({ id }).lean()
+    if (fromDB !== null) return fromDB
 
     // Otherwise create a new one
     return {
@@ -40,7 +34,7 @@ export default class VoteDB {
    * @param guildID Guild ID
    */
   async createVote (id: string): Promise<VoteDoc> {
-    await VoteModel.create({ id })
+    await voteModel.create({ id })
     return await this.getVotes(id)
   }
 
@@ -56,7 +50,56 @@ export default class VoteDB {
     votes.total_votes++
     votes.votes_worth = votes.votes_worth + vote.worth
 
-    this.cache.set(id, votes)
-    return VoteModel.findOneAndUpdate({ id }, votes, { upsert: true }).lean() as unknown as LevelDoc
+    return voteModel.updateOne({ id }, votes, { upsert: true }).lean() as unknown as LevelDoc
   }
+}
+
+/**
+ * User Vote Document in the DB
+ */
+export interface VoteDoc {
+  /**
+   * The ID of the user
+   */
+  id: string
+  /**
+   * The total amount of times the user has voted
+   */
+  total_votes: number
+  /**
+   * How many votes the votes were worth (weekends are worth 2x)
+   */
+  votes_worth: number
+  /**
+   * Array of votes
+   */
+  votes: Vote[]
+}
+
+/**
+ * A vote
+ */
+interface Vote {
+  /**
+   * When the vote was made
+   */
+  date: string
+  /**
+   * How much it is worth (1: normal, 2: weekends)
+   */
+  worth: 1 | 2
+  /**
+   * How many votes before this
+   */
+  number?: number
+  /**
+   * Query if there
+   */
+  query?: string | {
+    [key: string]: string
+  }
+  /**
+   * Which bot it was for
+   */
+  bot: string
 }

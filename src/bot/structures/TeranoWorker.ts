@@ -1,14 +1,15 @@
-// Basic shit
+import { Config } from '../../config'
+
 import fs from 'fs'
 import path from 'path'
 import { Api } from '@top-gg/sdk'
 
 // Worker
-import { Worker } from 'discord-rose'
+import { Embed, Worker } from 'discord-rose'
 
 // Required middlewares
 import flagsMiddleware from '@discord-rose/flags-middleware'
-import permissionsMiddleware from '@discord-rose/permissions-middleware'
+import permissionsMiddleware, { humanReadable } from '@discord-rose/permissions-middleware'
 
 // Database
 import GuildDB from '../../database/guild'
@@ -16,14 +17,11 @@ import UserDB from '../../database/user'
 import VoteDB from '../../database/vote'
 import mongoose from 'mongoose'
 
-// Lib
 import Monitor from './Monitor'
 import colors from './colors'
-import CommandContext from './CommandContext'
-import Webhooks from './Webhooks'
-
-import { TeranoOptions } from './types/TeranoOptions'
 import LanguageHandler from './LanguageHandler'
+import CommandContext from './CommandContext'
+
 import { getAvatar } from '../../utils'
 
 export default class TeranoWorker extends Worker {
@@ -31,7 +29,6 @@ export default class TeranoWorker extends Worker {
   topgg: Api | null = null
   colors = colors
   devmode = false
-  webhooks = new Webhooks(this)
   monitors: Monitor[] = []
   statsInterval: NodeJS.Timeout | null = null
   commandCooldowns: { [key: string]: number } = {}
@@ -39,18 +36,23 @@ export default class TeranoWorker extends Worker {
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
 
   langs = new LanguageHandler(this)
+  config = Config
 
   /**
    * Create the bot
-   * @param opts The options lol
    */
-  constructor (public opts: TeranoOptions) {
+  constructor () {
     super()
 
-    this.prod = opts.prod
+    this.prod = this.config.prod
 
     // Connect to mongoose
-    mongoose.connect(opts.mongodb.connectURI, opts.mongodb.connectOptions)
+    mongoose.connect(this.config.db.connection_string, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true
+    })
       .then(() => { this.log('Connected to MongoDB') })
       .catch(() => { this.log('MongoDB connection failed') })
 
@@ -58,12 +60,19 @@ export default class TeranoWorker extends Worker {
 
     this.commands.CommandContext = CommandContext
     this.commands.middleware(flagsMiddleware())
-    this.commands.middleware(permissionsMiddleware())
+    this.commands.middleware(permissionsMiddleware({
+      my: (ctx, p) => ctx.lang('NO_PERMS_BOT', p.map(x => humanReadable[x] ?? x) as any as string),
+      user: (ctx, p) => ctx.lang('NO_PERMS_USER', p.map(x => humanReadable[x] ?? x) as any as string)
+    }))
     this.commands.options({
-      bots: false,
+      bots: true,
       caseInsensitiveCommand: true,
       caseInsensitivePrefix: true,
       mentionPrefix: true
+    })
+    this.commands.prefix(async (msg: any) => {
+      const id = msg.guild_id ?? 'dm'
+      return await this.db.guildDB.getPrefix(id)
     })
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.commands.error(async (ctx, err) => {
@@ -71,7 +80,7 @@ export default class TeranoWorker extends Worker {
 
       if (err.nonFatal) {
         embed
-          .author(ctx.message.member?.nick ?? `${ctx.message.author.username} | ${String(ctx.command.command)}`,
+          .author((ctx.message.member?.nick ?? ctx.message.author.username) + ` | ${String(ctx.command.name ?? ctx.command.command)}`,
             getAvatar(ctx.message.author))
           .description(err.message)
       } else {
@@ -106,12 +115,19 @@ export default class TeranoWorker extends Worker {
     })
   }
 
+  webhook (wh: keyof typeof Config.discord.webhooks): Embed {
+    const webhook = this.config.discord.webhooks[wh]
+    return new Embed(async (embed) => {
+      return await this.comms.sendWebhook(webhook.id, webhook.token, embed)
+    })
+  }
+
   /**
    * Load the top.gg API stats
    */
   loadTOPGG (): void {
     this.log('Posting stats to top.gg every 20 minutes')
-    this.topgg = new Api(this.opts.topgg.token)
+    this.topgg = new Api(this.config.topgg.token)
     this.statsInterval = setInterval(() => { void this.postTOPGG() }, 20 * 60 * 1000)
   }
 
@@ -119,6 +135,7 @@ export default class TeranoWorker extends Worker {
    * Post top.gg stats
    */
   async postTOPGG (): Promise<void> {
+    // TODO: remove this
     if (!this.comms) return
     const clusterStats = await this.comms.getStats()
 

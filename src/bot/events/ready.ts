@@ -5,7 +5,12 @@ export default (worker: TeranoWorker): void => {
     worker.log(`Ready as ${worker.user.username}#${worker.user.discriminator} (${worker.user.id})`)
   })
 
-  worker.on('SHARD_READY', (shard) => {
-    void worker.webhooks.shard(worker.colors.GREEN, `Shard ${shard.id} is ready`)
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  worker.on('SHARD_READY', async (shard) => {
+    await worker.webhook('shards')
+      .title(`Cluster ${worker.comms.id}`)
+      .author(`${worker.user.username}#${worker.user.discriminator}`)
+      .description(`Shard ${shard.id} is ready`)
+      .color(worker.colors.GREEN)
   })
 }

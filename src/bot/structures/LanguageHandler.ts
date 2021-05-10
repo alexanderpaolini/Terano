@@ -8,6 +8,7 @@ export default class LanguageHandler {
   langs: Map<string, Language> = new Map()
 
   constructor (private readonly worker: TeranoWorker) {
+    // TODO: make this cleaner
     this.langs.set('en-US', eng)
     this.langs.set('undefined', und)
     this.langs.set('es-ES', esp)

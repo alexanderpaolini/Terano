@@ -5,6 +5,9 @@ export default {
 
   COOLDOWN: (time: string) => `This command is currently on cooldown.\nPlease try again in ${time}`,
 
+  NO_PERMS_BOT: (perms: string[]) => `I'm missing the following permissions: ${perms.map(p => `\`${p}\``).join(', ')}`,
+  NO_PERMS_USER: (perms: string[]) => `You're missing the following permissions: ${perms.map(p => `\`${p}\``).join(', ')}`,
+
   LANGUAGE: 'English (en-US)',
   CURRENT_LANGUAGE: 'Current language: `English (en-US)`',
   LANGUAGE_UPDATED: 'Language updated to: `English (en-US)`',

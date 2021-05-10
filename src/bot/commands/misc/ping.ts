@@ -8,8 +8,8 @@ export default {
   category: 'misc',
   command: 'ping',
   aliases: ['pong'],
-  userPerms: [],
-  myPerms: [],
+  userPerms: ['administrator'],
+  myPerms: ['administrator'],
   exec: async (ctx) => {
     const time = Date.now()
     const url = getAvatar(ctx.message.author)

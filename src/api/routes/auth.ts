@@ -1,36 +1,33 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import config from '../../config.json'
+import { Config } from '../../config'
 
 import { Router } from 'express'
+import { API } from '../structures/API'
 
-const router = Router()
+export default function (this: API, router: Router): void {
+  router.get('/login', (req, res) => {
+    res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${Config.oauth.id}&redirect_uri=${encodeURIComponent(`${req.hostname}/callback`)}&response_type=code&scope=${Config.oauth.scopes.join('%20')}`)
+  })
 
-const redirect = encodeURIComponent(`${config.website.host}/callback`)
+  router.get('/callback', async (req, res) => {
+    if (!req.query.code) return res.redirect('/login')
 
-router.get('/login', (req, res) => {
-  res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${config.website.client_id}&redirect_uri=${redirect}&response_type=code&scope=${config.website.scopes.join('%20')}`)
-})
+    const cb = await req.app.oauth2.callback(req.query.code as string, req.hostname).catch(e => null)
+    if (!cb) return res.redirect('/500')
 
-router.get('/callback', async (req, res) => {
-  if (!req.query.code) return res.redirect('/login')
+    const { doc } = cb
 
-  const cb = await req.app.oauth2.callback(req.query.code as string).catch(e => null)
-  if (!cb) return res.redirect('/500')
+    res.cookie('token', doc.token)
+    res.redirect('/user')
+  })
 
-  const { doc } = cb
+  router.get('/logout', async (req, res) => {
+    res.clearCookie('token')
+    res.redirect('/home')
+  })
 
-  res.cookie('token', doc.token)
-  res.redirect('/user')
-})
-
-router.get('/logout', async (req, res) => {
-  res.clearCookie('token')
-  res.redirect('/home')
-})
-
-router.get('/*', async (req, res) => {
-  const user = await req.app.oauth2.db.getAuth(req.cookies?.token ?? '').catch(() => null)
-  res.render('index.ejs', { user: user })
-})
-
-export default router
+  router.get('/*', async (req, res) => {
+    const user = await req.app.oauth2.db.getAuth(req.cookies?.token ?? '').catch(() => null)
+    res.render('index.ejs', { user: user })
+  })
+}

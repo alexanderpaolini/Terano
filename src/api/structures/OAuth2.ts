@@ -1,14 +1,12 @@
-import config from '../../config.json'
+import { Config } from '../../config'
 
-import OAuth2DB from '../../database/oauth2'
+import OAuth2DB, { OAuth2Doc } from '../../database/oauth2'
 
 import qs from 'qs'
 import Crypto from 'crypto'
 
 import { APIUser, RESTPostOAuth2AccessTokenResult, RESTPostOAuth2AccessTokenURLEncodedData } from 'discord-api-types'
 import { Application } from 'express'
-
-import { OAuth2Doc } from '../../database/types/OAuth2Doc'
 
 export class OAuth2 {
   db = new OAuth2DB()
@@ -26,7 +24,7 @@ export class OAuth2 {
       .digest('hex')
   }
 
-  async callback (code: string, host?: string): Promise<{ user: APIUser, doc: OAuth2Doc }> {
+  async callback (code: string, host: string): Promise<{ user: APIUser, doc: OAuth2Doc }> {
     const oauthUser = await this.getBearer(code, host)
     if (!oauthUser) throw new Error('Invalid Code')
 
@@ -50,18 +48,18 @@ export class OAuth2 {
     return { user, doc }
   }
 
-  async getBearer (code: string, host = `${config.website.host}/callback`): Promise<RESTPostOAuth2AccessTokenResult | false> {
+  async getBearer (code: string, host: string): Promise<RESTPostOAuth2AccessTokenResult | false> {
     const user = await this.app.api.request('POST', '/oauth2/token', {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: {
-        client_id: config.website.client_id,
-        client_secret: config.website.client_secret,
+        client_id: Config.oauth.id,
+        client_secret: Config.oauth.client_secret,
         code: code,
         grant_type: 'authorization_code',
         redirect_uri: host,
-        scope: config.website.scopes.join(' ')
+        scope: Config.oauth.scopes.join(' ')
       } as RESTPostOAuth2AccessTokenURLEncodedData,
       parser: qs.stringify
     })

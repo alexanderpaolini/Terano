@@ -9,12 +9,24 @@ export default (worker: TeranoWorker): void => {
     await worker.db.guildDB.createGuild(guild.id)
 
     // Send the Webhook
-    await worker.webhooks.guildJoin(guild)
+    await worker.webhook('guilds')
+      .title('Joined Guild')
+      .author(`${worker.user.username}#${worker.user.discriminator}`, 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png')
+      .color(worker.colors.GREEN)
+      .description(`\`${guild.name}\` (${guild.id})`)
+      .footer(`Current Guild Count: ${worker.guilds.size}`)
+      .send()
   })
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   worker.on('GUILD_DELETE', async (guild) => {
     worker.log(`Left Guild ${guild.id}`)
-    await worker.webhooks.guildLeave(guild)
+    await worker.webhook('guilds')
+      .title('Joined Guild')
+      .author(`${worker.user.username}#${worker.user.discriminator}`, 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png')
+      .color(worker.colors.GREEN)
+      .description(`${guild.id}`)
+      .footer(`Current Guild Count: ${worker.guilds.size}`)
+      .send()
   })
 }

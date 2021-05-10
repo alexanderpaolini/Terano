@@ -173,6 +173,7 @@ export default class CMDCTX extends CommandContext {
    * @param message What to respond
    */
   async respond (name: string, options: RespondOptions = {}, ...args: string[]): Promise<APIMessage | null> {
+    // TODO: make not shit
     if (this.flags.s) return null
 
     const message = await this.lang(name, ...args)

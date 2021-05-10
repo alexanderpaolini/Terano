@@ -1,7 +1,48 @@
+import { Schema, model } from 'mongoose'
 import { Cache } from '@jpbberry/cache'
 
-import GuildModel from './models/guilds/guild'
-import ModerationModel from './models/guilds/moderation'
+const guildSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  options: {
+    prefix: { type: String, default: 't!' },
+    embeds: { type: Boolean, default: true },
+    no_permissions: { type: Boolean, default: true },
+    lang: { type: String, default: 'en-US' }
+  },
+  level: {
+    cooldown: { type: String, default: 15 },
+    xp_multplier: { type: Number, default: 1 },
+    send_level_message: { type: Boolean, default: false },
+    level_message: { type: String, default: 'You are now level {{level}}!' },
+    default_color: { type: String, default: '#07bb5b' },
+    level_roles: { type: Array, default: [] }
+  },
+  moderation: {
+    log_channel: { type: String, default: 'none' },
+    mute_role: { type: String, default: 'none' },
+    auto_role: { type: Array, default: [] }
+  }
+})
+
+const guildModel = model('guilds', guildSchema)
+
+const moderationSchema = new Schema({
+  guildID: { type: String, required: true },
+  number: { type: Number, required: true },
+  info: {
+    member: { type: String, required: true },
+    action: { type: String, required: true },
+    reason: { type: String, required: false, default: 'none' },
+    moderator: { type: String, required: true },
+    timestamp: { type: Date, required: true }
+  },
+  log_message: {
+    channel: { type: String, required: true },
+    message: { type: String, required: true }
+  }
+})
+
+const moderationModel = model('guilds.moderation', moderationSchema)
 
 export default class GuildDB {
   /**
@@ -19,7 +60,7 @@ export default class GuildDB {
     if (fromCache !== undefined) return fromCache
 
     // Then check the DB
-    const fromDB: GuildDoc = await GuildModel.findOne({ id }).lean()
+    const fromDB: GuildDoc = await guildModel.findOne({ id }).lean()
     if (fromDB !== null) {
       // Add it to the cache
       this.guilds.set(id, fromDB)
@@ -35,7 +76,7 @@ export default class GuildDB {
    * @param id The ID of the guild
    */
   async createGuild (id: string): Promise<GuildDoc> {
-    await GuildModel.create({ id })
+    await guildModel.create({ id })
     return await this.getGuild(id)
   }
 
@@ -45,7 +86,7 @@ export default class GuildDB {
    */
   async updateGuild (doc: GuildDoc): Promise<GuildDoc> {
     this.guilds.set(doc.id, doc)
-    return GuildModel.findOneAndUpdate({ id: doc.id }, doc).lean() as unknown as GuildDoc
+    return guildModel.findOneAndUpdate({ id: doc.id }, doc).lean() as unknown as GuildDoc
   }
 
   /**
@@ -245,7 +286,7 @@ export default class GuildDB {
    * @param number The case number for that guild
    */
   async getModeration (guildID: string, number: number): Promise<ModerationDoc | null> {
-    const fromDB: ModerationDoc = await ModerationModel.findOne({ guildID, number }).lean()
+    const fromDB: ModerationDoc = await moderationModel.findOne({ guildID, number }).lean()
     return fromDB
   }
 
@@ -280,5 +321,163 @@ export default class GuildDB {
     const guildData = await this.getGuild(guildID)
     guildData.options.lang = lang
     return await this.updateGuild(guildData)
+  }
+}
+
+/**
+ * The Guild options
+ */
+interface GuildDoc {
+  /**
+   * Guild ID
+   */
+  id: string
+  /**
+   * Basic options
+   */
+  options: {
+    /**
+     * Guild Prefix
+     */
+    prefix: string
+    /**
+     * Whether or not to send in embeds
+     */
+    embeds: boolean
+    /**
+     * Whether or not to send no-permissions messages
+     */
+    no_permissions: boolean
+    /**
+     * What language to respond in
+     */
+    lang: string
+  }
+  /**
+   * Leveling options
+   */
+  level: {
+    /**
+     * The delay between gaining xp
+     */
+    cooldown: string
+    /**
+     * The XP Multplier
+     */
+    xp_multplier: number
+    /**
+     * Whether or not to send the level message
+     */
+    send_level_message: boolean
+    /**
+     * The Level-Up message to be sent
+     */
+    level_message: string
+    /**
+     * the default color of a rank card
+     */
+    default_color: string
+    /**
+     * Automatic roles on levels
+     */
+    level_roles: LevelRole[]
+  }
+  /**
+   * Moderation settings
+   */
+  moderation: {
+    /**
+     * The id of the role to give when muting
+     */
+    mute_role: string
+    /**
+     * The channel to send logs
+     */
+    log_channel: string
+    /**
+     * The auto role options
+     */
+    auto_role: AutoRole[]
+  }
+}
+
+/**
+ * The auto role options
+ */
+interface LevelRole {
+  /**
+   * The ID of the string
+   */
+  id: string
+  /**
+   * The level for it to be given on
+   */
+  level: number
+}
+
+/**
+ * The auto role options
+ */
+interface AutoRole {
+  /**
+   * The ID of the role
+   */
+  id: string
+  /**
+   * How long to wait before giving it (in miliseconds)
+   */
+  delay: number
+}
+
+/**
+ * Moderation database document
+ */
+interface ModerationDoc {
+  /**
+   * The ID of the guild it was in
+   */
+  guildID: string
+  /**
+   * The case number
+   */
+  number: number
+  /**
+   * Info about it
+   */
+  info: {
+    /**
+     * Who was the action on
+     */
+    member: string
+    /**
+     * What was the acction
+     */
+    action: 'BAN' | 'KICK' | 'MUTE' | 'WARN'
+    /**
+     * What was the reason for the action
+     */
+    reason: string
+    /**
+     * The ID of the moderator who did the action
+     */
+    moderator: string
+    /**
+     * The timesampt of the action
+     */
+    timestamp: string
+  }
+  /**
+   * The log stuff
+   * This is for editing the message
+   */
+  log_message: {
+    /**
+     * The channel ID
+     */
+    channel: string
+    /**
+     * The message ID
+     */
+    message: string
   }
 }

@@ -1,4 +1,4 @@
-import config from '../config.json'
+import { Config } from '../config'
 
 import { InfluxDB, FieldType } from 'influx'
 
@@ -8,7 +8,7 @@ const thread = new Thread()
 
 const influx = new InfluxDB({
   host: 'localhost',
-  database: config.prod ? 'prod' : 'test',
+  database: Config.prod ? 'prod' : 'test',
   schema: [
     {
       measurement: 'memory',

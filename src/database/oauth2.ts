@@ -1,9 +1,17 @@
+import { Schema, model } from 'mongoose'
 import { Cache } from '@jpbberry/cache'
 
-import OAuth2Model from './models/users/OAuth2'
-import { OAuth2Doc } from './types/OAuth2Doc'
+const OAuth2Schema = new Schema({
+  id: { type: String, required: true, unique: true },
+  token: { type: String, required: true, unique: true },
+  bearer: { type: String, required: true, unique: true },
+  avatar: { type: String, required: false, default: 'https://cdn.discordapp.com/embed/avatars/1.png' },
+  email: { type: String, required: false }
+})
 
-export default class VoteDB {
+const OAuth2Model = model('users.oauth2', OAuth2Schema)
+
+export default class OAuth2DB {
   /**
    * The Settings
    */
@@ -34,4 +42,30 @@ export default class VoteDB {
     this.cache.set(doc.id, doc)
     await OAuth2Model.updateOne({ id: doc.id }, doc, { upsert: true })
   }
+}
+
+/**
+ * OAuth2 Data from the db
+ */
+export interface OAuth2Doc {
+  /**
+   * The user's id
+   */
+  id: string
+  /**
+   * The generated token for API requests
+   */
+  token: string
+  /**
+   * Bearer token for requests
+   */
+  bearer: string
+  /**
+   * Avatar URL
+   */
+  avatar: string
+  /**
+   * Email?
+   */
+  email?: string
 }

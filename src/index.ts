@@ -1,18 +1,17 @@
-// Config
-import config from './config.json'
+import { Config } from './config'
 
-// Required shit
 import { Master } from 'discord-rose'
+
 import path from 'path'
 
 import { log } from './utils'
 
 const master = new Master(path.resolve(__dirname, './bot/index.js'), {
-  token: config.discord.token,
+  token: Config.discord.token,
   shards: 'auto',
   // I don't actually have access to these
   // Therfore I need to apply for them
-  intents: config.prod ? ['GUILD_MESSAGES', 'GUILDS'] : 32767,
+  intents: Config.prod ? ['GUILD_MESSAGES', 'GUILDS'] : 32767,
   cache: {
     users: true,
     members: true
