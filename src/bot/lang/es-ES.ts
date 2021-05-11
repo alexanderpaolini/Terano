@@ -206,8 +206,9 @@ export default {
 
   // Categories
 
-  // CAT_OWNER
-  // CAT_LEVEING
   // CAT_FUN
+  // CAT_LEVELING
   // CAT_MISC
+  // CAT_OWNER
+  // CAT_MODERATION
 } as any

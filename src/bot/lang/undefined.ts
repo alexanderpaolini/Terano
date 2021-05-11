@@ -205,7 +205,7 @@ export default {
   // Categories
 
   CAT_FUN: 'undefined',
-  CAT_LEVLEING: 'undefined',
+  CAT_LEVELING: 'undefined',
   CAT_MISC: 'undefined',
   CAT_MODERATION: 'undefined',
   CAT_OWNER: 'undefined'

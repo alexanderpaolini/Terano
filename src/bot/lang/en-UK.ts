@@ -1,4 +1,6 @@
-const lang = {
+import { Language } from '.'
+
+export default {
   CUSTOM: (str: string) => str,
   ERROR: (err: string) => `**Error: ${err}**`,
   LOADING: 'Loading...',
@@ -31,13 +33,13 @@ const lang = {
   CMD_FROG_DESCRIPTION: 'Get a picture of a frog',
   CMD_FROG_USAGE: 'frog',
 
-  CMD_COLOR_NAME: 'Color',
-  CMD_COLOR_DESCRIPTION: 'Set your rank card color',
-  CMD_COLOR_USAGE: '<color>',
-  CMD_COLOR_NONE: 'No color was given.',
-  CMD_COLOR_UNKNOWN: (color: string) => `I don't know the color \`${color}\``,
-  CMD_COLOR_UPDATED: (color: string, name: string) => `Set card color to **${color}** (${name})`,
-  CMD_COLOR_UPDATEDCUSTOM: (color: string) => `Set card color to **${color}**`,
+  CMD_COLOR_NAME: 'Colour',
+  CMD_COLOR_DESCRIPTION: 'Set your rank card colour',
+  CMD_COLOR_USAGE: '<colour>',
+  CMD_COLOR_NONE: 'No colour was given.',
+  CMD_COLOR_UNKNOWN: (color: string) => `I don't know the colour \`${color}\``,
+  CMD_COLOR_UPDATED: (color: string, name: string) => `Set card colour to **${color}** (${name})`,
+  CMD_COLOR_UPDATEDCUSTOM: (color: string) => `Set card colour to **${color}**`,
 
   CMD_COOLDOWN_NAME: 'XP-Cooldown',
   CMD_COOLDOWN_DESCRIPTION: 'Set the guild\'s XP-Cooldown',
@@ -207,6 +209,4 @@ const lang = {
   CAT_MISC: 'Misc',
   CAT_MODERATION: 'Moderation',
   CAT_OWNER: 'Owner'
-}
-
-export default lang
+} as Language
