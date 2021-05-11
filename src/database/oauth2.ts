@@ -43,29 +43,3 @@ export default class OAuth2DB {
     await OAuth2Model.updateOne({ id: doc.id }, doc, { upsert: true })
   }
 }
-
-/**
- * OAuth2 Data from the db
- */
-export interface OAuth2Doc {
-  /**
-   * The user's id
-   */
-  id: string
-  /**
-   * The generated token for API requests
-   */
-  token: string
-  /**
-   * Bearer token for requests
-   */
-  bearer: string
-  /**
-   * Avatar URL
-   */
-  avatar: string
-  /**
-   * Email?
-   */
-  email?: string
-}

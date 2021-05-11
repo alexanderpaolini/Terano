@@ -84,9 +84,9 @@ export default class GuildDB {
    * Update a guild doc
    * @param doc The already-existing guild document
    */
-  async updateGuild (doc: GuildDoc): Promise<GuildDoc> {
+  async updateGuild (doc: GuildDoc): Promise<void> {
     this.guilds.set(doc.id, doc)
-    return guildModel.findOneAndUpdate({ id: doc.id }, doc).lean() as unknown as GuildDoc
+    await guildModel.updateOne({ id: doc.id }, doc).lean()
   }
 
   /**
@@ -103,10 +103,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param prefix The new prefix
    */
-  async setPrefix (id: string, prefix: string): Promise<GuildDoc> {
+  async setPrefix (id: string, prefix: string): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.options.prefix = prefix
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -123,10 +123,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param value Whether or not to send embeds
    */
-  async setEmbeds (id: string, value: boolean): Promise<GuildDoc> {
+  async setEmbeds (id: string, value: boolean): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.options.embeds = value
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -143,10 +143,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param value Whether or not to send no-permissions message
    */
-  async setSendPermsMessage (id: string, value: boolean): Promise<GuildDoc> {
+  async setSendPermsMessage (id: string, value: boolean): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.options.no_permissions = value
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -163,10 +163,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param cooldown The new XP cooldown
    */
-  async setXPCooldown (id: string, cooldown: string): Promise<GuildDoc> {
+  async setXPCooldown (id: string, cooldown: string): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.cooldown = cooldown
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -183,10 +183,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param multiplier The XP multiplier
    */
-  async setXPMultiplier (id: string, multiplier: number): Promise<GuildDoc> {
+  async setXPMultiplier (id: string, multiplier: number): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.xp_multplier = multiplier
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -203,10 +203,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param value Whether or not to send the Level-Up message
    */
-  async setSendLevelMessage (id: string, value: boolean): Promise<GuildDoc> {
+  async setSendLevelMessage (id: string, value: boolean): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.send_level_message = value
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -223,10 +223,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param message The Level-Up message
    */
-  async setLevelMessage (id: string, message: string): Promise<GuildDoc> {
+  async setLevelMessage (id: string, message: string): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.level_message = message
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -243,10 +243,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param color The Level-Up Color
    */
-  async setLevelColor (id: string, color: string): Promise<GuildDoc> {
+  async setLevelColor (id: string, color: string): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.default_color = color
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -263,10 +263,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param role The autorole
    */
-  async addAutoRole (id: string, role: AutoRole): Promise<GuildDoc> {
+  async addAutoRole (id: string, role: AutoRole): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.moderation.auto_role.push(role)
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -274,10 +274,10 @@ export default class GuildDB {
    * @param id Guild ID
    * @param role The autorole
    */
-  async delAutoRole (id: string, role: AutoRole): Promise<GuildDoc> {
+  async delAutoRole (id: string, role: AutoRole): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.moderation.auto_role = guildData.moderation.auto_role.filter(r => r.id !== role.id)
-    return this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -295,13 +295,13 @@ export default class GuildDB {
    * @param guildID Guild ID
    * @param roleID Role ID
    */
-  async addLevelRole (guildID: string, roleID: string, level: number): Promise<GuildDoc> {
+  async addLevelRole (guildID: string, roleID: string, level: number): Promise<void> {
     const guildData = await this.getGuild(guildID)
     guildData.level.level_roles.push({
       id: roleID,
       level: level
     })
-    return await this.updateGuild(guildData)
+    await this.updateGuild(guildData)
   }
 
   /**
@@ -317,167 +317,9 @@ export default class GuildDB {
    * Get the language from the guild
    * @param guildID Guild ID
    */
-  async setLang (guildID: string, lang: string): Promise<GuildDoc> {
+  async setLang (guildID: string, lang: string): Promise<void> {
     const guildData = await this.getGuild(guildID)
     guildData.options.lang = lang
-    return await this.updateGuild(guildData)
-  }
-}
-
-/**
- * The Guild options
- */
-interface GuildDoc {
-  /**
-   * Guild ID
-   */
-  id: string
-  /**
-   * Basic options
-   */
-  options: {
-    /**
-     * Guild Prefix
-     */
-    prefix: string
-    /**
-     * Whether or not to send in embeds
-     */
-    embeds: boolean
-    /**
-     * Whether or not to send no-permissions messages
-     */
-    no_permissions: boolean
-    /**
-     * What language to respond in
-     */
-    lang: string
-  }
-  /**
-   * Leveling options
-   */
-  level: {
-    /**
-     * The delay between gaining xp
-     */
-    cooldown: string
-    /**
-     * The XP Multplier
-     */
-    xp_multplier: number
-    /**
-     * Whether or not to send the level message
-     */
-    send_level_message: boolean
-    /**
-     * The Level-Up message to be sent
-     */
-    level_message: string
-    /**
-     * the default color of a rank card
-     */
-    default_color: string
-    /**
-     * Automatic roles on levels
-     */
-    level_roles: LevelRole[]
-  }
-  /**
-   * Moderation settings
-   */
-  moderation: {
-    /**
-     * The id of the role to give when muting
-     */
-    mute_role: string
-    /**
-     * The channel to send logs
-     */
-    log_channel: string
-    /**
-     * The auto role options
-     */
-    auto_role: AutoRole[]
-  }
-}
-
-/**
- * The auto role options
- */
-interface LevelRole {
-  /**
-   * The ID of the string
-   */
-  id: string
-  /**
-   * The level for it to be given on
-   */
-  level: number
-}
-
-/**
- * The auto role options
- */
-interface AutoRole {
-  /**
-   * The ID of the role
-   */
-  id: string
-  /**
-   * How long to wait before giving it (in miliseconds)
-   */
-  delay: number
-}
-
-/**
- * Moderation database document
- */
-interface ModerationDoc {
-  /**
-   * The ID of the guild it was in
-   */
-  guildID: string
-  /**
-   * The case number
-   */
-  number: number
-  /**
-   * Info about it
-   */
-  info: {
-    /**
-     * Who was the action on
-     */
-    member: string
-    /**
-     * What was the acction
-     */
-    action: 'BAN' | 'KICK' | 'MUTE' | 'WARN'
-    /**
-     * What was the reason for the action
-     */
-    reason: string
-    /**
-     * The ID of the moderator who did the action
-     */
-    moderator: string
-    /**
-     * The timesampt of the action
-     */
-    timestamp: string
-  }
-  /**
-   * The log stuff
-   * This is for editing the message
-   */
-  log_message: {
-    /**
-     * The channel ID
-     */
-    channel: string
-    /**
-     * The message ID
-     */
-    message: string
+    await this.updateGuild(guildData)
   }
 }

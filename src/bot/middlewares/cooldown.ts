@@ -16,7 +16,9 @@ export default (): ((ctx: CommandContext) => {}) => {
 
   return async (ctx: CommandContext) => {
     if (guildProtecton.filter(e => e === ctx.getID).length > 40) {
-      await ctx.worker.webhooks.shard(ctx.worker.colors.RED, `Guild ${ctx.getID} excedeed ratelimit`)
+      await ctx.worker.webhook('shards')
+        .title(`Guild ${ctx.getID} exceeded ratelimits`)
+        .send()
       return false
     }
 

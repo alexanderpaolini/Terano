@@ -5,16 +5,17 @@ import express from 'express'
 import path from 'path'
 import mongoose from 'mongoose'
 
-import VoteDB from '../../database/vote'
+import { VoteDB } from '../../database'
 import { OAuth2 } from './OAuth2'
 
 import { Config } from '../../config'
 
 export class API {
+  app = express()
+
   db = new VoteDB()
   comms = new Thread()
   rest = new RestManager(Config.discord.token)
-  app = express()
   oauth2 = new OAuth2(this.app)
 
   constructor () {

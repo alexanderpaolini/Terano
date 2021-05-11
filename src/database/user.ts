@@ -1,8 +1,29 @@
+import { Schema, model } from 'mongoose'
 import { Cache } from '@jpbberry/cache'
 
-import LevelModel from './models/users/level'
-import InfoModel from './models/users/info'
-import UserModel from './models/users/user'
+const infoSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  owner: { type: Boolean, default: false },
+  blacklisted: { type: Boolean, default: false }
+})
+const levelSchema = new Schema({
+  guildID: { type: String, required: true },
+  userID: { type: String, required: true },
+  xp: { type: String, default: '0' },
+  level: { type: Number, default: 0 }
+})
+const userSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  level: {
+    tag: { type: String, default: '' },
+    color: { type: String, default: '' },
+    picture: { type: String, default: '' }
+  }
+})
+
+const infoModel = model('users.info', infoSchema)
+const levelModel = model('users.levels', levelSchema)
+const userModel = model('users.settings', userSchema)
 
 export default class UserDB {
   /**
@@ -29,7 +50,7 @@ export default class UserDB {
     if (fromCache !== undefined) return fromCache
 
     // Then check the DB
-    const fromDB: LevelDoc = await LevelModel.findOne({ userID, guildID }).lean()
+    const fromDB: LevelDoc = await levelModel.findOne({ userID, guildID }).lean()
     if (fromDB !== null) {
       // Add it to the cache
       this.levels.set(`${userID}${guildID}`, fromDB)
@@ -51,7 +72,7 @@ export default class UserDB {
    * @param guildID Guild ID
    */
   async createLevel (userID: string, guildID: string): Promise<LevelDoc> {
-    await LevelModel.create({ userID, guildID })
+    await levelModel.create({ userID, guildID })
     return await this.getLevel(userID, guildID)
   }
 
@@ -59,9 +80,9 @@ export default class UserDB {
    * Update a user's Level doc
    * @param doc The already-existing level document
    */
-  async updateLevel (doc: LevelDoc): Promise<LevelDoc> {
+  async updateLevel (doc: LevelDoc): Promise<void> {
     this.levels.set(`${doc.userID}${doc.guildID}`, doc)
-    return LevelModel.findOneAndUpdate({ userID: doc.userID, guildID: doc.guildID }, doc, { upsert: true }).lean() as unknown as LevelDoc
+    await levelModel.updateOne({ userID: doc.userID, guildID: doc.guildID }, doc, { upsert: true }).lean()
   }
 
   /**
@@ -80,10 +101,10 @@ export default class UserDB {
    * @param guildID Guild ID
    * @param level The new level
    */
-  async setUserLevel (userID: string, guildID: string, level: number): Promise<LevelDoc> {
+  async setUserLevel (userID: string, guildID: string, level: number): Promise<void> {
     const levelData = await this.getLevel(userID, guildID)
     levelData.level = level
-    return await this.updateLevel(levelData)
+    await this.updateLevel(levelData)
   }
 
   /**
@@ -102,7 +123,7 @@ export default class UserDB {
     if (fromCache !== undefined) return fromCache
 
     // Then check the DB
-    const fromDB: InfoDoc = await InfoModel.findOne({ id }).lean()
+    const fromDB: InfoDoc = await infoModel.findOne({ id }).lean()
     if (fromDB !== null) {
       // Add it to the cache
       this.infos.set(id, fromDB)
@@ -122,7 +143,7 @@ export default class UserDB {
    * @param id User ID
    */
   async createInfo (id: string): Promise<InfoDoc> {
-    await InfoModel.create({ id })
+    await infoModel.create({ id })
     return await this.getInfo(id)
   }
 
@@ -130,9 +151,9 @@ export default class UserDB {
    * Update a user's info
    * @param doc The already existing Info Document
    */
-  async updateInfo (doc: InfoDoc): Promise<InfoDoc> {
+  async updateInfo (doc: InfoDoc): Promise<void> {
     this.infos.set(doc.id, doc)
-    return InfoModel.findOneAndUpdate({ id: doc.id }, doc, { upsert: true }).lean() as unknown as InfoDoc
+    await infoModel.updateOne({ id: doc.id }, doc, { upsert: true }).lean()
   }
 
   /**
@@ -149,10 +170,10 @@ export default class UserDB {
    * @param id User ID
    * @param value Whether or not they are blacklisted
    */
-  async setBlacklist (id: string, value: boolean): Promise<InfoDoc> {
+  async setBlacklist (id: string, value: boolean): Promise<void> {
     const infoData = await this.getInfo(id)
     infoData.blacklisted = value
-    return await this.updateInfo(infoData)
+    await this.updateInfo(infoData)
   }
 
   /**
@@ -169,10 +190,10 @@ export default class UserDB {
    * @param id User iD
    * @param value Whether or not they are owner
    */
-  async setOwner (id: string, value: boolean): Promise<InfoDoc> {
+  async setOwner (id: string, value: boolean): Promise<void> {
     const infoData = await this.getInfo(id)
     infoData.owner = value
-    return await this.updateInfo(infoData)
+    await this.updateInfo(infoData)
   }
 
   /**
@@ -185,7 +206,7 @@ export default class UserDB {
     if (fromCache !== undefined) return fromCache
 
     // Then check the DB
-    const fromDB: SettingsDoc = await UserModel.findOne({ id }).lean()
+    const fromDB: SettingsDoc = await userModel.findOne({ id }).lean()
     if (fromDB !== null) {
       // Add it to the cache
       this.settings.set(id, fromDB)
@@ -208,7 +229,7 @@ export default class UserDB {
    * @param id User ID
    */
   async createSettings (id: string): Promise<SettingsDoc> {
-    await UserModel.create({ id })
+    await userModel.create({ id })
     return await this.getSettings(id)
   }
 
@@ -216,9 +237,9 @@ export default class UserDB {
    * Update a user's settings
    * @param doc Already existing settings doc
    */
-  async updateSettings (doc: SettingsDoc): Promise<SettingsDoc> {
+  async updateSettings (doc: SettingsDoc): Promise<void> {
     this.settings.set(doc.id, doc)
-    return UserModel.findOneAndUpdate({ id: doc.id }, doc, { upsert: true }).lean() as unknown as SettingsDoc
+    await userModel.updateOne({ id: doc.id }, doc, { upsert: true }).lean()
   }
 
   /**
@@ -235,10 +256,10 @@ export default class UserDB {
    * @param id User ID
    * @param color Thew new color hex code thing
    */
-  async setColor (id: string, color: string): Promise<SettingsDoc> {
+  async setColor (id: string, color: string): Promise<void> {
     const userSettings = await this.getSettings(id)
     userSettings.level.color = color
-    return await this.updateSettings(userSettings)
+    await this.updateSettings(userSettings)
   }
 
   /**
@@ -255,10 +276,10 @@ export default class UserDB {
    * @param id User ID
    * @param tag The new tag
    */
-  async setTag (id: string, tag: string): Promise<SettingsDoc> {
+  async setTag (id: string, tag: string): Promise<void> {
     const userSettings = await this.getSettings(id)
     userSettings.level.tag = tag
-    return await this.updateSettings(userSettings)
+    await this.updateSettings(userSettings)
   }
 
   /**
@@ -275,10 +296,10 @@ export default class UserDB {
    * @param id User ID
    * @param link Link to be updated to
    */
-  async setPicture (id: string, link: string): Promise<SettingsDoc> {
+  async setPicture (id: string, link: string): Promise<void> {
     const userSettings = await this.getSettings(id)
     userSettings.level.picture = link
-    return await this.updateSettings(userSettings)
+    await this.updateSettings(userSettings)
   }
 
   /**
@@ -288,8 +309,8 @@ export default class UserDB {
   async getAllLevels (guildID: string | null = null): Promise<LevelDoc[]> {
     let docs: LevelDoc[]
     if (guildID != null) {
-      docs = await LevelModel.find({ guildID }).lean()
-    } else docs = await LevelModel.find().lean()
+      docs = await levelModel.find({ guildID }).lean()
+    } else docs = await levelModel.find().lean()
     return docs
   }
 }

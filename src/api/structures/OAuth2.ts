@@ -1,6 +1,6 @@
 import { Config } from '../../config'
 
-import OAuth2DB, { OAuth2Doc } from '../../database/oauth2'
+import OAuth2DB from '../../database/oauth2'
 
 import qs from 'qs'
 import Crypto from 'crypto'

@@ -45,5 +45,5 @@ export const Config = {
     port: 6379
   },
 
-  prod: !!process.env.PROD
+  prod: process.env.PROD === 'TRUE'
 }

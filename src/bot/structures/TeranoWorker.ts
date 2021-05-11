@@ -4,18 +4,10 @@ import fs from 'fs'
 import path from 'path'
 import { Api } from '@top-gg/sdk'
 
-// Worker
 import { Embed, Worker } from 'discord-rose'
 
-// Required middlewares
 import flagsMiddleware from '@discord-rose/flags-middleware'
 import permissionsMiddleware, { humanReadable } from '@discord-rose/permissions-middleware'
-
-// Database
-import GuildDB from '../../database/guild'
-import UserDB from '../../database/user'
-import VoteDB from '../../database/vote'
-import mongoose from 'mongoose'
 
 import Monitor from './Monitor'
 import colors from './colors'
@@ -23,6 +15,7 @@ import LanguageHandler from './LanguageHandler'
 import CommandContext from './CommandContext'
 
 import { getAvatar } from '../../utils'
+import { Database } from '../../database'
 
 export default class TeranoWorker extends Worker {
   prod: boolean
@@ -32,8 +25,8 @@ export default class TeranoWorker extends Worker {
   monitors: Monitor[] = []
   statsInterval: NodeJS.Timeout | null = null
   commandCooldowns: { [key: string]: number } = {}
-  db = { guildDB: new GuildDB(), userDB: new UserDB(), voteDB: new VoteDB() }
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
+  db = new Database()
 
   langs = new LanguageHandler(this)
   config = Config
@@ -45,16 +38,6 @@ export default class TeranoWorker extends Worker {
     super()
 
     this.prod = this.config.prod
-
-    // Connect to mongoose
-    mongoose.connect(this.config.db.connection_string, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true
-    })
-      .then(() => { this.log('Connected to MongoDB') })
-      .catch(() => { this.log('MongoDB connection failed') })
 
     this.loadInit()
 
