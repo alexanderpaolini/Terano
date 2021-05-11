@@ -16,7 +16,7 @@ export default class LanguageHandler {
 
   async getString (id: string, name: string, ...args: string[]): Promise<string> {
     const guildLang = await this.getLang(id)
-    const string = this.langs.get(guildLang)?.[name] ?? 'undefined'
+    const string = this.langs.get(guildLang)?.[name] ?? this.langs.get('en-US')?.[name] ?? 'undefined'
     if (typeof string === 'function') return string(...args)
     return this.formatString(string, ...args)
   }

@@ -30,17 +30,6 @@ export default class CMDCTX extends CommandContext {
   }
 
   /**
-   * Send a very small embed
-   * @param color The color of the embed
-   * @param response The message of the embed
-   * @param embed Force embed
-   * @deprecated
-   */
-  async tinyResponse (color: number, response: string, embed?: boolean): Promise<APIMessage | null> {
-    return await this.respond('CUSTOM', { color: color }, response)
-  }
-
-  /**
    * Get the language string
    * @param name The name of the string
    * @param args A replacement string
