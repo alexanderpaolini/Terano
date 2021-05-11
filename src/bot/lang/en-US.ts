@@ -1,15 +1,12 @@
 export default {
   CUSTOM: (str: string) => str,
-  CMD_DISABLED: 'This command is currently disabled',
   NOT_OWNER: 'You can\'t do this, silly.',
-  RANK_UP: (role: string) => `Congats on leveling up! You now have the role <@&${role}>`,
-
   LOADING: 'Loading...',
+  CMD_DISABLED: 'This command is currently disabled',
   SERVER_ERROR: 'Internal Server Error',
   DEVELOPED_BY: 'Developed by MILLION#1321',
-
   ERROR: (err: string) => `**Error: ${err}**`,
-
+  RANK_UP: (role: string) => `Congats on leveling up! You now have the role <@&${role}>`,
   COOLDOWN: (time: string) => `This command is currently on cooldown.\nPlease try again in ${time}`,
 
   NO_PERMS_BOT: (perms: string[]) => `I'm missing the following permissions: ${perms.map(p => `\`${p}\``).join(', ')}`,
