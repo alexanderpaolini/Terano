@@ -23,6 +23,6 @@ export default {
     await ctx.worker.db.userDB.setOwner(userID, !isOwner)
 
     // Respond with success
-    await ctx.normalResponse(ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`)
+    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`)
   }
 } as CommandOptions

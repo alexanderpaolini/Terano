@@ -31,6 +31,11 @@ export const Config = {
     }
   },
 
+  influx: {
+    host: process.env.INFLUXDB_HOST as string,
+    database: process.env.INFLUXDB_DATABASE as string
+  },
+
   topgg: {
     token: process.env.TOPGG_TOKEN as string,
     webhook_auth: process.env.TOPGG_WEBHOOK_AUTH as string

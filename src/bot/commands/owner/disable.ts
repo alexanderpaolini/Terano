@@ -20,6 +20,6 @@ export default {
     if (cmd.disabled) cmd.disabled = false
     else cmd.disabled = true
 
-    await ctx.normalResponse(ctx.worker.colors.ORANGE, `${cmd.disabled ? 'Disabled' : 'Enabled'} command **${cmd.name}**`)
+    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `${cmd.disabled ? 'Disabled' : 'Enabled'} command **${cmd.name}**`)
   }
 } as CommandOptions

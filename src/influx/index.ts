@@ -7,8 +7,8 @@ import { Thread } from 'discord-rose'
 const thread = new Thread()
 
 const influx = new InfluxDB({
-  host: 'localhost',
-  database: Config.prod ? 'prod' : 'test',
+  host: Config.influx.host,
+  database: Config.influx.database,
   schema: [
     {
       measurement: 'memory',

@@ -1,1 +1,3 @@
-export default {} as Language
+export default {
+  CUSTOM: (str: string) => str
+} as Language

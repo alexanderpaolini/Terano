@@ -1,17 +1,16 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'throw',
+  name: 'Throw',
   usage: 'throw',
   description: 'throw',
   category: 'owner',
   command: 'throw',
-  aliases: [],
-  userPerms: [],
-  myPerms: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.flags.safe) return await ctx.error(ctx.args.join(' '))
-    throw new Error(ctx.args.join(' '))
+    const err = ctx.args.join(' ') || 'ERROR'
+    if (ctx.flags.respond) return await ctx.respond('ERROR', { error: true }, err)
+    if (ctx.flags.safe) return await ctx.error(err)
+    throw new Error(err)
   }
 } as CommandOptions

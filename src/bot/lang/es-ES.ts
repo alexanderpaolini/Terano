@@ -1,7 +1,11 @@
 export default {
+  CUSTOM: (str: string) => str,
+
   LOADING: 'Cargando...',
   SERVER_ERROR: 'Error de servidor interno',
   DEVELOPED_BY: 'Hecho por MILLION#1321',
+
+  ERROR: (err: string) => `**Error: ${err}**`,
 
   COOLDOWN: (time: string) => `Este comando se encuentra actualmente en enfriamiento.\nInténtelo de nuevo en ${
     time

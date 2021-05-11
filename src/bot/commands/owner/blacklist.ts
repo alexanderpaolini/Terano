@@ -20,9 +20,9 @@ export default {
     await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted)
 
     if (!isBlacklisted) {
-      await ctx.normalResponse(ctx.worker.colors.ORANGE, `<@${userID}> added to blacklisted.`)
+      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> added to blacklisted.`)
     } else {
-      await ctx.normalResponse(ctx.worker.colors.ORANGE, `<@${userID}> removed from blacklist.`)
+      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> removed from blacklist.`)
     }
   }
 } as CommandOptions

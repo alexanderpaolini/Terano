@@ -1,5 +1,3 @@
-import { Snowflake } from 'discord-api-types'
-
 import TeranoWorker from './bot/structures/TeranoWorker'
 import TeranoContext from './bot/structures/CommandContext'
 
@@ -16,14 +14,5 @@ declare module 'discord-rose/dist/typings/lib' {
 
   interface CommandContext extends TeranoContext { }
 
-  type worker = TeranoWorker
-}
-
-declare module 'discord-rose/dist/clustering/ThreadComms' {
-  interface ThreadEvents {
-    INFLUX_VOTE: {
-      send: Snowflake
-      receive: null
-    }
-  }
+  interface worker extends TeranoWorker { }
 }
