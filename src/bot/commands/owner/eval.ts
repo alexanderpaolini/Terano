@@ -11,15 +11,10 @@ let last
 let temp: any
 
 export default {
-  name: 'Eval',
-  usage: 'eval <code>',
-  description: 'Eval some code on the worker process',
-  category: 'owner',
   command: 'eval',
+  category: 'owner',
   aliases: ['ev'],
-  flags: ['b', 'm', 's', 'l'],
-  userPerms: [],
-  myPerms: [],
+  locale: 'EVAL',
   owner: true,
   exec: async (ctx) => {
     const worker = ctx.worker

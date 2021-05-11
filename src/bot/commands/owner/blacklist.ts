@@ -1,14 +1,10 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Blacklist',
-  usage: 'blacklist <mention | ID>',
-  description: 'Blacklist a user from using the bot.',
-  category: 'owner',
   command: 'blacklist',
+  category: 'owner',
   aliases: ['bl'],
-  userPerms: [],
-  myPerms: [],
+  locale: 'BLACKLIST',
   owner: true,
   exec: async (ctx) => {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
@@ -20,9 +16,9 @@ export default {
     await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted)
 
     if (!isBlacklisted) {
-      await ctx.respond('CMD_BLOACKLIST_ADDED', { color: ctx.worker.colors.ORANGE }, userID)
+      await ctx.respond('CMD_BLACKLIST_ADDED', { color: ctx.worker.colors.ORANGE }, userID)
     } else {
-      await ctx.respond('CMD_BLOACKLIST_REMOVED', { color: ctx.worker.colors.ORANGE }, userID)
+      await ctx.respond('CMD_BLACKLIST_REMOVED', { color: ctx.worker.colors.ORANGE }, userID)
     }
   }
 } as CommandOptions

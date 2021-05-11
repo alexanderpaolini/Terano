@@ -2,14 +2,10 @@ import { CommandOptions } from 'discord-rose'
 import { getAvatar } from '../../../utils'
 
 export default {
-  name: 'Ping',
-  usage: 'ping',
-  description: 'Get the bot\'s ping',
-  category: 'misc',
   command: 'ping',
+  category: 'misc',
   aliases: ['pong'],
-  userPerms: ['administrator'],
-  myPerms: ['administrator'],
+  locale: 'PING',
   exec: async (ctx) => {
     const time = Date.now()
     const url = getAvatar(ctx.message.author)

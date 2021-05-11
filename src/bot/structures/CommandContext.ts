@@ -3,6 +3,8 @@ import { APIMessage, Snowflake } from 'discord-api-types'
 import { CommandContext } from 'discord-rose'
 import { getAvatar } from '../../utils'
 
+import { LanguageString } from '../lang'
+
 interface RespondOptions {
   mention?: boolean
   embed?: boolean
@@ -34,7 +36,7 @@ export default class CMDCTX extends CommandContext {
    * @param name The name of the string
    * @param args A replacement string
    */
-  async lang (name: string, ...args: string[]): Promise<string> {
+  async lang (name: LanguageString, ...args: string[]): Promise<string> {
     return await this.worker.langs.getString(this.getID, name, ...args)
   }
 
@@ -42,7 +44,7 @@ export default class CMDCTX extends CommandContext {
    * Respond in a nice format
    * @param message What to respond
    */
-  async respond (name: string, options: RespondOptions = {}, ...args: string[]): Promise<APIMessage | null> {
+  async respond (name: LanguageString, options: RespondOptions = {}, ...args: string[]): Promise<APIMessage | null> {
     if (this.flags.s) return null
 
     const message = await this.lang(name, ...args)
@@ -63,7 +65,7 @@ export default class CMDCTX extends CommandContext {
     if (this.flags.nomention) options.mention = false
 
     const response = await this.embed
-      .author(this.message.member?.nick ?? `${this.message.author.username} | ${String(this.command.name)}`, getAvatar(this.message.author))
+      .author(this.message.member?.nick ?? `${this.message.author.username} | ${String(await this.lang(`CMD_${this.command.locale}_NAME` as LanguageString))}`, getAvatar(this.message.author))
       .description(message)
       .color(options.color ?? (options.error ? this.worker.colors.RED : this.worker.colors.GREEN))
       .send(options.reply, !!options.mention)

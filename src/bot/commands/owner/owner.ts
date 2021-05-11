@@ -1,14 +1,10 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Owner',
-  usage: 'owner <mention | id>',
-  description: 'Add or remove someone from bot owner.',
-  category: 'owner',
   command: 'owner',
+  category: 'owner',
   aliases: ['owo'],
-  userPerms: [],
-  myPerms: [],
+  locale: 'OWNER',
   owner: true,
   exec: async (ctx) => {
     // Get the user ID

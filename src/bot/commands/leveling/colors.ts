@@ -3,12 +3,10 @@ import { CommandOptions } from 'discord-rose'
 import colors from '../../../utils/colors'
 
 export default {
-  name: 'Color',
-  usage: 'color <color>',
-  description: 'Change the color of your rank card.',
-  category: 'leveling',
   command: 'color',
+  category: 'leveling',
   aliases: ['colour'],
+  locale: 'COLOR',
   exec: async (ctx) => {
     if (!ctx.flags.custom) {
       // Get the name of the color

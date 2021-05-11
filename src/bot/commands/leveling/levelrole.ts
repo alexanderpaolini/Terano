@@ -2,14 +2,11 @@ import { Snowflake } from 'discord-api-types'
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Level Role',
-  usage: 'levelrole <level> <ID | Role Mention>',
-  description: 'Add a level to the autorole',
-  category: 'leveling',
   command: 'levelrole',
+  category: 'leveling',
   aliases: ['lr'],
   userPerms: ['manageRoles'],
-  myPerms: [],
+  locale: 'LEVELROLE',
   exec: async (ctx) => {
     // Get the level and do some good checks
     const level = parseInt(ctx.args[0])

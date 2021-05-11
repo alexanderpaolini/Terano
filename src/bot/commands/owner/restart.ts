@@ -1,14 +1,9 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Restart',
-  usage: 'restart',
-  description: 'Restart the bot.',
-  category: 'owner',
   command: 'restart',
-  aliases: [],
-  userPerms: [],
-  myPerms: [],
+  category: 'owner',
+  locale: 'RESTART',
   owner: true,
   exec: async (ctx) => {
     if (typeof ctx.flags.shard !== 'undefined') {

@@ -5,14 +5,10 @@ import fetch from 'node-fetch'
 import { getAvatar } from '../../../utils'
 
 export default {
-  name: 'Leaderboard',
-  usage: 'leaderboard',
-  description: 'View the guild leaderboard',
-  category: 'leveling',
   command: 'leaderboard',
+  category: 'leveling',
   aliases: ['lb'],
-  userPerms: [],
-  myPerms: [],
+  locale: 'LEADERBOARD',
   cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message

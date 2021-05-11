@@ -1,14 +1,9 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Disable',
-  usage: 'disable <command>',
-  description: 'Disable a command globally',
-  category: 'owner',
   command: 'disable',
-  aliases: [],
-  userPerms: [],
-  myPerms: [],
+  category: 'owner',
+  locale: 'DISABLE',
   owner: true,
   exec: async (ctx) => {
     const command = ctx.args[0]
@@ -19,7 +14,7 @@ export default {
 
     cmd.disabled = !cmd.disabled
 
-    if (cmd.disabled) return await ctx.respond('CMD_DISABLE_DISABLED', {}, cmd.name)
-    else await ctx.respond('CMD_DISABLE_DISABLED', {}, cmd.name)
+    if (cmd.disabled) return await ctx.respond('CMD_DISABLE_DISABLED', {}, String(cmd.command))
+    else await ctx.respond('CMD_DISABLE_DISABLED', {}, String(cmd.command))
   }
 } as CommandOptions

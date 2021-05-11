@@ -1,11 +1,9 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Throw',
-  usage: 'throw',
-  description: 'throw',
-  category: 'owner',
   command: 'throw',
+  category: 'owner',
+  locale: 'THROW',
   owner: true,
   exec: async (ctx) => {
     const err = ctx.args.join(' ') || 'ERROR'

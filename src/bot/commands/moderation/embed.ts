@@ -1,14 +1,10 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Embeds',
-  usage: 'embed',
-  description: 'Toggle embed responses.',
-  category: 'moderation',
   command: 'embeds',
-  aliases: [],
+  category: 'moderation',
   userPerms: ['manageGuild'],
-  myPerms: [],
+  locale: 'EMBEDS',
   exec: async (ctx) => {
     // Get and update the shit
     let guildEmbed = await ctx.worker.db.guildDB.getEmbeds(ctx.getID)

@@ -6,15 +6,11 @@ import { APIUser, Snowflake } from 'discord-api-types'
 import { getAvatar } from '../../../utils'
 
 export default {
-  name: 'Rank',
-  usage: 'rank [mention]',
-  description: 'View your rank in a card format.',
-  category: 'leveling',
   command: 'rank',
+  category: 'leveling',
   aliases: ['card', 'level'],
-  userPerms: [],
-  myPerms: [],
   cooldown: 9e3,
+  locale: 'RANK',
   exec: async (ctx) => {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||

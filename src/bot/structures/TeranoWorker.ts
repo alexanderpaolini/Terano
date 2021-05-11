@@ -16,6 +16,7 @@ import CommandContext from './CommandContext'
 
 import { getAvatar } from '../../utils'
 import { Database } from '../../database'
+import { LanguageString } from '../lang'
 
 export default class TeranoWorker extends Worker {
   config = Config
@@ -44,8 +45,8 @@ export default class TeranoWorker extends Worker {
 
     this.commands.middleware(flagsMiddleware())
     this.commands.middleware(permissionsMiddleware({
-      my: (ctx, p) => ctx.lang('NO_PERMS_BOT', p.map(x => humanReadable[x] ?? x) as any as string),
-      user: (ctx, p) => ctx.lang('NO_PERMS_USER', p.map(x => humanReadable[x] ?? x) as any as string)
+      my: async (ctx, p) => await ctx.lang('NO_PERMS_BOT', p.map(x => humanReadable[x] ?? x) as any as string),
+      user: async (ctx, p) => await ctx.lang('NO_PERMS_USER', p.map(x => humanReadable[x] ?? x) as any as string)
     }))
 
     this.commands.options({
@@ -66,7 +67,7 @@ export default class TeranoWorker extends Worker {
 
       if (err.nonFatal) {
         embed
-          .author((ctx.message.member?.nick ?? ctx.message.author.username) + ` | ${String(ctx.command.name ?? ctx.command.command)}`,
+          .author((ctx.message.member?.nick ?? ctx.message.author.username) + ` | ${String(await ctx.lang(`CMD_${ctx.command.locale}_NAME` as LanguageString) ?? ctx.command.command)}`,
             getAvatar(ctx.message.author))
           .description(err.message)
       } else {

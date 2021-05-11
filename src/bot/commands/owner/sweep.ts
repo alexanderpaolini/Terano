@@ -3,13 +3,9 @@ import { CommandOptions } from 'discord-rose'
 import { performance } from 'perf_hooks'
 
 const command: CommandOptions = {
-  name: 'Sweep',
-  usage: 'sweep',
-  description: 'Sweep the database cache.',
-  category: 'owner',
   command: 'sweep',
-  aliases: [],
-  userPerms: [],
+  category: 'owner',
+  locale: 'SWEEP',
   owner: true,
   exec: async (ctx) => {
     const time = performance.now()
@@ -22,7 +18,7 @@ const command: CommandOptions = {
 
     ctx.worker.log('Swept Database cache')
 
-    await ctx.respond('CMD_SWEPT', { color: ctx.worker.colors.ORANGE }, (performance.now() - time).toFixed(3))
+    await ctx.respond('CMD_SWEEP', { color: ctx.worker.colors.ORANGE }, (performance.now() - time).toFixed(3))
   }
 }
 

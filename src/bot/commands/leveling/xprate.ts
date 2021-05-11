@@ -1,14 +1,11 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'XP Multiplier',
-  usage: 'xpmultiplier <multiplier>',
-  description: 'Change the multiplier on receiving XP.',
-  category: 'leveling',
   command: 'xpmultiplier',
+  category: 'leveling',
   aliases: ['xprate'],
   userPerms: ['manageMessages'],
-  myPerms: [],
+  locale: 'RATE',
   exec: async (ctx) => {
     // Get the new rate
     const newRate = Number(ctx.args[0])

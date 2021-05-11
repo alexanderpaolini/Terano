@@ -1,14 +1,9 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Dev Mode',
-  usage: 'devmode',
-  description: 'Toggle Developer-Only mode for the bot.',
-  category: 'owner',
   command: 'devmode',
-  aliases: [],
-  userPerms: [],
-  myPerms: [],
+  category: 'owner',
+  locale: 'DEVMODE',
   owner: true,
   exec: async (ctx) => {
     ctx.worker.devmode = !ctx.worker.devmode

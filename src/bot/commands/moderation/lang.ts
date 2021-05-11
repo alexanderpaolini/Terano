@@ -1,14 +1,11 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Language',
-  usage: 'language <language>',
-  description: 'Language!',
-  category: 'moderation',
   command: 'lang',
+  category: 'moderation',
   aliases: ['language'],
   userPerms: ['manageGuild'],
-  myPerms: [],
+  locale: 'LANG',
   exec: async (ctx) => {
     if (!ctx.args[0]) return await ctx.respond('CURRENT_LANGUAGE')
     const lang = ctx.args[0]

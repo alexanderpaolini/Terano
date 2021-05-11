@@ -1,14 +1,12 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'XP-Cooldown',
-  usage: 'xpcooldown <seconds>',
-  description: 'Change the cooldown for getting xp from messages.',
-  category: 'leveling',
   command: 'xpcooldown',
+  category: 'leveling',
   aliases: ['cooldown'],
   userPerms: ['manageMessages'],
   myPerms: [],
+  locale: 'COOLDOWN',
   exec: async (ctx) => {
     // Make sure its a number
     const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.getID)

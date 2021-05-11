@@ -1,14 +1,9 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Tag',
-  usage: 'tag <new tag>',
-  description: 'Set your tag for the rank card.',
-  category: 'leveling',
   command: 'tag',
-  aliases: [],
-  userPerms: [],
-  myPerms: [],
+  category: 'leveling',
+  locale: 'TAG',
   exec: async (ctx) => {
     // Get the tag
     const tag = ctx.args.join(' ')

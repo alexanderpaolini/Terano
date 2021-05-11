@@ -1,19 +1,15 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  name: 'Prefix',
-  usage: 'prefix <new prefix>',
-  description: 'Change the server-specific prefix.',
-  category: 'moderation',
   command: 'prefix',
-  aliases: [],
+  category: 'moderation',
   userPerms: ['manageMessages'],
-  myPerms: [],
+  locale: 'PREFIX',
   exec: async (ctx) => {
     const prefix = ctx.args[0]
 
     // Bruh my man is stupid
-    if (!prefix) return await ctx.respond('CMD_PREFIX_CURRENT', {}, ctx.prefix)
+    if (!prefix) return await ctx.respond('PREFIX_CURRENT', {}, ctx.prefix)
     if (prefix.length > 21) return await ctx.respond('CMD_PREFIX_LONG')
 
     // Get and change the prefix

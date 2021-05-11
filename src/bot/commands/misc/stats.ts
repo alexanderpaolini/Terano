@@ -2,14 +2,9 @@ import { CommandOptions } from 'discord-rose'
 import { getAvatar } from '../../../utils'
 
 export default {
-  name: 'Stats',
-  usage: 'stats',
-  description: 'Get the bot\'s stats.',
-  category: 'misc',
   command: 'stats',
-  userPerms: [],
-  myPerms: [],
-  owner: false,
+  category: 'misc',
+  locale: 'STATS',
   cooldown: 5e3,
   exec: async (ctx) => {
     const currentShard = Number((BigInt(ctx.getID) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
@@ -19,7 +14,7 @@ export default {
     const url = getAvatar(ctx.message.author)
 
     const embed = ctx.embed
-      .author(ctx.message.author.username + ' | ' + ctx.command.name, url)
+      .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_STATS_NAME'), url)
       .color(ctx.worker.colors.PURPLE)
 
     for (const cluster of stats) {
