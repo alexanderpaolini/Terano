@@ -12,14 +12,14 @@ export default {
   owner: true,
   exec: async (ctx) => {
     const command = ctx.args[0]
-    if (!command) return await ctx.error('No command was given, please include a command.')
+    if (!command) return await ctx.respond('CMD_DISABLE_NONE', { error: true })
 
     const cmd = ctx.worker.commands.commands?.find((c: CommandOptions) => c.command === command)
-    if (cmd == null) return ctx.error('Command not found.')
+    if (cmd == null) return await ctx.respond('CMD_DISABLE_NOTFOUND', { error: true }, command)
 
-    if (cmd.disabled) cmd.disabled = false
-    else cmd.disabled = true
+    cmd.disabled = !cmd.disabled
 
-    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `${cmd.disabled ? 'Disabled' : 'Enabled'} command **${cmd.name}**`)
+    if (cmd.disabled) return await ctx.respond('CMD_DISABLE_DISABLED', {}, cmd.name)
+    else await ctx.respond('CMD_DISABLE_DISABLED', {}, cmd.name)
   }
 } as CommandOptions

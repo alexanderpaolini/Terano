@@ -5,10 +5,10 @@ export default () => {
     if (ctx.command.owner) {
       const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
       if (!isOwner) {
-        await ctx.tinyResponse(ctx.worker.colors.RED, 'You can\'t do this, silly.')
+        await ctx.respond('NOT_OWNER', { error: true })
         return false
       }
-      return true
-    } else return true
+    }
+    return true
   }
 }

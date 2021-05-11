@@ -1,5 +1,8 @@
 export default {
   CUSTOM: (str: string) => str,
+  CMD_DISABLED: 'This command is currently disabled',
+  NOT_OWNER: 'You can\'t do this, silly.',
+  RANK_UP: (role: string) => `Congats on leveling up! You now have the role <@&${role}>`,
 
   LOADING: 'Loading...',
   SERVER_ERROR: 'Internal Server Error',
@@ -55,7 +58,36 @@ export default {
   CMD_EMBEDS_ENABLED: 'Enabled embeded messages',
   CMD_EMBEDS_DISABLED: 'Disabled embeded messages',
 
-  CMD_PREFIX_CURRENT: (prefix: string) => `Current prefix: \`${prefix}\``,
+  PREFIX_CURRENT: (prefix: string) => `Current prefix: \`${prefix}\``,
   CMD_PREFIX_LONG: 'Prefix length must be no greater than 20 characters',
-  CMD_PREFIX_UPDATED: (old: string, newer: string) => `Changed prefix from \`${old}\` to \`${newer}\``
+  CMD_PREFIX_UPDATED: (old: string, newer: string) => `Changed prefix from \`${old}\` to \`${newer}\``,
+
+  CMD_BLACKLIST_NOUSER: 'No user was given, please mention a user.',
+  CMD_BLACKLIST_NOSELF: 'You canno tblacklist yourself',
+  CMD_BLOACKLIST_ADDED: (user: string) => `<@${user}> is now blacklisted`,
+  CMD_BLACKLIST_REMOVED: (user: string) => `<@${user}> is no longer blacklisted`,
+
+  CMD_DEVMODE_ENABLED: 'Enabled developer-only mode',
+  CMD_DEVMODE_DISABLED: 'Disabled developer-only mode',
+
+  CMD_DISABLE_NONE: 'No command was given, please include a command',
+  CMD_DISABLE_NOTFOUND: (cmd: string) => `\`${cmd}\` is not a valid command`,
+  CMD_DISABLE_ENABLED: (cmd: string) => `Enabled \`${cmd}\``,
+  CMD_DISABLE_DISABLED: (cmd: string) => `Disabled \`${cmd}\``,
+
+  CMD_EVAL_SUCCESS: 'Eval Successful',
+  CMD_EVAL_UNSUCCESS: 'Eval Unsuccessful',
+
+  CMD_OWNER_NOUSER: 'No user was given, please mention a user',
+  CMD_OWNER_NOSELF: 'You cannot remove yourself from owner',
+  CMD_OWNER_REMOVED: (user: string) => `<@${user}> is no longer a bot owner`,
+  CMD_OWNER_ADDED: (user: string) => `<@${user}> is now a bot owner`,
+
+  CMD_RESTART_SHARD: (shard: string) => `Restarting Shard \`${shard}\``,
+  CMD_RESTART_NOSHARD: (shard: string) => `Shard \`${shard}\` does not exist`,
+  CMD_RESTART_CLUSTER: (cluster: string) => `Restarting Cluster \`${cluster}\``,
+  CMD_RESTART_NOCLUSTER: (cluster: string) => `Cluster \`${cluster}\` does not exist`,
+  CMD_RESTART_ALL: 'Restarting...',
+
+  CMD_SWEEP: (ms: string) => `Swept Cache\nTook: \`${ms}\`ms`
 } as Language

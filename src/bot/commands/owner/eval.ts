@@ -44,7 +44,7 @@ export default {
 
       await ctx.embed
         .color(ctx.worker.colors.GREEN)
-        .title('Eval Successful')
+        .title(await ctx.lang('CMD_EVAL_SUCCESS'))
         .description(`\`\`\`xl\n${evaled}\`\`\``)
         .send()
     } catch (err) {
@@ -52,7 +52,7 @@ export default {
 
       ctx.embed
         .color(ctx.worker.colors.RED)
-        .title('Eval Unsuccessful')
+        .title(await ctx.lang('CMD_EVAL_UNSUCCESS'))
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)
         .send()
         .catch(() => {})

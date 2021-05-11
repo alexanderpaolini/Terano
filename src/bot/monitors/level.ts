@@ -1,11 +1,12 @@
-import { APIGuild, Snowflake } from 'discord-api-types'
+import { APIGuild, Snowflake, APIMessage } from 'discord-api-types'
 import { getAvatar } from '../../utils'
 import Monitor from '../structures/Monitor'
 
 export default class PrefixMonitor extends Monitor {
   cooldown = new Set()
 
-  async run (message: any): Promise<void> {
+  async run (message: APIMessage): Promise<void> {
+    if (!message.guild_id) return
     const guildDoc = await this.worker.db.guildDB.getGuild(message.guild_id)
     const userDoc = await this.worker.db.userDB.getLevel(message.author.id, message.guild_id)
 
@@ -28,20 +29,21 @@ export default class PrefixMonitor extends Monitor {
     setTimeout(() => { this.cooldown.delete(`${message.guild_id as string}${message.author.id as string}`) }, Number(guildDoc.level.cooldown) * 1000)
   }
 
-  async restrictions (msg: any): Promise<boolean> {
+  async restrictions (msg: APIMessage): Promise<boolean> {
     if (!(msg?.author?.id as string) || msg.author.bot as boolean || !(msg.guild_id as string) || this.cooldown.has(`${msg.guild_id as string}${msg.author.id as string}`)) return false
     if (await this.worker.db.userDB.getBlacklist(msg.author.id)) return false
     return true
   }
 
-  async sendUpdateMessage (message: any, level: number, guildDoc: GuildDoc): Promise<void> {
+  async sendUpdateMessage (message: APIMessage, level: number, guildDoc: GuildDoc): Promise<void> {
+    if (!message.guild_id) return
     const guild = this.worker.guilds.get(message.guild_id) as APIGuild
 
     const member = await this.worker.api.members.get(message.guild_id, message.author.id)
 
-    const msg = guildDoc.level.level_message.replace(/{{(.+?)}}/g, (match: string) => {
+    const msg = guildDoc.level.level_message.replace(/{{(.+?)}}/g, (match: any | string | number) => {
       switch (match.slice(2, -2)) {
-        case 'tag': return `${message.author.username as string}#${message.author.discriminator as string}`
+        case 'tag': return `${message.author.username}#${message.author.discriminator}`
 
         case 'user':
         case 'username': return message.author.username
@@ -67,7 +69,7 @@ export default class PrefixMonitor extends Monitor {
       }
     }
 
-    await this.worker.api.messages.send(message.channel_id as Snowflake, { embed: embed }).catch(err => this.worker.log(err.toString()))
+    await this.worker.api.messages.send(message.channel_id, { embed: embed }).catch(err => this.worker.log(err.toString()))
   }
 
   xpFromLevel (level: number): number {
@@ -81,7 +83,7 @@ export default class PrefixMonitor extends Monitor {
           embed: {
             color: this.worker.colors.GREEN,
             author: {
-              name: `Congats on leveling up! You now have the role <@&${role.id}>`,
+              name: await this.worker.langs.getString(message.guild_id, 'RANK_UP'),
               icon_url: getAvatar(message.author)
             }
           }
@@ -93,7 +95,7 @@ export default class PrefixMonitor extends Monitor {
           embed: {
             color: this.worker.colors.GREEN,
             author: {
-              name: `Error: ${err as string}`,
+              name: await this.worker.langs.getString(message.guild_id, 'ERROR', err),
               icon_url: getAvatar(message.author)
             }
           }

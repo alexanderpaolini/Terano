@@ -13,16 +13,16 @@ export default {
   exec: async (ctx) => {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
 
-    if (!userID) return await ctx.error('No user was given, please mention a user.')
-    if (userID === ctx.message.author.id) return await ctx.error('You cannot blacklist yourself.')
+    if (!userID) return await ctx.respond('CMD_BLACKLIST_NOUSER', { error: true })
+    if (userID === ctx.message.author.id) return await ctx.respond('CMD_BLACKLIST_NOSELF', { error: true })
 
     const isBlacklisted = await ctx.worker.db.userDB.getBlacklist(userID)
     await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted)
 
     if (!isBlacklisted) {
-      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> added to blacklisted.`)
+      await ctx.respond('CMD_BLOACKLIST_ADDED', { color: ctx.worker.colors.ORANGE }, userID)
     } else {
-      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> removed from blacklist.`)
+      await ctx.respond('CMD_BLOACKLIST_REMOVED', { color: ctx.worker.colors.ORANGE }, userID)
     }
   }
 } as CommandOptions

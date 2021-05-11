@@ -18,18 +18,17 @@ import { getAvatar } from '../../utils'
 import { Database } from '../../database'
 
 export default class TeranoWorker extends Worker {
+  config = Config
   prod: boolean
-  topgg: Api | null = null
   colors = colors
   devmode = false
   monitors: Monitor[] = []
   statsInterval: NodeJS.Timeout | null = null
+  topgg = new Api(this.config.topgg.token)
   commandCooldowns: { [key: string]: number } = {}
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
   db = new Database()
-
   langs = new LanguageHandler(this)
-  config = Config
 
   /**
    * Create the bot
@@ -42,21 +41,25 @@ export default class TeranoWorker extends Worker {
     this.loadInit()
 
     this.commands.CommandContext = CommandContext
+
     this.commands.middleware(flagsMiddleware())
     this.commands.middleware(permissionsMiddleware({
       my: (ctx, p) => ctx.lang('NO_PERMS_BOT', p.map(x => humanReadable[x] ?? x) as any as string),
       user: (ctx, p) => ctx.lang('NO_PERMS_USER', p.map(x => humanReadable[x] ?? x) as any as string)
     }))
+
     this.commands.options({
       bots: true,
       caseInsensitiveCommand: true,
       caseInsensitivePrefix: true,
       mentionPrefix: true
     })
+
     this.commands.prefix(async (msg: any) => {
       const id = msg.guild_id ?? 'dm'
       return await this.db.guildDB.getPrefix(id)
     })
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.commands.error(async (ctx, err) => {
       const embed = ctx.embed
@@ -77,7 +80,6 @@ export default class TeranoWorker extends Worker {
         .then(() => { })
         .catch(() => { })
     })
-    if (this.prod) this.loadTOPGG()
   }
 
   /**
@@ -103,31 +105,6 @@ export default class TeranoWorker extends Worker {
     return new Embed(async (embed) => {
       return await this.comms.sendWebhook(webhook.id, webhook.token, embed)
     })
-  }
-
-  /**
-   * Load the top.gg API stats
-   */
-  loadTOPGG (): void {
-    this.log('Posting stats to top.gg every 20 minutes')
-    this.topgg = new Api(this.config.topgg.token)
-    this.statsInterval = setInterval(() => { void this.postTOPGG() }, 20 * 60 * 1000)
-  }
-
-  /**
-   * Post top.gg stats
-   */
-  async postTOPGG (): Promise<void> {
-    // TODO: remove this
-    if (!this.comms) return
-    const clusterStats = await this.comms.getStats()
-
-    const serverCount = clusterStats.reduce((a, c) => a + c.shards.reduce((b, s) => b + s.guilds, 0), 0)
-    const shardCount = clusterStats.reduce((a, c) => a + c.shards.length, 0)
-
-    this.log('Posting stats to top.gg', `Servers ${serverCount}`, `Shards ${shardCount}`)
-    if (this.topgg != null) await this.topgg.postStats({ serverCount, shardCount })
-    else this.log('Posting to top.gg but not loaded.')
   }
 
   /**

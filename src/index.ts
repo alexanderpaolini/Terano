@@ -1,7 +1,7 @@
 import { Config } from './config'
 
 import { Master } from 'discord-rose'
-
+import autoPoster from 'topgg-autoposter'
 import path from 'path'
 
 import { log } from './utils'
@@ -27,8 +27,14 @@ const master = new Master(path.resolve(__dirname, './bot/index.js'), {
   }
 })
 
-// Spawn the API
 master.spawnProcess('API', path.resolve(__dirname, './api/index.js'))
 master.spawnProcess('Influx', path.resolve(__dirname, './influx/index.js'))
+
+if (Config.prod) {
+  autoPoster(Config.topgg.token, master)
+    .on('posted', (stats) => {
+      master.log(`Posted stats to Top.gg: ${stats.serverCount as number || '0'} Guilds | ${stats.shardCount as number || '0'} Shards`)
+    })
+}
 
 void master.start()

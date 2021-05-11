@@ -14,25 +14,25 @@ export default {
     if (typeof ctx.flags.shard !== 'undefined') {
       const shard = parseInt(String(ctx.flags.shard))
 
-      if (shard >= (ctx.worker.options.shards)) return await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Shard ${ctx.flags.shard as string} does not exist.`)
+      if (shard >= (ctx.worker.options.shards)) return await ctx.respond('CMD_RESTART_NOSHARD', { error: true }, String(ctx.flags.shard))
 
-      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Restarting Shard ${shard}`)
+      await ctx.respond('CMD_RESTART_SHARD', {}, String(shard))
       ctx.worker.comms.restartShard(shard)
     } else if (typeof ctx.flags.cluster !== 'undefined') {
       const cluster = parseInt(String(ctx.flags.cluster))
 
       if (isNaN(cluster) || cluster >= Math.ceil((ctx.worker.options.shards) / (ctx.worker.options.shardsPerCluster ?? 5))) {
-        return await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Cluster ${ctx.flags.cluster as string} does not exist.`)
+        return await ctx.respond('CMD_RESTART_NOCLUSTER', {}, String(ctx.flags.cluster))
       }
 
-      await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Restarting Cluster ${cluster}`)
-      await ctx.worker.comms.restartCluster(cluster.toString())
+      await ctx.respond('CMD_RESTART_CLUSTER', {}, String(cluster))
+      ctx.worker.comms.restartCluster(cluster.toString())
     } else {
-      await ctx.tinyResponse(ctx.worker.colors.ORANGE, 'Restarting...')
+      await ctx.respond('CMD_RESTART_ALL', { color: ctx.worker.colors.ORANGE })
 
       const maxClusters = Math.ceil((ctx.worker.options.shards) / (ctx.worker.options.shardsPerCluster ?? 5))
       for (let i = 0; i < maxClusters; i++) {
-        await ctx.worker.comms.restartCluster(i.toString())
+        ctx.worker.comms.restartCluster(i.toString())
       }
     }
   }

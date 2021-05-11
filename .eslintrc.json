@@ -3,16 +3,6 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "overrides": [
-    {
-      "files": [
-        "./src/socket/cache/*"
-      ],
-      "rules": {
-        "@typescript-eslint/consistent-type-assertions": "off"
-      }
-    }
-  ],
   "rules": {
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-for-in-array": "off",

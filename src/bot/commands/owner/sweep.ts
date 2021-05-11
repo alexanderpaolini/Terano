@@ -15,16 +15,14 @@ const command: CommandOptions = {
     const time = performance.now()
 
     ctx.worker.db.guildDB.guilds.clear()
-
     ctx.worker.db.Oauth2DB.cache.clear()
-
     ctx.worker.db.userDB.levels.clear()
     ctx.worker.db.userDB.infos.clear()
     ctx.worker.db.userDB.settings.clear()
 
     ctx.worker.log('Swept Database cache')
 
-    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `Swept Cache\nTook: ${(performance.now() - time).toFixed(3)}ms`)
+    await ctx.respond('CMD_SWEPT', { color: ctx.worker.colors.ORANGE }, (performance.now() - time).toFixed(3))
   }
 }
 

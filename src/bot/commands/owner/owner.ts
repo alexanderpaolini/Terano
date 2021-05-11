@@ -15,14 +15,15 @@ export default {
     const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
 
     // Check if the user exists
-    if (!userID) return await ctx.error('No user was given, please mention a user.')
-    if (userID === ctx.message.author.id) return await ctx.error('You cannot remove yourself from owner.')
+    if (!userID) return await ctx.respond('CMD_OWNER_NOUSER', { error: true })
+    if (userID === ctx.message.author.id) return await ctx.respond('CMD_OWNER_NOSELF', { error: true })
 
     // Change the owner to the opposite
-    const isOwner = await ctx.worker.db.userDB.getOwner(userID)
-    await ctx.worker.db.userDB.setOwner(userID, !isOwner)
+    const isOwner = !(await ctx.worker.db.userDB.getOwner(userID))
+    await ctx.worker.db.userDB.setOwner(userID, isOwner)
 
     // Respond with success
-    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `<@${userID}> is ${isOwner ? 'no longer bot owner' : 'now bot owner'}.`)
+    if (isOwner) return await ctx.respond('CMD_OWNER_ADDED', {}, userID)
+    else await ctx.respond('CMD_OWNER_REMOVED', {}, userID)
   }
 } as CommandOptions

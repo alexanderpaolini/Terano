@@ -11,8 +11,8 @@ export default {
   myPerms: [],
   owner: true,
   exec: async (ctx) => {
-    if (ctx.worker.devmode) ctx.worker.devmode = false
-    else ctx.worker.devmode = true
-    await ctx.tinyResponse(ctx.worker.colors.ORANGE, `${ctx.worker.devmode ? 'Enabled' : 'Disabled'} developer mode`)
+    ctx.worker.devmode = !ctx.worker.devmode
+    if (ctx.worker.devmode) return await ctx.respond('CMD_DEVMODE_ENABLED')
+    else await ctx.respond('CMD_DEVMODE_DISABLED')
   }
 } as CommandOptions
