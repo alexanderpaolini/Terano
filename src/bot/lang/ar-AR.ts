@@ -9,8 +9,8 @@ export default {
   RANK_UP: (role: string) => `تهانينا على التسوية! لديك الآن الدور <@${role}>`,
   COOLDOWN: (time: string) => `هذا الأمر قيد التهدئة حاليًا.\n يرجى المحاولة مرة أخرى بعد ${time}.`,
 
-  NO_PERMS_BOT: (perms: string[]) => `I'm missing the following permissions: ${perms.map(p => `\`${p}\``).join(', ')}`,
-  NO_PERMS_USER: (perms: string[]) => `You're missing the following permissions: ${perms.map(p => `\`${p}\``).join(', ')}`,
+  NO_PERMS_BOT: (perms: string[]) => `افتقد الأذونات التالية: ${perms.map(p => `\`${p}\``).join('، ')}`,
+  NO_PERMS_USER: (perms: string[]) => `تفتقد الأذونات التالية: ${perms.map(p => `\`${p}\``).join(', ')}`,
 
   LANGUAGE: 'English (en-US)',
   CURRENT_LANGUAGE: 'Current language: `English (en-US)`',
