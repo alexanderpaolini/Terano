@@ -1,12 +1,10 @@
-import { Config } from '../../config'
-
 import { Snowflake } from 'discord-api-types'
 import { Router } from 'express'
 import { Webhook } from '@top-gg/sdk'
 import { API } from '../structures/API'
 
 export default function (this: API, router: Router): void {
-  const webhook = new Webhook(Config.topgg.webhook_auth)
+  const webhook = new Webhook(this.config.topgg.webhook_auth)
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   router.post('/vote', webhook.listener(async (vote, req, res) => {
@@ -25,8 +23,8 @@ export default function (this: API, router: Router): void {
       query: vote.query
     })
 
-    if (Config.discord.webhooks?.votes) {
-      await req.app.comms.sendWebhook(Config.discord.webhooks.votes.id as any, Config.discord.webhooks.votes.token, {
+    if (this.config.discord.webhooks?.votes) {
+      await req.app.comms.sendWebhook(this.config.discord.webhooks.votes.id as any, this.config.discord.webhooks.votes.token, {
         embeds: [{
           title: 'User Voted',
           author: {

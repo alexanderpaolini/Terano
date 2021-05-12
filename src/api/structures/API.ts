@@ -11,6 +11,8 @@ import { OAuth2 } from './OAuth2'
 import { Config } from '../../config'
 
 export class API {
+  config = Config
+
   app = express()
 
   db = new VoteDB()
@@ -19,8 +21,6 @@ export class API {
   oauth2 = new OAuth2(this.app)
 
   constructor () {
-    loadRoutes(this.app, path.join(__dirname, '../routes'), this)
-
     this.app.set('trust-proxy', true)
     this.app.set('views', path.join(__dirname, '../views'))
 
@@ -34,8 +34,10 @@ export class API {
       .catch(() => { this.comms.log('MongoDB connction failed') })
 
     this.app.use('/', express.static(path.join(__dirname, '../public')))
-    this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
+    this.app.use(express.json())
+
+    loadRoutes(this.app, path.join(__dirname, '../routes'), this)
 
     this.app.listen(Config.api.port, () => {
       this.comms.log('Starting on port', Config.api.port)

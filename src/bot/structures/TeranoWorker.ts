@@ -9,7 +9,6 @@ import { Embed, Worker } from 'discord-rose'
 import flagsMiddleware from '@discord-rose/flags-middleware'
 import permissionsMiddleware, { humanReadable } from '@discord-rose/permissions-middleware'
 
-import Monitor from './Monitor'
 import colors from './colors'
 import LanguageHandler from './LanguageHandler'
 import CommandContext from './CommandContext'
@@ -17,19 +16,21 @@ import CommandContext from './CommandContext'
 import { getAvatar } from '../../utils'
 import { Database } from '../../database'
 import { LanguageString } from '../lang'
+import { LevelingHandler } from './LevelingHandler'
 
 export default class TeranoWorker extends Worker {
-  config = Config
   prod: boolean
+
+  config = Config
   colors = colors
   devmode = false
-  monitors: Monitor[] = []
-  statsInterval: NodeJS.Timeout | null = null
-  topgg = new Api(this.config.topgg.token)
-  commandCooldowns: { [key: string]: number } = {}
+
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
-  db = new Database()
+
+  topgg = new Api(this.config.topgg.token)
   langs = new LanguageHandler(this)
+  levels = new LevelingHandler(this)
+  db = new Database()
 
   /**
    * Create the bot

@@ -22,6 +22,7 @@ export const Config = {
 
   discord: {
     token: process.env.DISCORD_TOKEN as string,
+    shards: process.env.DISCORD_SHARDS,
 
     webhooks: {
       errors: parseWebhook('error'),

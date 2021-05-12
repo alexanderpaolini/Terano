@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Config } from '../../config'
-
 import { Router } from 'express'
 import { API } from '../structures/API'
 
 export default function (this: API, router: Router): void {
   router.get('/login', (req, res) => {
-    res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${Config.oauth.id}&redirect_uri=${encodeURIComponent(`${req.hostname}/callback`)}&response_type=code&scope=${Config.oauth.scopes.join('%20')}`)
+    res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${this.config.oauth.id}&redirect_uri=${encodeURIComponent(`${req.hostname}/callback`)}&response_type=code&scope=${this.config.oauth.scopes.join('%20')}`)
   })
 
   router.get('/callback', async (req, res) => {

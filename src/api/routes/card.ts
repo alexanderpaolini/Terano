@@ -6,7 +6,7 @@ import { Router } from 'express'
 import { API } from '../structures/API'
 
 export default function (this: API, router: Router): void {
-  router.post('/card', authentication(), async (req, res) => {
+  router.post('/', authentication(), async (req, res) => {
     let { color, level, xp, maxxp, picture, tag, usertag } = req.body
 
     const canvas = Canvas.createCanvas(850, 250)

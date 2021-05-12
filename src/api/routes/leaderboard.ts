@@ -6,7 +6,7 @@ import { Router } from 'express'
 import { API } from '../structures/API'
 
 export default function (this: API, router: Router): void {
-  router.post('/leaderboard', authentication(), async (req, res) => {
+  router.post('/', authentication(), async (req, res) => {
     const users: any[] = req.body.data
     if (users.length > 8) users.length = 8
 
