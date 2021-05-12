@@ -17,7 +17,7 @@ const master = new Master(path.resolve(__dirname, './bot/index.js'), {
     members: true
   },
   cacheControl: {
-    guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id'],
+    guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id', 'preferred_locale'],
     members: ['nick', 'user'],
     channels: ['nsfw', 'permission_overwrites'],
     roles: ['permissions']
