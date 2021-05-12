@@ -26,8 +26,8 @@ export default class TeranoWorker extends Worker {
   monitors: Monitor[] = []
   statsInterval: NodeJS.Timeout | null = null
   topgg = new Api(this.config.topgg.token)
-  commandCooldowns: { [key: string]: number } = {}
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
+  commandCooldowns: { [key: string]: number } = {}
   db = new Database()
   langs = new LanguageHandler(this)
 
