@@ -74,6 +74,7 @@ export class LevelingHandler {
 
   async sendUpdateMessage (guildID: Snowflake, user: APIUser, channelID: Snowflake, level: number): Promise<void> {
     const guildData = await this.worker.db.guildDB.getGuild(guildID)
+    if (!guildData.level.send_level_message) return
 
     const member = this.worker.members.get(guildID)?.get(user.id) ??
       await this.worker.api.members.get(guildID, user.id).catch(() => null)
