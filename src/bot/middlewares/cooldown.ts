@@ -1,4 +1,4 @@
-import CommandContext from '../structures/CommandContext'
+import { CommandContext } from '../structures/CommandContext'
 
 import { formatTime } from '../../utils/index'
 
@@ -6,35 +6,28 @@ import Collection from '@discordjs/collection'
 
 interface CooldownObject {
   time: number
-  timeout: number
+  timeout: NodeJS.Timeout
   createdMessage?: boolean
 }
 
 export default (): ((ctx: CommandContext) => {}) => {
-  const cooldowns: Collection<string, CooldownObject> = new Collection()
+  const cooldowns = new Collection<string, CooldownObject>()
   const guildProtecton: string[] = []
 
   return async (ctx: CommandContext) => {
-    if (guildProtecton.filter(e => e === ctx.getID).length > 40) {
+    if (guildProtecton.filter(e => e === ctx.id).length > 40) {
       await ctx.worker.webhook('shards')
-        .title(`Guild ${ctx.getID} exceeded ratelimits`)
+        .title(`Guild ${ctx.id} exceeded ratelimits`)
         .send()
       return false
     }
 
-    guildProtecton.push(ctx.getID)
+    guildProtecton.push(ctx.id)
     setTimeout(() => {
-      guildProtecton.splice(guildProtecton.indexOf(ctx.getID), 1)
+      guildProtecton.splice(guildProtecton.indexOf(ctx.id), 1)
     }, 5000)
 
-    if (ctx.command.cooldown === undefined) {
-      ctx.invokeCooldown = () => {
-        throw new Error(`cooldown does not exist on command ${ctx.command.command as string}`)
-      }
-      return true
-    }
-
-    const id = `${ctx.message.author.id as string}-${ctx.getID}-${ctx.command.command as string}`
+    const id = `${ctx.message.author.id as string}-${ctx.id}-${ctx.command.command as string}`
     const currentCooldown = cooldowns.get(id)
 
     if (currentCooldown != null) {

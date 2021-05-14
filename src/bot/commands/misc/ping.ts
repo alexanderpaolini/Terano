@@ -19,6 +19,7 @@ export default {
         ((msg.embeds[0] ?? {}).author ?? {}).name += ` (${(Date.now() - time).toFixed(2)}ms)`
         await ctx.worker.api.messages.edit(msg.channel_id, msg.id, { embed: msg.embeds[0] })
       })
-      .catch(() => {})
+      .catch(() => { })
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

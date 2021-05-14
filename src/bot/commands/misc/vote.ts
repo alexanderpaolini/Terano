@@ -6,5 +6,6 @@ export default {
   locale: 'VOTE',
   exec: async (ctx) => {
     await ctx.reply('https://top.gg/bot/647256366280474626/vote')
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

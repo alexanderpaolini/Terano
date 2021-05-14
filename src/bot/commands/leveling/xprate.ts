@@ -11,17 +11,27 @@ export default {
     const newRate = Number(ctx.args[0])
 
     // Do the checks
-    if (isNaN(newRate)) return await ctx.respond('CMD_RATE_NONE', { error: true })
+    if (isNaN(newRate)) {
+      await ctx.respond('CMD_RATE_NONE', { error: true })
+      return false
+    }
 
     // Make sure people aren't stupid
-    if (newRate <= 0) return await ctx.respond('CMD_RATE_HIGH', { error: true })
-    if (newRate > 100) return await ctx.respond('CMD_RATE_LOW', { error: true })
+    if (newRate <= 0) {
+      await ctx.respond('CMD_RATE_HIGH', { error: true })
+      return false
+    }
+    if (newRate > 100) {
+      await ctx.respond('CMD_RATE_LOW', { error: true })
+      return false
+    }
 
     // Get and update the rate
-    const oldRate = await ctx.worker.db.guildDB.getXPMultiplier(ctx.getID)
-    await ctx.worker.db.guildDB.setXPMultiplier(ctx.getID, newRate)
+    const oldRate = await ctx.worker.db.guildDB.getXPMultiplier(ctx.id)
+    await ctx.worker.db.guildDB.setXPMultiplier(ctx.id, newRate)
 
     // Return success
     await ctx.respond('CMD_RATE_UPDATED', {}, String(oldRate), String(newRate))
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

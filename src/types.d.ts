@@ -1,8 +1,13 @@
 import TeranoWorker from './bot/structures/TeranoWorker'
-import TeranoContext from './bot/structures/CommandContext'
+import { CommandContext as TeranoContext } from './bot/structures/CommandContext'
+
+import { CommandError } from 'discord-rose/dist/typings/lib'
 
 declare module 'discord-rose/dist/typings/lib' {
-  interface CommandOptions {
+  interface CommandOptions<K> {
+    onRun?: (ctx: CommandContext, response: K) => any | Promise<any>
+    onError?: (ctx: CommandContext, response: CommandError) => any | Promise<any>
+    exec: (ctx: CommandContext) => K | Promise<K>
     locale: string
     category: string
     owner?: boolean
@@ -12,5 +17,5 @@ declare module 'discord-rose/dist/typings/lib' {
 
   interface CommandContext extends TeranoContext { }
 
-  interface worker extends TeranoWorker { }
+  interface worker extends TeranoWorker {}
 }

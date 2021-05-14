@@ -9,7 +9,10 @@ export default {
     if (typeof ctx.flags.shard !== 'undefined') {
       const shard = parseInt(String(ctx.flags.shard))
 
-      if (shard >= (ctx.worker.options.shards)) return await ctx.respond('CMD_RESTART_NOSHARD', { error: true }, String(ctx.flags.shard))
+      if (shard >= (ctx.worker.options.shards)) {
+        await ctx.respond('CMD_RESTART_NOSHARD', { error: true }, String(ctx.flags.shard))
+        return false
+      }
 
       await ctx.respond('CMD_RESTART_SHARD', {}, String(shard))
       ctx.worker.comms.restartShard(shard)
@@ -17,7 +20,8 @@ export default {
       const cluster = parseInt(String(ctx.flags.cluster))
 
       if (isNaN(cluster) || cluster >= Math.ceil((ctx.worker.options.shards) / (ctx.worker.options.shardsPerCluster ?? 5))) {
-        return await ctx.respond('CMD_RESTART_NOCLUSTER', {}, String(ctx.flags.cluster))
+        await ctx.respond('CMD_RESTART_NOCLUSTER', { error: true }, String(ctx.flags.cluster))
+        return false
       }
 
       await ctx.respond('CMD_RESTART_CLUSTER', {}, String(cluster))
@@ -30,5 +34,6 @@ export default {
         ctx.worker.comms.restartCluster(i.toString())
       }
     }
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

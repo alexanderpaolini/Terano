@@ -16,7 +16,7 @@ export default {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||
       ctx.message.author
-    const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.getID)
+    const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.id)
     const settings = await ctx.worker.db.userDB.getSettings(user.id) || {} as SettingsDoc
 
     const usertag = `${user.username}#${user.discriminator}`
@@ -27,7 +27,7 @@ export default {
 
     const tag = settings?.level.tag || '─────────────────'
     const picture = settings?.level.picture || getAvatar(user, 'png', 256)
-    const color = settings?.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.getID)
+    const color = settings?.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.id)
 
     const body = { color, level, xp, maxxp, picture, tag, usertag }
 
@@ -44,12 +44,12 @@ export default {
       await ctx.respond('SERVER_ERROR', { error: true })
       const text = response ? await response.text() : 'No response from POST /rank'
       ctx.worker.log(text)
-      return
+      return false
     }
 
     const buffer = await response.buffer()
 
     await ctx.sendFile({ name: 'rank.png', buffer: Buffer.from(buffer) })
-    if (ctx.invokeCooldown) ctx.invokeCooldown()
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

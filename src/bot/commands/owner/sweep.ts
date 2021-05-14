@@ -2,7 +2,7 @@ import { CommandOptions } from 'discord-rose'
 
 import { performance } from 'perf_hooks'
 
-const command: CommandOptions = {
+export default {
   command: 'sweep',
   category: 'owner',
   locale: 'SWEEP',
@@ -19,7 +19,6 @@ const command: CommandOptions = {
     ctx.worker.log('Swept Database cache')
 
     await ctx.respond('CMD_SWEEP', { color: ctx.worker.colors.ORANGE }, (performance.now() - time).toFixed(3))
+    return true
   }
-}
-
-export default command
+} as CommandOptions<boolean>

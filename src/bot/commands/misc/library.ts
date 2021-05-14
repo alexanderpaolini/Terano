@@ -7,5 +7,6 @@ export default {
   locale: 'LIBRARY',
   exec: async (ctx) => {
     await ctx.reply('https://npm.im/discord-rose')
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

@@ -35,22 +35,27 @@ export default {
 
       if (typeof evaled !== 'string') { evaled = util.inspect(evaled) }
 
-      if (ctx.flags.s || ctx.flags.silent) return
+      if (ctx.flags.s || ctx.flags.silent) return true
+
+      const SUCCESS = await ctx.lang('CMD_EVAL_SUCCESS')
 
       await ctx.embed
         .color(ctx.worker.colors.GREEN)
-        .title(await ctx.lang('CMD_EVAL_SUCCESS'))
+        .title(SUCCESS)
         .description(`\`\`\`xl\n${evaled}\`\`\``)
         .send()
     } catch (err) {
-      if (ctx.flags.s || ctx.flags.silent) return
+      if (ctx.flags.s || ctx.flags.silent) return true
+
+      const FAIL = await ctx.lang('CMD_EVAL_UNSUCCESS')
 
       ctx.embed
         .color(ctx.worker.colors.RED)
-        .title(await ctx.lang('CMD_EVAL_UNSUCCESS'))
+        .title(FAIL)
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)
         .send()
-        .catch(() => {})
+        .catch(() => { })
     }
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

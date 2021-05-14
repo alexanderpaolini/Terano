@@ -7,7 +7,7 @@ export default {
   locale: 'STATS',
   cooldown: 5e3,
   exec: async (ctx) => {
-    const currentShard = Number((BigInt(ctx.getID) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
+    const currentShard = Number((BigInt(ctx.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
 
     const stats = await ctx.worker.comms.broadcastEval('const shit = { id: worker.comms.id, shards: worker.shardStats, memory: worker.mem, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0) }; shit;')
 
@@ -43,6 +43,6 @@ Current
 
       })
 
-    if (ctx.invokeCooldown) ctx.invokeCooldown()
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

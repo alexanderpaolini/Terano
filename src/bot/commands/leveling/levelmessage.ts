@@ -8,11 +8,14 @@ export default {
   locale: 'LEVELMESSAGE',
   exec: async (ctx) => {
     // Get and reverse the current setting
-    const sendMesasge = !(await ctx.worker.db.guildDB.getSendLevelMessage(ctx.getID))
-    await ctx.worker.db.guildDB.setSendLevelMessage(ctx.getID, sendMesasge)
+    const sendMesasge = !(await ctx.worker.db.guildDB.getSendLevelMessage(ctx.id))
+    await ctx.worker.db.guildDB.setSendLevelMessage(ctx.id, sendMesasge)
 
     // Respond with success
-    if (sendMesasge) return await ctx.respond('CMD_LEVELMESSAGE_ENABLED')
-    else await ctx.respond('CMD_LEVELMESSAGE_DISABLED')
+    if (sendMesasge) {
+      await ctx.respond('CMD_LEVELMESSAGE_ENABLED')
+      return false
+    } else await ctx.respond('CMD_LEVELMESSAGE_DISABLED')
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

@@ -11,13 +11,20 @@ export default {
     const message = ctx.args.join(' ')
 
     // Make sure they aren't dumb
-    if (message.length < 1) return await ctx.respond('CMD_SETLEVELMESSAGE_CURRENT', { error: true }, await ctx.worker.db.guildDB.getLevelMessage(ctx.getID))
-    if (message.length >= 100) return await ctx.respond('CMD_SETLEVELMESSAGE_SHORT', { error: true })
+    if (message.length < 1) {
+      await ctx.respond('CMD_SETLEVELMESSAGE_CURRENT', { error: true }, await ctx.worker.db.guildDB.getLevelMessage(ctx.id))
+      return false
+    }
+    if (message.length >= 100) {
+      await ctx.respond('CMD_SETLEVELMESSAGE_SHORT', { error: true })
+      return false
+    }
 
     // Update the settings
-    await ctx.worker.db.guildDB.setLevelMessage(ctx.getID, message)
+    await ctx.worker.db.guildDB.setLevelMessage(ctx.id, message)
 
     // Respond with success
     await ctx.respond('CMD_SETLEVELMESSAGE_SET', {}, message)
+    return true
   }
-} as CommandOptions
+} as CommandOptions<boolean>

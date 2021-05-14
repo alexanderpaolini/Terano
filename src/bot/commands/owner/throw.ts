@@ -7,8 +7,14 @@ export default {
   owner: true,
   exec: async (ctx) => {
     const err = ctx.args.join(' ') || 'ERROR'
-    if (ctx.flags.respond) return await ctx.respond('ERROR', { error: true }, err)
-    if (ctx.flags.safe) return await ctx.error(err)
+    if (ctx.flags.respond) {
+      await ctx.respond('ERROR', { error: true }, err)
+      return true
+    }
+    if (ctx.flags.safe) {
+      await ctx.error(err)
+      return true
+    }
     throw new Error(err)
   }
-} as CommandOptions
+} as CommandOptions<boolean>

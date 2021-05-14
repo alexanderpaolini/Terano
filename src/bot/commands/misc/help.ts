@@ -9,7 +9,7 @@ export default {
   aliases: ['yardım', 'yardim'],
   locale: 'HELP',
   exec: async (ctx) => {
-    const guildPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.getID)
+    const guildPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.id)
 
     const cmd = ctx.args[0]
     const url = getAvatar(ctx.message.author)
@@ -32,6 +32,7 @@ export default {
       } else {
         await ctx.respond('CMD_HELP_NOCMD', { error: true }, cmd)
       }
+      return true
     } else {
       const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
       const categories = ctx.worker.commands.commands?.reduce((a, b) => a.includes(b.category) ? a : a.concat([b.category]), [] as string[]) ?? []
@@ -44,8 +45,8 @@ export default {
         .timestamp()
 
       for (const cat of categories) {
-        if (!cat) return
-        if (cat === 'owner' && !userIsOwner) return
+        if (!cat) continue
+        if (cat === 'owner' && !userIsOwner) continue
         let desc = ''
         for (const cmd_ of ctx.worker.commands.commands?.filter(x => x.category === cat).map(e => e) ?? []) {
           const cmdDesc = await ctx.lang(`CMD_${cmd_.locale}_DESCRIPTION` as LanguageString)
@@ -57,6 +58,7 @@ export default {
       embed
         .send(true)
         .catch(() => { })
+      return true
     }
   }
-} as CommandOptions
+} as CommandOptions<boolean>

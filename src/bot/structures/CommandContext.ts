@@ -1,6 +1,6 @@
 
 import { APIMessage, Snowflake } from 'discord-api-types'
-import { CommandContext } from 'discord-rose'
+import { CommandContext as CMDCTX } from 'discord-rose'
 import { getAvatar } from '../../utils'
 
 import { LanguageString } from '../lang'
@@ -13,7 +13,7 @@ interface RespondOptions {
   color?: number
 }
 
-export default class CMDCTX extends CommandContext {
+export class CommandContext extends CMDCTX {
   flags: any
   invokeCooldown?: () => void
 
@@ -21,13 +21,13 @@ export default class CMDCTX extends CommandContext {
    * Get whether or not a guild sends embeds
    */
   public async getEmbeds (): Promise<boolean> {
-    return await this.worker.db.guildDB.getEmbeds(this.getID)
+    return await this.worker.db.guildDB.getEmbeds(this.id)
   }
 
   /**
    * The real ID because this is how its gonna go
    */
-  get getID (): Snowflake {
+  get id (): Snowflake {
     return this.guild?.id ?? this.message.author.id
   }
 
@@ -37,7 +37,7 @@ export default class CMDCTX extends CommandContext {
    * @param args A replacement string
    */
   async lang (name: LanguageString, ...args: string[]): Promise<string> {
-    return await this.worker.langs.getString(this.getID, name, ...args)
+    return await this.worker.langs.getString(this.id, name, ...args)
   }
 
   /**
@@ -49,7 +49,7 @@ export default class CMDCTX extends CommandContext {
 
     const message = await this.lang(name, ...args)
 
-    options.embed = options.embed === undefined ? !!await this.worker.db.guildDB.getEmbeds(this.getID) : options.embed
+    options.embed = options.embed === undefined ? !!await this.worker.db.guildDB.getEmbeds(this.id) : options.embed
 
     if (!options.embed || this.flags.noembed || !this.myPerms('embed')) {
       return (await this.send({ content: message })

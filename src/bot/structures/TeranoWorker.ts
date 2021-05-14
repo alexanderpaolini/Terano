@@ -11,7 +11,8 @@ import permissionsMiddleware, { humanReadable } from '@discord-rose/permissions-
 
 import colors from './colors'
 import LanguageHandler from './LanguageHandler'
-import CommandContext from './CommandContext'
+import { CommandContext } from './CommandContext'
+import { CommandHandler } from './CommandHandler'
 
 import { getAvatar } from '../../utils'
 import { Database } from '../../database'
@@ -31,6 +32,8 @@ export default class TeranoWorker extends Worker {
   langs = new LanguageHandler(this)
   levels = new LevelingHandler(this)
   db = new Database()
+  // @ts-expect-error
+  commands: CommandHandler = new CommandHandler(this)
 
   /**
    * Create the bot
@@ -54,7 +57,6 @@ export default class TeranoWorker extends Worker {
       bots: true,
       caseInsensitiveCommand: true,
       caseInsensitivePrefix: true,
-      // @ts-expect-error
       default: {
         category: 'Misc',
         cooldown: 3e3
@@ -77,6 +79,8 @@ export default class TeranoWorker extends Worker {
             getAvatar(ctx.message.author))
           .description(err.message)
       } else {
+        console.error(err)
+
         embed
           .author('Error: ' + err.message, getAvatar(ctx.message.author))
       }
@@ -89,6 +93,10 @@ export default class TeranoWorker extends Worker {
     })
 
     this.commands.load(path.resolve(__dirname, '../commands'))
+
+    // this.commands.on('COMMAND_RAN', (ctx, response) => {
+    //   if (response) ctx.invokeCooldown?.()
+    // })
   }
 
   /**
