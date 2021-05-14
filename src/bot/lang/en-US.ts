@@ -151,7 +151,7 @@ const lang = {
   CMD_BLACKLIST_DESCRIPTION: 'Blacklist a user from using the bot',
   CMD_BLACKLIST_USAGE: '<ID | User Mention>',
   CMD_BLACKLIST_NOUSER: 'No user was given, please mention a user.',
-  CMD_BLACKLIST_NOSELF: 'You canno tblacklist yourself',
+  CMD_BLACKLIST_NOSELF: 'You cannot blacklist yourself',
   CMD_BLACKLIST_ADDED: (user: string) => `<@${user}> is now blacklisted`,
   CMD_BLACKLIST_REMOVED: (user: string) => `<@${user}> is no longer blacklisted`,
 

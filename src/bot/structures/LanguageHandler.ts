@@ -1,11 +1,12 @@
 import TeranoWorker from './TeranoWorker'
 
-import eng from '../lang/en-US'
-import und from '../lang/undefined'
-import esp from '../lang/es-ES'
-import ara from '../lang/ar-AR'
-import ita from '../lang/it-IT'
-import shtewpid from '../lang/en-GB'
+import English from '../lang/en-US'
+import Undefined from '../lang/undefined'
+import Spanish from '../lang/es-ES'
+// import Arabic from '../lang/ar-AR'
+// import Italian from '../lang/it-IT'
+import British from '../lang/en-GB'
+import Malay from '../lang/my-MY'
 
 import { Language, LanguageString } from '../lang'
 
@@ -13,12 +14,13 @@ export default class LanguageHandler {
   langs: Map<string, Language> = new Map()
 
   constructor (private readonly worker: TeranoWorker) {
-    this.langs.set('en-US', eng)
-    this.langs.set('undefined', und)
-    this.langs.set('es-ES', esp)
-    this.langs.set('ar-AR', ara)
-    this.langs.set('it-IT', ita)
-    this.langs.set('en-GB', shtewpid)
+    this.langs.set('en-US', English)
+    this.langs.set('undefined', Undefined)
+    this.langs.set('es-ES', Spanish)
+    // this.langs.set('ar-AR', Arabic)
+    // this.langs.set('it-IT', Italian)
+    this.langs.set('en-GB', British)
+    this.langs.set('my-MY', Malay)
   }
 
   async getString (id: string, name: LanguageString, ...args: string | string[] | any): Promise<string> {
