@@ -64,8 +64,10 @@ export default class CMDCTX extends CommandContext {
     if (this.flags.noreply) options.reply = false
     if (this.flags.nomention) options.mention = false
 
+    const cmd = `| ${String(await this.lang(`CMD_${this.command.locale}_NAME` as LanguageString))}`
+
     const response = await this.embed
-      .author(this.message.member?.nick ?? `${this.message.author.username} | ${String(await this.lang(`CMD_${this.command.locale}_NAME` as LanguageString))}`, getAvatar(this.message.author))
+      .author(this.message.member?.nick ? this.message.member.nick + cmd : `${this.message.author.username} ` + cmd, getAvatar(this.message.author))
       .description(message)
       .color(options.color ?? (options.error ? this.worker.colors.RED : this.worker.colors.GREEN))
       .send(options.reply, !!options.mention)
