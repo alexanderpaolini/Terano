@@ -18,7 +18,7 @@ export default class LanguageHandler {
     this.langs.set('es-ES', esp)
     this.langs.set('ar-AR', ara)
     this.langs.set('it-IT', ita)
-    this.langs.set('en-UK', shtewpid)
+    this.langs.set('en-GB', shtewpid)
   }
 
   async getString (id: string, name: LanguageString, ...args: string | string[] | any): Promise<string> {
