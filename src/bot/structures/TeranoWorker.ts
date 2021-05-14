@@ -54,6 +54,11 @@ export default class TeranoWorker extends Worker {
       bots: true,
       caseInsensitiveCommand: true,
       caseInsensitivePrefix: true,
+      // @ts-expect-error
+      default: {
+        category: 'Misc',
+        cooldown: 3e3
+      },
       mentionPrefix: true
     })
 
@@ -82,6 +87,8 @@ export default class TeranoWorker extends Worker {
         .then(() => { })
         .catch(() => { })
     })
+
+    this.commands.load(path.resolve(__dirname, '../commands'))
   }
 
   /**

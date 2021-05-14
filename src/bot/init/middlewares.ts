@@ -8,7 +8,10 @@ export default function initFunction (worker: TeranoWorker): void {
     readdir(dir, { withFileTypes: true }, (err, files) => {
       if (err != null) return worker.log(err.message)
       for (const file of files) {
-        if (file.isDirectory()) return loadMiddleware(`${dir}/${file.name}`)
+        if (file.isDirectory()) {
+          loadMiddleware(`${dir}/${file.name}`)
+          continue
+        }
         if (file.isFile() && file.name.endsWith('.js')) {
           const middlewareFunc = require(`${dir}/${file.name}`).default // eslint-disable-line @typescript-eslint/no-var-requires
           worker.commands.middleware(middlewareFunc())
