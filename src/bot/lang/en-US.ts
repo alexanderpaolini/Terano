@@ -73,7 +73,7 @@ const lang = {
 
   CMD_SETLEVELMESSAGE_NAME: 'Set Level-Up Message',
   CMD_SETLEVELMESSAGE_DESCRIPTION: 'Set the guild\'s Level-Up Message',
-  CMD_SETLEVELMESSAGE_USAGE: '<string>',
+  CMD_SETLEVELMESSAGE_USAGE: '<text>',
   CMD_SETLEVELMESSAGE_SHORT: 'Level-Up message must be shorter than 100 characters',
   CMD_SETLEVELMESSAGE_CURRENT: (msg: string) => `Current Level-Up message: \`${msg}\``,
   CMD_SETLEVELMESSAGE_SET: (msg: string) => `Level-Up message set to \`${msg}\``,
@@ -133,6 +133,7 @@ const lang = {
   CMD_EMBEDS_USAGE: '',
   CMD_EMBEDS_ENABLED: 'Enabled embeded messages',
   CMD_EMBEDS_DISABLED: 'Disabled embeded messages',
+  CMD_EMBEDS_ENABLED_NOPERMS: 'Enabled embedded messages but I don\'t have permissions to use them',
 
   CMD_LANG_NAME: 'Language',
   CMD_LANG_DESCRIPTION: 'Set the guild\'s language',
@@ -198,7 +199,7 @@ const lang = {
 
   CMD_THROW_NAME: 'Throw',
   CMD_THROW_DESCRIPTION: 'Make the bot handle an error',
-  CMD_THROW_USAGE: '',
+  CMD_THROW_USAGE: '[text]',
 
   // Categories
 

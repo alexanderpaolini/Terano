@@ -135,6 +135,7 @@ export default {
   CMD_EMBEDS_USAGE: 'undefined',
   CMD_EMBEDS_ENABLED: 'undefined',
   CMD_EMBEDS_DISABLED: 'undefined',
+  CMD_EMBEDS_ENABLED_NOPERMS: 'undefined',
 
   CMD_LANG_NAME: 'undefined',
   CMD_LANG_DESCRIPTION: 'undefined',

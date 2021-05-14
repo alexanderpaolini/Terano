@@ -135,6 +135,7 @@ export default {
   CMD_EMBEDS_USAGE: '',
   CMD_EMBEDS_ENABLED: 'Enabled embeded messages',
   CMD_EMBEDS_DISABLED: 'Disabled embeded messages',
+  CMD_EMBEDS_ENABLED_NOPERMS: 'Enabled embedded messages however, I don\'t have permissions to use them',
 
   CMD_LANG_NAME: 'Language',
   CMD_LANG_DESCRIPTION: 'Set the guild\'s language',

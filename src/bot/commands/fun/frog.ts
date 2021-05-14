@@ -8,11 +8,15 @@ export default {
   aliases: ['forg', 'froggers', 'og'],
   locale: 'FROG',
   exec: async (ctx) => {
-    fetch('https://frogs.media/api/random')
-      .then(async res => await res.json())
-      .then(async json => {
-        await ctx.reply(json.url)
-      })
-      .catch(ctx.error)
+    const json = await fetch('https://frogs.media/api/random')
+      .then(async e => await e.json())
+      .catch(() => null)
+
+    if (!json || !json.url) {
+      await ctx.respond('SERVER_ERROR', { error: true })
+      return
+    }
+
+    await ctx.reply(json.url)
   }
 } as CommandOptions

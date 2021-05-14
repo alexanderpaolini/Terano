@@ -9,8 +9,9 @@ export default {
   command: 'rank',
   category: 'leveling',
   aliases: ['card', 'level'],
-  cooldown: 9e3,
   locale: 'RANK',
+  myPerms: ['embed'],
+  cooldown: 9e3,
   exec: async (ctx) => {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||
@@ -36,10 +37,15 @@ export default {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    }).catch(() => null)
 
     // Respond with an error kekw
-    if (!response || !response.ok) return ctx.error(await ctx.lang('SERVER_ERROR'))
+    if (!response || !response.ok) {
+      await ctx.respond('SERVER_ERROR', { error: true })
+      const text = response ? await response.text() : 'No response from POST /rank'
+      ctx.worker.log(text)
+      return
+    }
 
     const buffer = await response.buffer()
 

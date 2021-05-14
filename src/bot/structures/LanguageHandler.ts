@@ -5,7 +5,7 @@ import und from '../lang/undefined'
 import esp from '../lang/es-ES'
 import ara from '../lang/ar-AR'
 import ita from '../lang/it-IT'
-import stewpid from '../lang/en-UK'
+import shtewpid from '../lang/en-GB'
 
 import { Language, LanguageString } from '../lang'
 
@@ -18,7 +18,7 @@ export default class LanguageHandler {
     this.langs.set('es-ES', esp)
     this.langs.set('ar-AR', ara)
     this.langs.set('it-IT', ita)
-    this.langs.set('en-UK', stewpid)
+    this.langs.set('en-UK', shtewpid)
   }
 
   async getString (id: string, name: LanguageString, ...args: string | string[] | any): Promise<string> {

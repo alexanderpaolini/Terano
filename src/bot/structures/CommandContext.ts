@@ -51,7 +51,7 @@ export default class CMDCTX extends CommandContext {
 
     options.embed = options.embed === undefined ? !!await this.worker.db.guildDB.getEmbeds(this.getID) : options.embed
 
-    if (!options.embed || this.flags.noembed) {
+    if (!options.embed || this.flags.noembed || !this.myPerms('embed')) {
       return (await this.send({ content: message })
         .catch(() => undefined)) ?? null
     }

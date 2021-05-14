@@ -137,6 +137,7 @@ export default {
   // CMD_EMBEDS_USAGE
   CMD_EMBEDS_ENABLED: 'Mensajes incrustados activado',
   CMD_EMBEDS_DISABLED: 'Mensajes incrustados discapacitado',
+  // CMD_EMBEDS_ENABLED_NOPERMS
 
   // CMD_LANG_NAME
   // CMD_LANG_DESCRIPTION

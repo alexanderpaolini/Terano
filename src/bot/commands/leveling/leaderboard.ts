@@ -9,6 +9,7 @@ export default {
   category: 'leveling',
   aliases: ['lb'],
   locale: 'LEADERBOARD',
+  myPerms: ['embed'],
   cooldown: 15e3,
   exec: async (ctx) => {
     // Send the loading message
@@ -54,7 +55,12 @@ export default {
     }).catch(() => null)
 
     // Respond with an error kekw
-    if ((response == null) || !response.ok) return await ctx.respond('SERVER_ERROR', { error: true })
+    if (!response || !response.ok) {
+      await ctx.respond('SERVER_ERROR', { error: true })
+      const text = response ? await response.text() : 'No response from POST /leaderboard'
+      ctx.worker.log(text)
+      return
+    }
 
     // Get the buffer
     const buffer = await response.buffer()
