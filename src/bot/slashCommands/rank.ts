@@ -68,7 +68,7 @@ export default {
     const formData = new FormData()
     formData.append('file', buffer, 'rank.png')
 
-    await worker.api.request('PATCH', `/webhooks/692029320775860245/${data.token}/messages/@original`, {
+    await worker.api.request('PATCH', `/webhooks/${worker.user.id}/${data.token}/messages/@original`, {
       body: formData,
       headers: formData.getHeaders(),
       parser: _ => _
