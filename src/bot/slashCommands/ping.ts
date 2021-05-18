@@ -24,7 +24,7 @@ export default {
       .author(`Pong! (${(performance.now() - time).toPrecision(5)}ms)`, getAvatar(user))
       .color(worker.colors.PURPLE)
 
-    await worker.api.request('PATCH', `/webhooks/692029320775860245/${data.token}/messages/@original`, {
+    await worker.api.request('PATCH', `/webhooks/${worker.user.id}/${data.token}/messages/@original`, {
       body: { embeds: [embed.render()] }
     })
   }
