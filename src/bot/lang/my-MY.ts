@@ -150,6 +150,10 @@ export default {
   CMD_LANG_DESCRIPTION: 'Kemas kini bahasa server.',
   CMD_LANG_USAGE: '[bahasa]',
 
+  CMD_INVITE_NAME: 'Invitasi',
+  CMD_INVITE_DESCRIPTION: 'Dapatkan URL invitasi bot.',
+  CMD_INVITE_USAGE: '',
+
   CMD_PREFIX_NAME: 'Prefiks',
   CMD_PREFIX_DESCRIPTION: 'Kemas kini prefiks bot.',
   CMD_PREFIX_USAGE: '[prefiks]',

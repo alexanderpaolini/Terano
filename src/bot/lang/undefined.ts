@@ -141,6 +141,10 @@ export default {
   CMD_LANG_DESCRIPTION: 'undefined',
   CMD_LANG_USAGE: 'undefined',
 
+  CMD_INVITE_NAME: 'undefined',
+  CMD_INVITE_DESCRIPTION: 'undefined',
+  CMD_INVITE_USAGE: 'undefined',
+
   CMD_PREFIX_NAME: 'undefined',
   CMD_PREFIX_DESCRIPTION: 'undefined',
   CMD_PREFIX_USAGE: 'undefined',

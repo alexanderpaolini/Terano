@@ -141,6 +141,10 @@ export default {
   CMD_LANG_DESCRIPTION: 'Set the guild\'s language',
   CMD_LANG_USAGE: '[lang]',
 
+  CMD_INVITE_NAME: 'Invite',
+  CMD_INVITE_DESCRIPTION: 'Get the bot\'s invite URL',
+  CMD_INVITE_USAGE: '',
+
   CMD_PREFIX_NAME: 'Prefix',
   CMD_PREFIX_DESCRIPTION: 'Set the bot\'s prefix',
   CMD_PREFIX_USAGE: '[prefix]',
