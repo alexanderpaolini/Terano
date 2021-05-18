@@ -29,7 +29,9 @@ export const Config = {
       guilds: parseWebhook('guilds'),
       shards: parseWebhook('shards'),
       votes: parseWebhook('votes')
-    }
+    },
+
+    test_guild: '564790211561652237'
   },
 
   influx: {

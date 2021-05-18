@@ -7,9 +7,6 @@ export default {
   category: 'fun',
   aliases: ['forg', 'froggers', 'og'],
   locale: 'FROG',
-  onRun: (r, re) => {
-    console.log(re)
-  },
   exec: async (ctx) => {
     const json = await fetch('https://frogs.media/api/random')
       .then(async e => await e.json())

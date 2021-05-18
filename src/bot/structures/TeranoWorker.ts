@@ -18,6 +18,7 @@ import { getAvatar } from '../../utils'
 import { Database } from '../../database'
 import { LanguageString } from '../lang'
 import { LevelingHandler } from './LevelingHandler'
+import { SlashHandler } from './SlashHandler'
 
 export default class TeranoWorker extends Worker {
   prod: boolean
@@ -34,6 +35,7 @@ export default class TeranoWorker extends Worker {
   db = new Database()
   // @ts-expect-error
   commands: CommandHandler = new CommandHandler(this)
+  slashCommands: SlashHandler = new SlashHandler(this)
 
   /**
    * Create the bot

@@ -22,9 +22,9 @@ export default (worker: TeranoWorker): void => {
   worker.on('GUILD_DELETE', async (guild) => {
     worker.log(`Left Guild ${guild.id}`)
     await worker.webhook('guilds')
-      .title('Joined Guild')
+      .title('Left Guild')
       .author(`${worker.user.username}#${worker.user.discriminator}`, 'https://cdn.discordapp.com/attachments/813578636162367559/813581068199264296/image0.png')
-      .color(worker.colors.GREEN)
+      .color(worker.colors.RED)
       .description(`${guild.id}`)
       .footer(`Current Guild Count: ${worker.guilds.size}`)
       .send()
