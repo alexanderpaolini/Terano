@@ -1,18 +1,25 @@
 import TeranoWorker from './TeranoWorker'
 
-import { APIMessage, APIUser, Snowflake } from 'discord-api-types'
+import { Snowflake, APIMessage, APIUser } from 'discord-api-types'
 
 import { Embed } from 'discord-rose'
 import { getAvatar } from '../../utils'
 
 export class LevelingHandler {
-  cooldown = new Set()
+  /**
+   * Cooldown without duplicates
+   */
+  cooldown = new Set<string>()
 
   constructor (private readonly worker: TeranoWorker) {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     worker.on('MESSAGE_CREATE', this.run.bind(this))
   }
 
+  /**
+   * The function that handles the leveling
+   * @param data The message
+   */
   async run (data: APIMessage): Promise<void> {
     if (!data.guild_id || data.author.bot) return
 
@@ -45,6 +52,13 @@ export class LevelingHandler {
     setTimeout(() => { this.cooldown.delete(str) }, Number(guildData.level.cooldown) * 1000)
   }
 
+  /**
+   * Add the role corresponding to the level for the guild
+   * @param guildID Guild ID
+   * @param user The user
+   * @param channelID Channel ID
+   * @param level level
+   */
   async addLevelRole (guildID: Snowflake, user: APIUser, channelID: Snowflake, level: number): Promise<void> {
     const guildData = await this.worker.db.guildDB.getGuild(guildID)
     const role = guildData.level.level_roles.find(e => e.level === level)
@@ -72,6 +86,13 @@ export class LevelingHandler {
       })
   }
 
+  /**
+   * Send the Level-Up mesasge
+   * @param guildID Guild ID
+   * @param user The user
+   * @param channelID Channel ID
+   * @param level the level
+   */
   async sendUpdateMessage (guildID: Snowflake, user: APIUser, channelID: Snowflake, level: number): Promise<void> {
     const guildData = await this.worker.db.guildDB.getGuild(guildID)
     if (!guildData.level.send_level_message) return

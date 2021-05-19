@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { CommandOptions } from 'discord-rose'
+import { CommandOptions } from '../../structures/CommandHandler'
 import { getAvatar } from '../../../utils'
 import { LanguageString } from '../../lang'
 
@@ -21,6 +21,7 @@ export default {
         const l2 = await ctx.lang('CMD_HELP_A', command.aliases as any as string)
         const l3 = await ctx.lang('CMD_HELP_U', await ctx.lang(`CMD_${command.locale}_USAGE` as LanguageString))
         const l4 = await ctx.lang('CMD_HELP_D', await ctx.lang(`CMD_${command.locale}_DESCRIPTION` as LanguageString))
+
         ctx.embed
           .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_HELP_NAME'), url)
           .description(`${l1}\n${l2}\n${l3}\n${l4}`)
@@ -50,7 +51,7 @@ export default {
         let desc = ''
         for (const cmd_ of ctx.worker.commands.commands?.filter(x => x.category === cat).map(e => e) ?? []) {
           const cmdDesc = await ctx.lang(`CMD_${cmd_.locale}_DESCRIPTION` as LanguageString)
-          desc += `\`${guildPrefix}${cmd_.command as string}\`: ${cmdDesc}\n`
+          desc += `\`${guildPrefix}${cmd_.command}\`: ${cmdDesc}\n`
         }
         embed.field(await ctx.lang(`CAT_${cat.toUpperCase()}` as LanguageString), desc)
       }

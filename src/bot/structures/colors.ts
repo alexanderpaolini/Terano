@@ -1,7 +1,7 @@
 /**
  * Useful colours used throught the bot
  */
-enum colors {
+export enum colors {
   /**
    * Red
    */
@@ -37,5 +37,3 @@ enum colors {
    */
   PURPLE = 0xb649eb
 }
-
-export default colors

@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose'
+import { CommandOptions } from '../../structures/CommandHandler'
 
 import colors from '../../../utils/colors'
 

@@ -1,5 +1,5 @@
 import { APIUser, Snowflake } from 'discord-api-types'
-import { CommandOptions } from 'discord-rose'
+import { CommandOptions } from '../../structures/CommandHandler'
 
 import fetch from 'node-fetch'
 import { getAvatar } from '../../../utils'

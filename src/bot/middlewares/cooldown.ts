@@ -6,7 +6,7 @@ import Collection from '@discordjs/collection'
 
 interface CooldownObject {
   time: number
-  timeout: NodeJS.Timeout
+  timeout: number
   createdMessage?: boolean
 }
 
@@ -27,7 +27,7 @@ export default (): ((ctx: CommandContext) => {}) => {
       guildProtecton.splice(guildProtecton.indexOf(ctx.id), 1)
     }, 5000)
 
-    const id = `${ctx.message.author.id as string}-${ctx.id}-${ctx.command.command as string}`
+    const id = `${ctx.message.author.id as string}-${ctx.id}-${ctx.command.command}`
     const currentCooldown = cooldowns.get(id)
 
     if (currentCooldown != null) {

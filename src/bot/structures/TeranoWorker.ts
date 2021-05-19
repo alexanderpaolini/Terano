@@ -2,39 +2,66 @@ import { Config } from '../../config'
 
 import fs from 'fs'
 import path from 'path'
-import { Api } from '@top-gg/sdk'
 
+import { Api } from '@top-gg/sdk'
 import { Embed, Worker } from 'discord-rose'
 
 import flagsMiddleware from '@discord-rose/flags-middleware'
 import permissionsMiddleware, { humanReadable } from '@discord-rose/permissions-middleware'
 
-import colors from './colors'
-import LanguageHandler from './LanguageHandler'
-import { CommandContext } from './CommandContext'
-import { CommandHandler } from './CommandHandler'
-
-import { getAvatar } from '../../utils'
-import { Database } from '../../database'
-import { LanguageString } from '../lang'
+import { CommandHandler, MiddlewareFunction } from './CommandHandler'
 import { LevelingHandler } from './LevelingHandler'
+import { LanguageHandler } from './LanguageHandler'
 import { SlashHandler } from './SlashHandler'
+import { colors } from './colors'
+
+import { Database } from '../../database'
 
 export default class TeranoWorker extends Worker {
+  /**
+   * Whether or not the bot is on production
+   */
   prod: boolean
-
+  /**
+   * The bot's configuration
+   */
   config = Config
+  /**
+   * Fancy colors
+   */
   colors = colors
+  /**
+   * Whether or not to accept command responses
+   */
   devmode = false
-
+  /**
+   * Bot status
+   */
   status = { type: 'playing', name: 'Minecraft', status: 'online', url: undefined }
-
+  /**
+   * Top.gg API (for posting stats)
+   */
   topgg = new Api(this.config.topgg.token)
+  /**
+   * Language handler
+   */
   langs = new LanguageHandler(this)
+  /**
+   * Level handler
+   */
   levels = new LevelingHandler(this)
+  /**
+   * The bot's database
+   */
   db = new Database()
+  /**
+   * The command handler
+   */
   // @ts-expect-error
   commands: CommandHandler = new CommandHandler(this)
+  /**
+   * The slash command handler
+   */
   slashCommands: SlashHandler = new SlashHandler(this)
 
   /**
@@ -47,58 +74,14 @@ export default class TeranoWorker extends Worker {
 
     this.loadInit()
 
-    this.commands.CommandContext = CommandContext
+    this.commands.middleware(flagsMiddleware() as any as MiddlewareFunction)
 
-    this.commands.middleware(flagsMiddleware())
     this.commands.middleware(permissionsMiddleware({
       my: async (ctx, p) => await ctx.lang('NO_PERMS_BOT', p.map(x => humanReadable[x] ?? x) as any as string),
       user: async (ctx, p) => await ctx.lang('NO_PERMS_USER', p.map(x => humanReadable[x] ?? x) as any as string)
-    }))
-
-    this.commands.options({
-      bots: true,
-      caseInsensitiveCommand: true,
-      caseInsensitivePrefix: true,
-      default: {
-        category: 'Misc',
-        cooldown: 3e3
-      },
-      mentionPrefix: true
-    })
-
-    this.commands.prefix(async (msg: any) => {
-      const id = msg.guild_id ?? 'dm'
-      return await this.db.guildDB.getPrefix(id)
-    })
-
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.commands.error(async (ctx, err) => {
-      const embed = ctx.embed
-
-      if (err.nonFatal) {
-        embed
-          .author((ctx.message.member?.nick ?? ctx.message.author.username) + ` | ${String(await ctx.lang(`CMD_${ctx.command.locale}_NAME` as LanguageString) ?? ctx.command.command)}`,
-            getAvatar(ctx.message.author))
-          .description(err.message)
-      } else {
-        console.error(err)
-
-        embed
-          .author('Error: ' + err.message, getAvatar(ctx.message.author))
-      }
-
-      embed
-        .color(ctx.worker.colors.RED)
-        .send(true)
-        .then(() => { })
-        .catch(() => { })
-    })
+    }) as any as MiddlewareFunction)
 
     this.commands.load(path.resolve(__dirname, '../commands'))
-
-    // this.commands.on('COMMAND_RAN', (ctx, response) => {
-    //   if (response) ctx.invokeCooldown?.()
-    // })
   }
 
   /**
@@ -119,6 +102,10 @@ export default class TeranoWorker extends Worker {
     })
   }
 
+  /**
+   * Get an embed which sends directly to a webhook
+   * @param wh Webhook name
+   */
   webhook (wh: keyof typeof Config.discord.webhooks): Embed {
     const webhook = this.config.discord.webhooks[wh]
     return new Embed(async (embed) => {

@@ -1,5 +1,5 @@
 import { Snowflake } from 'discord-api-types'
-import { CommandOptions } from 'discord-rose'
+import { CommandOptions } from '../../structures/CommandHandler'
 
 export default {
   command: 'levelrole',

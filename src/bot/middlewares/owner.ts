@@ -1,4 +1,4 @@
-import { CommandContext } from 'discord-rose/dist/typings/lib'
+import { CommandContext } from '../structures/CommandContext'
 
 export default () => {
   return async (ctx: CommandContext) => {

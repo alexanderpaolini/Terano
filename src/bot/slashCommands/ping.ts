@@ -1,8 +1,5 @@
 import { SlashCommand } from '../structures/SlashHandler'
 
-import { APIApplicationCommandGuildInteraction } from 'discord-api-types'
-
-import { Embed } from 'discord-rose'
 import { performance } from 'perf_hooks'
 
 import { getAvatar } from '../../utils'
@@ -10,22 +7,13 @@ import { getAvatar } from '../../utils'
 export default {
   name: 'ping',
   description: 'Ping Pong!',
-  exec: async (worker, data: APIApplicationCommandGuildInteraction) => {
-    if (data.type !== 2) return
-
-    const user = data.member.user
-
+  exec: async (ctx) => {
     const time = performance.now()
-    await worker.api.request('POST', `/interactions/${data.id}/${data.token}/callback`, {
-      body: { type: 5 }
-    })
+    await ctx.thinking()
 
-    const embed = new Embed()
-      .author(`Pong! (${(performance.now() - time).toPrecision(5)}ms)`, getAvatar(user))
-      .color(worker.colors.PURPLE)
-
-    await worker.api.request('PATCH', `/webhooks/${worker.user.id}/${data.token}/messages/@original`, {
-      body: { embeds: [embed.render()] }
-    })
+    await ctx.embed
+      .author(`Pong! (${(performance.now() - time).toPrecision(5)}ms)`, getAvatar(ctx.user))
+      .color(ctx.worker.colors.PURPLE)
+      .send()
   }
 } as SlashCommand

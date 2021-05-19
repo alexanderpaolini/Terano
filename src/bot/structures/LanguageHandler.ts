@@ -6,11 +6,11 @@ import Spanish from '../lang/es-ES'
 // import Arabic from '../lang/ar-AR'
 // import Italian from '../lang/it-IT'
 import British from '../lang/en-GB'
-import Malay from '../lang/my-MY'
+import Malay from '../lang/ms-MY'
 
 import { Language, LanguageString } from '../lang'
 
-export default class LanguageHandler {
+export class LanguageHandler {
   langs: Map<string, Language> = new Map()
 
   constructor (private readonly worker: TeranoWorker) {
@@ -20,7 +20,7 @@ export default class LanguageHandler {
     // this.langs.set('ar-AR', Arabic)
     // this.langs.set('it-IT', Italian)
     this.langs.set('en-GB', British)
-    this.langs.set('my-MY', Malay)
+    this.langs.set('ms-MY', Malay)
   }
 
   async getString (id: string, name: LanguageString, ...args: string | string[] | any): Promise<string> {
@@ -41,3 +41,5 @@ export default class LanguageHandler {
     return guildLang ?? 'en-US'
   }
 }
+
+export { Language, LanguageString }

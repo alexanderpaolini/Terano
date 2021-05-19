@@ -1,14 +1,18 @@
-import { APIApplicationCommand, APIApplicationCommandInteraction } from 'discord-api-types'
+import { APIApplicationCommand } from 'discord-api-types'
 
 import { Worker } from 'discord-rose/dist/typings/lib'
 
 import Collection from '@discordjs/collection'
+import { SlashContext } from './SlashContext'
 
 export interface SlashCommand extends Omit<APIApplicationCommand, 'id' | 'application_id'> {
-  exec: (worker: Worker, data: APIApplicationCommandInteraction) => Promise<void> | void
+  exec: (ctx: SlashContext) => Promise<void> | void
 }
 
 export class SlashHandler {
+  /**
+   * Collection holding all of the commands
+   */
   commands = new Collection<string, SlashCommand>()
 
   constructor (private readonly worker: Worker) {
@@ -36,10 +40,20 @@ export class SlashHandler {
     this.worker.on('INTERACTION_CREATE', async (data) => {
       const command = this.commands.get(data.data.name)
       if (!command) return
-      await command.exec(this.worker, data)
+      if (!('member' in data)) return
+      const ctx = new SlashContext({
+        worker: this.worker,
+        command: command,
+        interaction: data
+      })
+      await command.exec(ctx)
     })
   }
 
+  /**
+   * Add a slash command to the handler
+   * @param command Slash command to be added
+   */
   add (command: SlashCommand): this {
     this.commands.set(command.name, command)
 

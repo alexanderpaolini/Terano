@@ -1,4 +1,4 @@
-import { CommandOptions } from 'discord-rose'
+import { CommandOptions } from '../../structures/CommandHandler'
 
 export default {
   command: '',
@@ -11,6 +11,6 @@ export default {
     const prefix = await ctx.worker.db.guildDB.getPrefix(ctx.id)
 
     await ctx.respond('PREFIX_CURRENT', {}, prefix)
-    return true
+    return false
   }
 } as CommandOptions<boolean>

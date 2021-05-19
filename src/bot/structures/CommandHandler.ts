@@ -1,15 +1,18 @@
 import { APIMessage, MessageType } from 'discord-api-types'
-import { EventEmitter } from 'events'
-
-import { CommandOptions, CommandType, CommandContext as ctx, Worker } from 'discord-rose/dist/typings/lib'
-import Collection from '@discordjs/collection'
+import { CommandType } from 'discord-rose/dist/typings/lib'
 
 import fs from 'fs'
 import path from 'path'
+import { EventEmitter } from 'events'
+
+import Collection from '@discordjs/collection'
 
 import { CommandContext } from './CommandContext'
+import Worker from './TeranoWorker'
+import { LanguageString } from '../lang'
+import { getAvatar } from '../../utils'
 
-type MiddlewareFunction = (ctx: ctx) => boolean | Promise<boolean>
+export type MiddlewareFunction = (ctx: CommandContext) => boolean | Promise<boolean>
 
 /**
  * Error in command
@@ -22,9 +25,9 @@ export class CommandError extends Error {
  * Command Events
  */
 export interface HandlerEvents {
-  COMMAND_RAN: [ctx, any]
-  MIDDLEWARE_ERROR: [ctx, CommandError]
-  COMMAND_ERROR: [ctx, CommandError]
+  COMMAND_RAN: [CommandContext, any]
+  MIDDLEWARE_ERROR: [CommandContext, CommandError]
+  COMMAND_ERROR: [CommandContext, CommandError]
   NO_COMMAND: [APIMessage]
 }
 
@@ -33,21 +36,28 @@ export interface HandlerEvents {
  */
 export class CommandHandler extends EventEmitter {
   private _options: CommandHandlerOptions = {
-    default: {},
-    bots: false,
-    mentionPrefix: true,
+    bots: true,
+    caseInsensitiveCommand: true,
     caseInsensitivePrefix: true,
-    caseInsensitiveCommand: true
+    default: {
+      category: 'Misc',
+      cooldown: 3e3
+    },
+    mentionPrefix: true
   }
 
   once!: <K extends keyof HandlerEvents>(event: K, listener: (...data: HandlerEvents[K]) => any | Promise<any>) => this
   on!: <K extends keyof HandlerEvents>(event: K, listener: (...data: HandlerEvents[K]) => any | Promise<any>) => this
   emit!: <K extends keyof HandlerEvents>(event: K | symbol, ...data: HandlerEvents[K]) => boolean
 
+  /**
+   * The command handler middlewares
+   */
   public middlewares: MiddlewareFunction[] = []
+  /**
+   * The command handler commnads
+   */
   public commands = new Collection<CommandType, CommandOptions<any>>()
-
-  public CommandContext = CommandContext
 
   /**
    * Create's new Command Handler
@@ -61,26 +71,40 @@ export class CommandHandler extends EventEmitter {
     })
   }
 
-  public prefixFunction?: ((message: APIMessage) => Promise<string | string[]> | string | string[])
-  public errorFunction = (ctx: ctx, err: CommandError): void => {
-    if (ctx.myPerms('sendMessages')) {
-      if (ctx.myPerms('embed')) {
-        ctx.embed
-          .color(0xFF0000)
-          .title('An Error Occured')
-          .description(`\`\`\`xl\n${err.message}\`\`\``)
-          .send().catch(() => { })
-      } else {
-        ctx
-          .send(`An Error Occured\n\`\`\`xl\n${err.message}\`\`\``)
-          .catch(() => { })
-      }
+  /**
+   * The function which returns the prefix
+   * @param msg Mesasge
+   */
+  public prefixFunction: ((message: APIMessage) => Promise<string | string[]> | string | string[]) = async (msg: any) => {
+    const id = msg.guild_id ?? 'dm'
+    return await this.worker.db.guildDB.getPrefix(id)
+  }
+
+  /**
+   * The function which handles the error
+   * @param ctx Command Context
+   * @param err The Error
+   */
+  public errorFunction = async (ctx: CommandContext, err: CommandError): Promise<void> => {
+    const embed = ctx.embed
+
+    if (err.nonFatal) {
+      embed
+        .author((ctx.message.member?.nick ?? ctx.message.author.username) + ` | ${String(await ctx.lang(`CMD_${ctx.command.locale}_NAME` as LanguageString) ?? ctx.command.command)}`,
+          getAvatar(ctx.message.author))
+        .description(err.message)
+    } else {
+      console.error(err)
+
+      embed
+        .author('Error: ' + err.message, getAvatar(ctx.message.author))
     }
 
-    if (err.nonFatal) return
-
-    err.message += ` (While Running Command: ${String(ctx.command.command)})`
-    console.error(err)
+    embed
+      .color(ctx.worker.colors.RED)
+      .send(true)
+      .then(() => { })
+      .catch(() => { })
   }
 
   /**
@@ -123,46 +147,6 @@ export class CommandHandler extends EventEmitter {
       ...this._options,
       ...opts
     }
-
-    return this
-  }
-
-  /**
-   * Sets a prefix fetcher
-   * @param fn String of prefix or Function to choose prefix with
-   * @example
-   * worker.commands
-   *   .prefix('!')
-   * // or
-   *   .prefix(['!', '+'])
-   * // or
-   *   .prefix((message) => {
-   *     return db.getPrefix(message.guild_id)
-   *   })
-   * @returns this
-   */
-  prefix (fn: string | string[] | ((message: APIMessage) => Promise<string | string[]> | string | string[])): this {
-    if (Array.isArray(fn) || typeof fn === 'string') {
-      this.prefixFunction = () => fn
-    } else {
-      this.prefixFunction = fn
-    }
-
-    return this
-  }
-
-  /**
-   * Defines an error handler replacing the default one
-   * @param fn Function to handle error
-   * @example
-   * worker.commands
-   *  .error((ctx, error) => {
-   *    ctx.send(`Error: ${error.message}`)
-   *  })
-   * @returns this
-   */
-  error (fn: (ctx: ctx, error: CommandError) => void): this {
-    this.errorFunction = fn
 
     return this
   }
@@ -214,7 +198,7 @@ export class CommandHandler extends EventEmitter {
    * @returns Command
    */
   public find (command: string): CommandOptions<any> | undefined {
-    return this.commands?.find(x => (this._test(command, x.command) || x.aliases?.some(alias => this._test(command, alias)) as boolean))
+    return this.commands?.find(x => !!(this._test(command, x.command) || x.aliases?.some(alias => this._test(command, alias))))
   }
 
   private async _exec (data: APIMessage): Promise<void> {
@@ -249,7 +233,7 @@ export class CommandHandler extends EventEmitter {
       return
     }
 
-    const ctx = new this.CommandContext({
+    const ctx = new CommandContext({
       worker: this.worker,
       message: data,
       command: cmd,
@@ -285,16 +269,19 @@ export class CommandHandler extends EventEmitter {
           void cmd.onError?.(ctx, err_)
         } catch (e) { }
 
-        this.errorFunction(ctx, err_)
+        await this.errorFunction(ctx, err_)
       }
     } catch (err) {
       this.emit('MIDDLEWARE_ERROR', ctx, err)
 
-      this.errorFunction(ctx, err)
+      await this.errorFunction(ctx, err)
     }
   }
 }
 
+/**
+ * The options
+ */
 export interface CommandHandlerOptions {
   /**
    * Default CommandOptions ('command', 'exec', and 'aliases' cannot be defaulted)
@@ -320,4 +307,51 @@ export interface CommandHandlerOptions {
    * @default true
    */
   caseInsensitiveCommand?: boolean
+}
+
+/**
+ * The Command
+ */
+export interface CommandOptions<K> {
+  /**
+   * Code ran when the command finishes
+   */
+  onRun?: (ctx: CommandContext, response: K) => any | Promise<any>
+  /**
+   * Code ran when the command errors
+   */
+  onError?: (ctx: CommandContext, response: CommandError) => any | Promise<any>
+  /**
+   * The Command's code
+   */
+  exec: (ctx: CommandContext) => K | Promise<K>
+  /**
+   * Aliases the command can be called by
+   */
+  aliases?: string[]
+  /**
+   * The command name
+   */
+  command: string
+  /**
+   * The locale (Language support)
+   */
+  locale: string
+  /**
+   * The category of the command
+   */
+  category: string
+  /**
+   * If the command is locked to owners
+   */
+  owner?: boolean
+  /**
+   * If the command is disabled
+   */
+  disabled?: boolean
+  /**
+   * The cooldown
+   * @default 3
+   */
+  cooldown?: number
 }

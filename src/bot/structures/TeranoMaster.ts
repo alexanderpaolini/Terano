@@ -6,8 +6,14 @@ import autoPoster from 'topgg-autoposter'
 import { log } from '../../utils'
 
 export default class TeranoMaster extends Master {
+  /**
+   * The bot's configuration
+   */
   config = Config
 
+  /**
+   * How many processes are running
+   */
   get processAmount (): number {
     return this.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1)
   }

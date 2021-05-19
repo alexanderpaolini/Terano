@@ -12,8 +12,8 @@ export default {
       type: 3
     }
   ],
-  exec: async (worker, data) => {
-    const frog = data.data.options?.find(e => e.name === 'frog')
+  exec: async (ctx) => {
+    const frog = ctx.interaction.data?.options?.find(e => e.name === 'frog')
     if (frog && !('value' in frog)) return
     const frogType = frog?.value
 
@@ -24,8 +24,6 @@ export default {
       url = json.url
     } else url = `https://frogs.media/api/images/${frogType as string}`
 
-    await worker.api.request('POST', `/interactions/${data.id}/${data.token}/callback`, {
-      body: { type: 4, data: { content: url } }
-    })
+    await ctx.send(url)
   }
 } as SlashCommand
