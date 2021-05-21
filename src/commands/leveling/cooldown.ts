@@ -10,7 +10,7 @@ export default {
   exec: async (ctx) => {
     // Make sure its a number
     const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.id)
-    if (!ctx.args[0]) {
+    if (ctx.args[0] === undefined) {
       await ctx.respond('CMD_COOLDOWN_CURRENT', {}, oldCooldown)
       return true
     }
