@@ -5,9 +5,31 @@ import authentication from '../middleware/internalAuth'
 import { Router } from 'express'
 import { API } from '../structures/API'
 
+interface CardRequestBody {
+  color: string
+  level: string
+  xp: string
+  maxxp: string
+  picture: string
+  tag: string
+  usertag: string
+}
+
 export default function (this: API, router: Router): void {
   router.post('/', authentication(), async (req, res) => {
-    let { color, level, xp, maxxp, picture, tag, usertag } = req.body
+    let { color, level, xp, maxxp, picture, tag, usertag } = req.body as CardRequestBody
+    const str = color + level + xp + maxxp + tag + usertag
+
+    const hasImage = this.cache.rank.has(str)
+    if (hasImage) {
+      console.log('cached')
+      const image = this.cache.rank.get(str)
+
+      res.contentType('image/png')
+      res.status(200)
+      res.send(image)
+      return
+    }
 
     const canvas = Canvas.createCanvas(850, 250)
     const ctx = canvas.getContext('2d')
@@ -21,16 +43,16 @@ export default function (this: API, router: Router): void {
 
     ctx.font = '26px sans-serif'
     ctx.fillStyle = '#ffffff'
-    ctx.fillText(`Level: ${level as string}   XP: ${xp as string} / ${maxxp as string}`, 275, canvas.height / 2)
+    ctx.fillText(`Level: ${level}   XP: ${xp} / ${maxxp}`, 275, canvas.height / 2)
 
     ctx.font = 'normal 32px sans-serif'
     ctx.fillStyle = '#ffffff'
-    while (ctx.measureText(usertag).width > 530) usertag = `${usertag.slice(0, -4) as string}...`
-    ctx.fillText(`${usertag as string}`, 275, canvas.height / 3.5)
+    while (ctx.measureText(usertag).width > 530) usertag = `${usertag.slice(0, -4)}...`
+    ctx.fillText(`${usertag}`, 275, canvas.height / 3.5)
 
     ctx.font = 'bold 32px sans-serif'
     ctx.fillStyle = color
-    while (ctx.measureText(tag).width > 530) tag = `${tag.slice(0, -4) as string}...`
+    while (ctx.measureText(tag).width > 530) tag = `${tag.slice(0, -4)}...`
     ctx.fillText(tag, 275, canvas.height / 1.35)
 
     const percentage = Math.floor(Number(xp) / Number(maxxp) * 100) / 100
@@ -56,10 +78,19 @@ export default function (this: API, router: Router): void {
     ctx.closePath()
     ctx.clip()
 
-    const avatar = await Canvas.loadImage(picture)
+    let avatar: Canvas.Image
+    const hasAvatar = this.cache.avatar.has(picture)
+    if (hasAvatar) {
+      avatar = this.cache.avatar.get(picture) as Canvas.Image
+    } else {
+      avatar = await Canvas.loadImage(picture)
+    }
+
     ctx.drawImage(avatar, 33, 32, 185, 185)
 
     const buffer = canvas.toBuffer('image/png')
+
+    this.cache.rank.set(str, buffer)
 
     res.contentType('image/png')
     res.send(buffer)

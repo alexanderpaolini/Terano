@@ -1,4 +1,5 @@
 import { LoadRoutes as loadRoutes } from '@jpbberry/load-routes'
+import { Cache } from '@jpbberry/cache'
 import { RestManager, Thread } from 'discord-rose'
 
 import express from 'express'
@@ -19,6 +20,12 @@ export class API {
   comms = new Thread()
   rest = new RestManager(Config.discord.token)
   oauth2 = new OAuth2(this.app)
+
+  cache = {
+    rank: new Cache(15e3),
+    avatar: new Cache(15 * 60 * 1000),
+    leaderboard: new Cache(15 * 60 * 1000)
+  }
 
   constructor () {
     this.app.set('trust-proxy', true)
