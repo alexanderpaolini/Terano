@@ -31,6 +31,10 @@ export class SlashContext {
    */
   public responded?: boolean
 
+  /**
+   * The Slash Command Context
+   * @param opts Options
+   */
   constructor (opts: { worker: Worker, interaction: APIGuildInteraction, command: SlashCommand }) {
     this.interaction = opts.interaction
     this.worker = opts.worker

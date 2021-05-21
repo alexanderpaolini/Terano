@@ -4,12 +4,13 @@ import { CommandType } from 'discord-rose/dist/typings/lib'
 import fs from 'fs'
 import path from 'path'
 import { EventEmitter } from 'events'
-
 import Collection from '@discordjs/collection'
 
-import { CommandContext } from './CommandContext'
 import Worker from './TeranoWorker'
+import { CommandContext } from './CommandContext'
+
 import { LanguageString } from '../lang'
+
 import { getAvatar } from '../../utils'
 
 export type MiddlewareFunction = (ctx: CommandContext) => boolean | Promise<boolean>
@@ -57,7 +58,7 @@ export class CommandHandler extends EventEmitter {
   /**
    * The command handler commnads
    */
-  public commands = new Collection<CommandType, CommandOptions<any>>()
+  public commands = new Collection<CommandType, CommandOptions>()
 
   /**
    * Create's new Command Handler
@@ -175,7 +176,7 @@ export class CommandHandler extends EventEmitter {
    *   })
    * @returns this
    */
-  add (command: CommandOptions<any>): this {
+  add (command: CommandOptions): this {
     this.commands.set(command.command, {
       ...this._options.default,
       ...command
@@ -197,7 +198,7 @@ export class CommandHandler extends EventEmitter {
    * @param command Command name to fetch
    * @returns Command
    */
-  public find (command: string): CommandOptions<any> | undefined {
+  public find (command: string): CommandOptions | undefined {
     return this.commands?.find(x => !!(this._test(command, x.command) || x.aliases?.some(alias => this._test(command, alias))))
   }
 
@@ -286,7 +287,7 @@ export interface CommandHandlerOptions {
   /**
    * Default CommandOptions ('command', 'exec', and 'aliases' cannot be defaulted)
    */
-  default?: Partial<Pick<CommandOptions<any>, Exclude<keyof CommandOptions<any>, 'command' | 'exec' | 'aliases'>>>
+  default?: Partial<Pick<CommandOptions, Exclude<keyof CommandOptions, 'command' | 'exec' | 'aliases'>>>
   /**
    * Allow commands from bots
    * @default false
@@ -312,7 +313,7 @@ export interface CommandHandlerOptions {
 /**
  * The Command
  */
-export interface CommandOptions<K> {
+export interface CommandOptions<K = any> {
   /**
    * Code ran when the command finishes
    */
