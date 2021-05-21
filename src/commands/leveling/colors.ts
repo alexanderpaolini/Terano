@@ -1,6 +1,6 @@
 import { CommandOptions } from '../../structures/CommandHandler'
 
-import colors from '../../../utils/colors'
+import colors from '../../utils/colors'
 
 export default {
   command: 'color',

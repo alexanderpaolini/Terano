@@ -2,7 +2,7 @@ import { Config } from '../config'
 
 import mongoose from 'mongoose'
 
-import TeranoWorker from '../bot/structures/TeranoWorker'
+import TeranoWorker from '../structures/TeranoWorker'
 
 import GuildDB from './guild'
 import OAuth2DB from './oauth2'

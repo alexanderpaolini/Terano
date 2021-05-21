@@ -1,4 +1,4 @@
-import { Config } from '../../config'
+import { Config } from '../config'
 
 import fs from 'fs'
 import path from 'path'
@@ -15,7 +15,7 @@ import { LanguageHandler } from './LanguageHandler'
 import { SlashHandler } from './SlashHandler'
 import { colors } from './colors'
 
-import { Database } from '../../database'
+import { Database } from '../database'
 
 export default class TeranoWorker extends Worker {
   /**

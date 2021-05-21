@@ -5,10 +5,10 @@ import express from 'express'
 import path from 'path'
 import mongoose from 'mongoose'
 
-import { VoteDB } from '../../database'
+import { VoteDB } from '../../../database'
 import { OAuth2 } from './OAuth2'
 
-import { Config } from '../../config'
+import { Config } from '../../../config'
 
 export class API {
   config = Config

@@ -3,7 +3,7 @@ import { CommandOptions } from '../../structures/CommandHandler'
 import fetch from 'node-fetch'
 
 import { APIUser, Snowflake } from 'discord-api-types'
-import { getAvatar } from '../../../utils'
+import { getAvatar } from '../../utils'
 
 export default {
   command: 'rank',

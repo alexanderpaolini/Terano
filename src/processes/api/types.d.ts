@@ -1,6 +1,6 @@
 import { Thread, RestManager } from 'discord-rose'
 import { OAuth2 } from './structures/OAuth2'
-import VoteDB from '../database/vote'
+import VoteDB from '../../database/vote'
 
 declare global {
   namespace Express {

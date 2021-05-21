@@ -3,7 +3,7 @@ import TeranoWorker from './TeranoWorker'
 import { Snowflake, APIMessage, APIUser } from 'discord-api-types'
 
 import { Embed } from 'discord-rose'
-import { getAvatar } from '../../utils'
+import { getAvatar } from '../utils'
 
 export class LevelingHandler {
   /**

@@ -1,6 +1,6 @@
 import { CommandContext } from '../structures/CommandContext'
 
-import { formatTime } from '../../utils/index'
+import { formatTime } from '../utils/index'
 
 import Collection from '@discordjs/collection'
 

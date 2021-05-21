@@ -4,7 +4,7 @@ import { Snowflake } from 'discord-api-types'
 
 import fetch from 'node-fetch'
 
-import { getAvatar } from '../../utils'
+import { getAvatar } from '../utils'
 
 export default {
   name: 'rank',

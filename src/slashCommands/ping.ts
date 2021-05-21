@@ -2,7 +2,7 @@ import { SlashCommand } from '../structures/SlashHandler'
 
 import { performance } from 'perf_hooks'
 
-import { getAvatar } from '../../utils'
+import { getAvatar } from '../utils'
 
 export default {
   name: 'ping',

@@ -1,5 +1,5 @@
-import TeranoWorker from './bot/structures/TeranoWorker'
-import { CommandContext as TeranoContext } from './bot/structures/CommandContext'
+import TeranoWorker from './structures/TeranoWorker'
+import { CommandContext as TeranoContext } from './structures/CommandContext'
 
 declare module 'discord-rose/dist/typings/lib' {
   interface CommandContext extends TeranoContext {}

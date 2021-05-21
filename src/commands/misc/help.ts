@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { CommandOptions } from '../../structures/CommandHandler'
-import { getAvatar } from '../../../utils'
+import { getAvatar } from '../../utils'
 import { LanguageString } from '../../lang'
 
 export default {

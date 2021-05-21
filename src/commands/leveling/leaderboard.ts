@@ -2,7 +2,7 @@ import { APIUser, Snowflake } from 'discord-api-types'
 import { CommandOptions } from '../../structures/CommandHandler'
 
 import fetch from 'node-fetch'
-import { getAvatar } from '../../../utils'
+import { getAvatar } from '../../utils'
 
 export default {
   command: 'leaderboard',

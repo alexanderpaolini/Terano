@@ -11,7 +11,7 @@ import { CommandContext } from './CommandContext'
 
 import { LanguageString } from '../lang'
 
-import { getAvatar } from '../../utils'
+import { getAvatar } from '../utils'
 
 export type MiddlewareFunction = (ctx: CommandContext) => boolean | Promise<boolean>
 

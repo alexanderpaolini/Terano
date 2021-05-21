@@ -8,7 +8,7 @@ import { CommandOptions } from './CommandHandler'
 
 import { LanguageString } from '../lang'
 
-import { getAvatar } from '../../utils'
+import { getAvatar } from '../utils'
 
 export interface RespondOptions {
   /**

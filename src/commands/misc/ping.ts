@@ -1,5 +1,5 @@
 import { CommandOptions } from '../../structures/CommandHandler'
-import { getAvatar } from '../../../utils'
+import { getAvatar } from '../../utils'
 
 export default {
   command: 'ping',

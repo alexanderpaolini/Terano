@@ -1,9 +1,9 @@
-import { Config } from '../../config'
+import { Config } from '../config'
 
 import { Master } from 'discord-rose'
 import autoPoster from 'topgg-autoposter'
 
-import { log } from '../../utils'
+import { log } from '../utils'
 
 export default class TeranoMaster extends Master {
   /**
