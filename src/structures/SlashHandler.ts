@@ -1,21 +1,31 @@
 import { APIApplicationCommand } from 'discord-api-types'
 
-import { Worker } from 'discord-rose/dist/typings/lib'
-
 import Collection from '@discordjs/collection'
+import { EventEmitter } from '@jpbberry/typed-emitter'
+
+import TeranoWorker from './TeranoWorker'
 import { SlashContext } from './SlashContext'
 
 export interface SlashCommand extends Omit<APIApplicationCommand, 'id' | 'application_id'> {
   exec: (ctx: SlashContext) => Promise<void> | void
 }
 
-export class SlashHandler {
+/**
+ * Command Events
+ */
+export interface HandlerEvents {
+  COMMAND_RAN: [SlashContext, any]
+}
+
+export class SlashHandler extends EventEmitter<HandlerEvents> {
   /**
    * Collection holding all of the commands
    */
   commands = new Collection<string, SlashCommand>()
 
-  constructor (private readonly worker: Worker) {
+  constructor (private readonly worker: TeranoWorker) {
+    super()
+
     this.worker.on('READY', () => {
       const interactions: Array<Partial<SlashCommand>> = []
 
