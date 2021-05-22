@@ -53,7 +53,8 @@ export class CommandError extends Error {
  */
 export class CommandContext {
   flags: any
-  invokeCooldown?: () => void
+
+  invokeCooldown!: () => void
 
   /**
    * Command arguments

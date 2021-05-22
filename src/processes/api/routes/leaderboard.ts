@@ -10,6 +10,18 @@ export default function (this: API, router: Router): void {
     const users: any[] = req.body.data
     if (users.length > 8) users.length = 8
 
+    const str = JSON.stringify(users)
+
+    const hasLeaderboard = this.cache.leaderboard.has(str)
+    if (hasLeaderboard) {
+      const image = await this.cache.leaderboard.get(str)
+
+      res.status(200)
+      res.contentType('image/png')
+      res.send(image)
+      return
+    }
+
     const canvas = Canvas.createCanvas(800, 250 + 1000)
     const ctx = canvas.getContext('2d')
 
@@ -30,7 +42,11 @@ export default function (this: API, router: Router): void {
     let diff = 100
     for (const user of users) {
       // Do the canvas image
-      const pfp = await Canvas.loadImage(user.pfp)
+      const pfp = this.cache.avatar.get(user.pfp) ??
+        await Canvas.loadImage(user.pfp)
+
+      this.cache.avatar.set(user.pfp, pfp)
+
       ctx.drawImage(pfp, 82, 175 + diff - 40, 100, 100)
 
       // Fill the user tag
@@ -53,5 +69,7 @@ export default function (this: API, router: Router): void {
 
     res.contentType('image/png')
     res.send(buffer)
+
+    this.cache.leaderboard.set(str, buffer)
   })
 }

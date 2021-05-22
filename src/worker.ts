@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import TeranoWorker from './structures/TeranoWorker'
 
 import frogCommand from './slashCommands/frog'

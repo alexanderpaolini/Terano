@@ -3,7 +3,7 @@ import { CommandType } from 'discord-rose/dist/typings/lib'
 
 import fs from 'fs'
 import path from 'path'
-import { EventEmitter } from 'events'
+import { EventEmitter } from '@jpbberry/typed-emitter'
 import Collection from '@discordjs/collection'
 
 import Worker from './TeranoWorker'
@@ -35,7 +35,7 @@ export interface HandlerEvents {
 /**
  * Utility in charge of holding and running commands
  */
-export class CommandHandler extends EventEmitter {
+export class CommandHandler extends EventEmitter<HandlerEvents> {
   private _options: CommandHandlerOptions = {
     bots: true,
     caseInsensitiveCommand: true,
@@ -46,10 +46,6 @@ export class CommandHandler extends EventEmitter {
     },
     mentionPrefix: true
   }
-
-  once!: <K extends keyof HandlerEvents>(event: K, listener: (...data: HandlerEvents[K]) => any | Promise<any>) => this
-  on!: <K extends keyof HandlerEvents>(event: K, listener: (...data: HandlerEvents[K]) => any | Promise<any>) => this
-  emit!: <K extends keyof HandlerEvents>(event: K | symbol, ...data: HandlerEvents[K]) => boolean
 
   /**
    * The command handler middlewares
