@@ -45,7 +45,7 @@ export const Config = {
   },
 
   api: {
-    port: process.env.PROD === 'TRUE' ? 3002 : 3004
+    port: process.env.NODE_ENV === 'production' ? 3002 : 3004
   },
 
   redis: {
@@ -53,5 +53,5 @@ export const Config = {
     port: 6379
   },
 
-  prod: process.env.PROD === 'TRUE'
+  prod: process.env.NODE_ENV === 'production'
 }
