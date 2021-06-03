@@ -6,7 +6,7 @@ export default {
   locale: 'STINKY',
   cooldown: 5e3,
   exec: async (ctx) => {
-    await ctx.reply('<@277183033344524288>')
+    await ctx.reply('<@142408079177285632>')
     return true
   }
 } as CommandOptions<boolean>
