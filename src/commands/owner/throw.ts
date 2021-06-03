@@ -7,11 +7,11 @@ export default {
   owner: true,
   exec: async (ctx) => {
     const err = ctx.args.join(' ') || 'ERROR'
-    if (ctx.flags.respond) {
+    if (ctx.flags.respond || ctx.flags.r) {
       await ctx.respond('ERROR', { error: true }, err)
       return true
     }
-    if (ctx.flags.safe) {
+    if (ctx.flags.safe || ctx.flags.s) {
       await ctx.error(err)
       return true
     }

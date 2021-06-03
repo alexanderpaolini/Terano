@@ -18,13 +18,13 @@ export default {
       const command = ctx.worker.commands.commands?.find(e => e.command === cmd)
       if (command != null) {
         const l1 = await ctx.lang('CMD_HELP_C', String(command.command))
-        const l2 = await ctx.lang('CMD_HELP_A', command.aliases as any as string)
+        const l2 = await ctx.lang('CMD_HELP_A', (command.aliases ?? []) as any as string)
         const l3 = await ctx.lang('CMD_HELP_U', await ctx.lang(`CMD_${command.locale}_USAGE` as LanguageString))
         const l4 = await ctx.lang('CMD_HELP_D', await ctx.lang(`CMD_${command.locale}_DESCRIPTION` as LanguageString))
 
         ctx.embed
           .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_HELP_NAME'), url)
-          .description(`${l1}\n${l2}\n${l3}\n${l4}`)
+          .description(`${l1}${Array.isArray(command.aliases) ? `\n${l2}` : ''}\n${l3}\n${l4}`)
           .footer(await ctx.lang('DEVELOPED_BY'))
           .color(ctx.worker.colors.GREEN)
           .timestamp()
