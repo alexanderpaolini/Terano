@@ -46,7 +46,7 @@ export default {
     }
 
     // Fetch the canvas
-    const response = await fetch(`http://localhost:${String(ctx.worker.config.api.port)}/leaderboard`, {
+    const response = await fetch(`http://localhost:${String(ctx.worker.config.image_api.port)}/leveling/leaderboard`, {
       method: 'POST',
       body: JSON.stringify({ data: newDataArr }),
       headers: {

@@ -48,6 +48,10 @@ export const Config = {
     port: process.env.NODE_ENV === 'production' ? 3002 : 3004
   },
 
+  image_api: {
+    port: process.env.NODE_ENV === 'production' ? 6962 : 6969
+  },
+
   redis: {
     host: '127.0.0.1',
     port: 6379

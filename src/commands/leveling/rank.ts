@@ -31,7 +31,7 @@ export default {
 
     const body = { color, level, xp, maxxp, picture, tag, usertag }
 
-    const response = await fetch(`http://localhost:${String(ctx.worker.config.api.port)}/card`, {
+    const response = await fetch(`http://localhost:${String(ctx.worker.config.image_api.port)}/leveling/card`, {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
