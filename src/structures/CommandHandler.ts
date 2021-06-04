@@ -1,14 +1,15 @@
-import { APIMessage, MessageType } from 'discord-api-types'
-import { CommandType } from 'discord-rose/dist/typings/lib'
-
 import fs from 'fs'
 import path from 'path'
-import { EventEmitter } from '@jpbberry/typed-emitter'
+
 import Collection from '@discordjs/collection'
 
-import Worker from './TeranoWorker'
-import { CommandContext } from './CommandContext'
+import { CommandType } from 'discord-rose/dist/typings/lib'
+import { APIMessage, MessageType } from 'discord-api-types'
+import { EventEmitter } from '@jpbberry/typed-emitter'
 
+import Worker from './TeranoWorker'
+
+import { CommandContext } from './CommandContext'
 import { LanguageString } from '../lang'
 
 import { getAvatar } from '../utils'
@@ -42,7 +43,9 @@ export class CommandHandler extends EventEmitter<HandlerEvents> {
     caseInsensitivePrefix: true,
     default: {
       category: 'Misc',
-      cooldown: 3e3
+      cooldown: {
+        time: 3e3
+      }
     },
     mentionPrefix: true
   }
@@ -350,5 +353,8 @@ export interface CommandOptions<K = any> {
    * The cooldown
    * @default 3
    */
-  cooldown?: number
+  cooldown?: {
+    time: number
+    before?: boolean
+  }
 }

@@ -5,7 +5,9 @@ export default {
   command: 'stats',
   category: 'misc',
   locale: 'STATS',
-  cooldown: 5e3,
+  cooldown: {
+    time: 5e3
+  },
   exec: async (ctx) => {
     const currentShard = Number((BigInt(ctx.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
 

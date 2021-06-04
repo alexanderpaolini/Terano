@@ -10,7 +10,10 @@ export default {
   aliases: ['lb'],
   locale: 'LEADERBOARD',
   myPerms: ['embed'],
-  cooldown: 15e3,
+  cooldown: {
+    time: 15e3,
+    before: true
+  },
   exec: async (ctx) => {
     // Send the loading message
     const msg = await ctx.respond('LOADING')

@@ -11,7 +11,10 @@ export default {
   aliases: ['card', 'level'],
   locale: 'RANK',
   myPerms: ['embed'],
-  cooldown: 9e3,
+  cooldown: {
+    time: 9e3,
+    before: true
+  },
   exec: async (ctx) => {
     const user =
       (await ctx.worker.api.users.get((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake).catch(() => null as unknown as APIUser)) ||

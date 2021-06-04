@@ -46,11 +46,15 @@ export default (): ((ctx: CommandContext) => {}) => {
 
     ctx.invokeCooldown = () => {
       cooldowns.set(id, {
-        time: Date.now() + Number(ctx.command.cooldown ?? 0),
+        time: Date.now() + Number(ctx.command.cooldown?.time ?? 0),
         timeout: setTimeout(() => {
           cooldowns.delete(id)
-        }, ctx.command.cooldown)
+        }, ctx.command.cooldown?.time)
       })
+    }
+
+    if (ctx.command.cooldown?.before) {
+      ctx.invokeCooldown()
     }
 
     return true

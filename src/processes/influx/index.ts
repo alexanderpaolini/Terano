@@ -39,32 +39,34 @@ const influx = new InfluxDB({
   ]
 })
 
-setInterval(() => {
-  void thread.broadcastEval('(() => ({id: worker.comms.id, shards: worker.shardStats, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)}))()')
-    .then((data) => {
-      const guilds = data.reduce((a, d) => d.guilds, 0)
-      const channels = data.reduce((a, d) => d.channels, 0)
-      const roles = data.reduce((a, d) => d.roles, 0)
-      const ping = data.map(d => Object.entries(d.shards).map(([id, s]: [string, any]) => s.ping)).flat().map(e => isNaN(parseInt(e)) ? null : parseInt(e)).filter(e => e)
+if (Config.prod) {
+  setInterval(() => {
+    void thread.broadcastEval('(() => ({id: worker.comms.id, shards: worker.shardStats, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)}))()')
+      .then((data) => {
+        const guilds = data.reduce((a, d) => d.guilds, 0)
+        const channels = data.reduce((a, d) => d.channels, 0)
+        const roles = data.reduce((a, d) => d.roles, 0)
+        const ping = data.map(d => Object.entries(d.shards).map(([id, s]: [string, any]) => s.ping)).flat().map(e => isNaN(parseInt(e)) ? null : parseInt(e)).filter(e => e)
 
-      void influx.writePoints([
-        {
-          measurement: 'memory',
-          fields: process.memoryUsage()
-        },
-        {
-          measurement: 'bot-stats',
-          fields: { guilds, channels, roles }
-        },
-        ...ping.map(p => {
-          return {
+        void influx.writePoints([
+          {
+            measurement: 'memory',
+            fields: process.memoryUsage()
+          },
+          {
             measurement: 'bot-stats',
-            fields: { ping: p }
-          }
-        })
-      ])
-        .then()
-        .catch(e => { throw e })
-    })
-    .catch()
-}, 500)
+            fields: { guilds, channels, roles }
+          },
+          ...ping.map(p => {
+            return {
+              measurement: 'bot-stats',
+              fields: { ping: p }
+            }
+          })
+        ])
+          .then()
+          .catch(e => { throw e })
+      })
+      .catch()
+  }, 500)
+}

@@ -9,6 +9,32 @@ function parseWebhook (name: string): { id: Snowflake, token: string } {
   return { id, token }
 }
 
+function checkEnv (): void {
+  const toCheckArr = [
+    'OAUTH_ID',
+    'OAUTH_CLIENT_SECRET',
+    'DATABASE_CONNECTION_STRING',
+    'DISCORD_TOKEN',
+    'INFLUXDB_HOST',
+    'INFLUXDB_DATABASE',
+    'TOPGG_TOKEN',
+    'TOPGG_WEBHOOK_AUTH',
+    'NODE_ENV'
+  ]
+  const missingProps: string[] = []
+
+  toCheckArr.forEach(e => {
+    if (!process.env[e]) missingProps.push(e)
+  })
+
+  if (missingProps.length) {
+    const errMsg = `Missing env properties: ${missingProps.join(', ')}`
+    throw new Error(errMsg)
+  }
+}
+
+checkEnv()
+
 export const Config = {
   oauth: {
     id: process.env.OAUTH_ID as string,
