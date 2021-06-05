@@ -46,7 +46,7 @@ export default {
     if (!response || !response.ok) {
       await ctx.respond('SERVER_ERROR', { error: true })
       const text = response ? await response.text() : 'No response from POST /rank'
-      ctx.worker.log(text)
+      console.error(text)
       return false
     }
 

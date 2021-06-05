@@ -5,7 +5,7 @@ export default {
   category: 'misc',
   locale: 'VOTE',
   exec: async (ctx) => {
-    await ctx.reply('https://top.gg/bot/647256366280474626/vote')
+    await ctx.reply(`https://top.gg/bot/${ctx.worker.user.id}/vote`)
     return true
   }
 } as CommandOptions<boolean>

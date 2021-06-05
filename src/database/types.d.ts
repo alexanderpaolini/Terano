@@ -5,7 +5,7 @@ interface GuildDoc {
   /**
    * Guild ID
    */
-  id: string
+  id: Snowflake
   /**
    * Basic options
    */

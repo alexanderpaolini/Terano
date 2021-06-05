@@ -57,6 +57,8 @@ export const Config = {
       votes: parseWebhook('votes')
     },
 
+    invite: process.env.DISCORD_INVITE as string,
+
     test_guild: '564790211561652237'
   },
 
@@ -83,5 +85,7 @@ export const Config = {
     port: 6379
   },
 
-  prod: process.env.NODE_ENV === 'production'
+  prod: process.env.NODE_ENV === 'production',
+
+  stinky: '142408079177285632'
 }

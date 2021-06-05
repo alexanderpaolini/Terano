@@ -61,7 +61,7 @@ export default {
     if (!response || !response.ok) {
       await ctx.respond('SERVER_ERROR', { error: true })
       const text = response ? await response.text() : 'No response from POST /leaderboard'
-      ctx.worker.log(text)
+      console.error(text)
       return false
     }
 

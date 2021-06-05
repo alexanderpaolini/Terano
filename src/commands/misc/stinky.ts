@@ -8,7 +8,7 @@ export default {
     time: 5e3
   },
   exec: async (ctx) => {
-    await ctx.reply('<@142408079177285632>')
+    await ctx.reply(`<@${ctx.worker.config.stinky}>`)
     return true
   }
 } as CommandOptions<boolean>

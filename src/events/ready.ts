@@ -7,10 +7,13 @@ export default (worker: TeranoWorker): void => {
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   worker.on('SHARD_READY', async (shard) => {
-    await worker.webhook('shards')
-      .title(`Cluster ${worker.comms.id}`)
-      .author(`${worker.user.username}#${worker.user.discriminator}`)
-      .description(`Shard ${shard.id} is ready`)
-      .color(worker.colors.GREEN)
+    if (worker.prod) {
+      await worker.webhook('shards')
+        .title(`Cluster ${worker.comms.id}`)
+        .author(`${worker.user.username}#${worker.user.discriminator}`)
+        .description(`Shard ${shard.id} is ready`)
+        .color(worker.colors.GREEN)
+        .send()
+    }
   })
 }

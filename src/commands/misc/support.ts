@@ -5,7 +5,7 @@ export default {
   category: 'misc',
   locale: 'SUPPORT',
   exec: async (ctx) => {
-    await ctx.reply('https://discord.gg/YzWsDrs2kw')
+    await ctx.reply(`https://discord.gg/${ctx.worker.config.discord.invite}`)
     return true
   }
 } as CommandOptions<boolean>
