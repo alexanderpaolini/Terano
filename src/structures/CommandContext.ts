@@ -3,6 +3,9 @@ import { APIChannel, APIGuildMember, APIMessage, Snowflake, APIUser } from 'disc
 import { CachedGuild, Embed, Emoji, MessagesResource, MessageTypes, PermissionsUtils } from 'discord-rose'
 import { bits } from 'discord-rose/dist/utils/Permissions'
 
+import qs from 'querystring'
+import fetch from 'node-fetch'
+
 import Worker from './TeranoWorker'
 import { CommandOptions } from './CommandHandler'
 
@@ -139,6 +142,20 @@ export class CommandContext {
    */
   get me (): APIGuildMember {
     return this.worker.selfMember.get(this.message.guild_id as Snowflake) as APIGuildMember
+  }
+
+  /**
+   * Send an image from la API
+   * @param image The image name
+   * @param data data or something
+   */
+  async imageAPI (image: string, data: any): Promise<APIMessage | null> {
+    const req = await fetch(`http://localhost:${this.worker.config.image_api.port}/images/${image}?${qs.stringify(data)}`)
+    if (req.status !== 200) {
+      return null
+    }
+    const buffer = await req.buffer()
+    return await this.sendFile({ name: `${image}.png`, buffer })
   }
 
   /**
