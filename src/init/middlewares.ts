@@ -20,5 +20,5 @@ export default function initFunction (worker: TeranoWorker): void {
     })
   }
   loadMiddleware(resolve(__dirname, '../', './middlewares'))
-  worker.log('Loaded Moddlewares')
+  worker.log('Loaded Middlewares')
 }

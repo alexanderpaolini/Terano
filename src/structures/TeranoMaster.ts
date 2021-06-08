@@ -31,7 +31,8 @@ export default class TeranoMaster extends Master {
       },
       cacheControl: {
         guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id', 'preferred_locale'],
-        members: ['nick', 'user'],
+        // @ts-expect-error
+        members: ['nick', 'user', 'avatar'],
         channels: ['nsfw', 'permission_overwrites'],
         roles: ['permissions']
       },

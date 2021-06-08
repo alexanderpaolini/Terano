@@ -132,7 +132,7 @@ export class LevelingHandler {
       .author(msg, getAvatar(user))
 
     await this.worker.api.messages.send(channelID, embed)
-      .catch(() => {})
+      .catch(() => { })
   }
 
   /**

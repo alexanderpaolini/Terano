@@ -152,7 +152,7 @@ export class CommandHandler extends EventEmitter<HandlerEvents> {
   }
 
   /**
-   * Adds a global middleware function
+   * Adds a global function
    * @param fn Middleware function
    * @returns this
    */

@@ -41,7 +41,15 @@ const influx = new InfluxDB({
 
 if (Config.prod) {
   setInterval(() => {
-    void thread.broadcastEval('(() => ({id: worker.comms.id, shards: worker.shardStats, guilds: worker.guilds.size, channels: worker.channels.size, roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)}))()')
+    void thread.broadcastEval(`
+    (() => ({
+      id: worker.comms.id,
+      shards: worker.shardStats,
+      guilds: worker.guilds.size,
+      channels: worker.channels.size,
+      roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)
+    }))()
+      `)
       .then((data) => {
         const guilds = data.reduce((a, d) => d.guilds, 0)
         const channels = data.reduce((a, d) => d.channels, 0)

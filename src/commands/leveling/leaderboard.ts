@@ -1,8 +1,7 @@
 import { APIUser, Snowflake } from 'discord-api-types'
 import { CommandOptions } from '../../structures/CommandHandler'
 
-import fetch from 'node-fetch'
-import { getAvatar } from '../../utils'
+import { getGuildAvatar } from '../../utils'
 
 export default {
   command: 'leaderboard',
@@ -15,9 +14,8 @@ export default {
     before: true
   },
   exec: async (ctx) => {
-    // Send the loading message
-    const msg = await ctx.respond('LOADING')
-    if (!msg) return
+    await ctx.typing()
+
     // Get all of the level data and sort it
     const allLevels = await ctx.worker.db.userDB.getAllLevels(ctx.id)
     const data = allLevels.sort((a, b) => {
@@ -33,43 +31,31 @@ export default {
 
     // Loop through all users, getting the data from each
     for (const user of data) {
+      const member = ctx.worker.members.get(ctx.id)?.get(user.userID as Snowflake) ??
+        await ctx.worker.api.members.get(ctx.id, user.userID as Snowflake)
       // Fetch the user, if none just continue
-      const user_ = ctx.worker.users.get(user.userID as Snowflake) ??
-        ctx.worker.members.get(ctx.id)?.get(user.userID as Snowflake)?.user ??
-        await ctx.worker.api.users.get(user.userID as Snowflake).catch(() => null as unknown as APIUser)
+      const user_ = member.user as APIUser
       if (!user_) continue
 
       // Push the user to the array
       newDataArr.push({
         tag: `${user_.username}#${user_.discriminator}`,
-        pfp: getAvatar(user_),
+        pfp: getGuildAvatar(member, ctx.id),
         level: user.level,
         rank: Number(data.indexOf(user)) + 1
       })
     }
 
-    // Fetch the canvas
-    const response = await fetch(`http://localhost:${String(ctx.worker.config.image_api.port)}/leveling/leaderboard`, {
-      method: 'POST',
-      body: JSON.stringify({ data: newDataArr }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).catch(() => null)
-
-    // Respond with an error kekw
-    if (!response || !response.ok) {
+    let buffer: Buffer
+    try {
+      buffer = await ctx.worker.imageAPI.leaderboard(newDataArr)
+    } catch (err) {
       await ctx.respond('SERVER_ERROR', { error: true })
-      const text = response ? await response.text() : 'No response from POST /leaderboard'
-      console.error(text)
+      console.error(err)
       return false
     }
 
-    // Get the buffer
-    const buffer = await response.buffer()
-
-    // Delete the message and send the file
-    await ctx.worker.api.messages.delete(msg.channel_id, msg.id).catch(() => null)
+    // Send the file
     await ctx.sendFile({ name: 'leaderboard.png', buffer })
     return true
   }

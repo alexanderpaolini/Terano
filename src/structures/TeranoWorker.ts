@@ -16,6 +16,7 @@ import { SlashHandler } from './SlashHandler'
 import { colors } from './colors'
 
 import { Database } from '../database'
+import { ImageAPI } from './ImageAPI'
 
 export default class TeranoWorker extends Worker {
   /**
@@ -63,6 +64,10 @@ export default class TeranoWorker extends Worker {
    * The slash command handler
    */
   slashCommands: SlashHandler = new SlashHandler(this)
+  /**
+   * The image api wrapper:tm:
+   */
+  imageAPI = new ImageAPI(this)
 
   /**
    * Create the bot

@@ -1,4 +1,4 @@
-import { APIUser } from 'discord-api-types'
+import { APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
 
 import colors from 'colors/safe'
 import { Cluster } from 'discord-rose'
@@ -20,6 +20,12 @@ export function escapeMarkdown (text: string): string {
 export function getAvatar (user: APIUser, type: string = 'png', size: number = 128): string {
   if (user.avatar !== null) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${type}?size=${size}`
   return `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`
+}
+
+export function getGuildAvatar (user: APIGuildMember, guildId: Snowflake, type: string = 'png', size: number = 128): string {
+  // @ts-expect-error
+  if (user.avatar) return `https://cdn.discordapp.com/guilds/${guildId}/users/${user.user.id}/avatars/${user.avatar as string}.${type}?size=${size}`
+  else return getAvatar(user.user as unknown as APIUser)
 }
 
 /**
