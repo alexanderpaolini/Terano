@@ -150,6 +150,8 @@ export class CommandContext {
    * @param data data or something
    */
   async imageAPI (image: string, data: any): Promise<APIMessage | null> {
+    data.token = this.worker.config.image_api.token
+
     const req = await fetch(`http://localhost:${this.worker.config.image_api.port}/images/${image}?${qs.stringify(data)}`)
     if (req.status !== 200) {
       return null

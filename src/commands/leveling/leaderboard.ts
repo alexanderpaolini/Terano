@@ -32,10 +32,10 @@ export default {
     // Loop through all users, getting the data from each
     for (const user of data) {
       const member = ctx.worker.members.get(ctx.id)?.get(user.userID as Snowflake) ??
-        await ctx.worker.api.members.get(ctx.id, user.userID as Snowflake)
+        await ctx.worker.api.members.get(ctx.id, user.userID as Snowflake).catch(() => null)
       // Fetch the user, if none just continue
-      const user_ = member.user as APIUser
-      if (!user_) continue
+      const user_ = member?.user as APIUser
+      if (!user_ || !member) continue
 
       // Push the user to the array
       newDataArr.push({

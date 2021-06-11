@@ -32,7 +32,8 @@ export class ImageAPI {
       method: method,
       body: JSON.stringify(body),
       headers: Object.assign(headers, {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: this.worker.config.image_api.token
       })
     }).catch(() => null)
 

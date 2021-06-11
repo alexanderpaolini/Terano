@@ -19,7 +19,9 @@ function checkEnv (): void {
     'INFLUXDB_DATABASE',
     'TOPGG_TOKEN',
     'TOPGG_WEBHOOK_AUTH',
-    'NODE_ENV'
+    'NODE_ENV',
+    'IMAGE_API_PORT',
+    'IMAGE_API_KEY'
   ]
   const missingProps: string[] = []
 
@@ -77,7 +79,8 @@ export const Config = {
   },
 
   image_api: {
-    port: process.env.NODE_ENV === 'production' ? 6962 : 6969
+    port: process.env.IMAGE_API_PORT as unknown as number,
+    token: process.env.IMAGE_API_KEY as string
   },
 
   redis: {
