@@ -26,9 +26,7 @@ export default {
       if (ctx.flags.m) evaled = await worker.comms.masterEval(code)
       else if (ctx.flags.b) evaled = await worker.comms.broadcastEval(code)
       // eslint-disable-next-line no-eval
-      else evaled = eval(code)
-
-      if (evaled instanceof Promise) evaled = await evaled
+      else evaled = await eval(code)
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       if (ctx.flags.l) last = evaled
