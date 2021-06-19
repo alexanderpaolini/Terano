@@ -22,9 +22,11 @@ export interface LeaderboardUser {
 
 export class ImageAPI {
   port: number
+  token: string
 
   constructor (private readonly worker: TeranoWorker) {
     this.port = this.worker.config.image_api.port
+    this.token = this.worker.config.image_api.token
   }
 
   public async _request (method: methods, path: string, body?: any, headers = {}): Promise<Buffer> {
@@ -33,7 +35,7 @@ export class ImageAPI {
       body: JSON.stringify(body),
       headers: Object.assign(headers, {
         'Content-Type': 'application/json',
-        authorization: this.worker.config.image_api.token
+        authorization: this.token
       })
     }).catch(() => null)
 

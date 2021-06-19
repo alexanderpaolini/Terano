@@ -2,8 +2,6 @@ import { SlashCommand } from '../structures/SlashHandler'
 
 import { Snowflake } from 'discord-api-types'
 
-import fetch from 'node-fetch'
-
 import { getAvatar } from '../utils'
 
 export default {
@@ -43,22 +41,14 @@ export default {
 
     const body = { color, level, xp, maxxp, picture, tag, usertag }
 
-    const response = await fetch(`http://localhost:${String(ctx.worker.config.api.port)}/card`, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).catch(() => null)
-
-    if (!response || !response.ok) {
-      await ctx.send('Oops! An error has occured. Please try again later')
-      const text = response ? await response.text() : 'No response from POST /rank'
-      ctx.worker.log(text)
-      return
+    let buffer: Buffer
+    try {
+      buffer = await ctx.worker.imageAPI.card(body)
+    } catch (err) {
+      await ctx.send('Oops! An internal error occured.')
+      console.error(err)
+      return false
     }
-
-    const buffer = await response.buffer()
 
     await ctx.sendFile({ buffer, name: 'rank.png' })
   }
