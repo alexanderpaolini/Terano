@@ -1,21 +1,28 @@
-import { CommandOptions } from '../../structures/CommandHandler'
-import { getAvatar } from '../../utils'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Ping',
   command: 'ping',
-  category: 'misc',
   aliases: ['pong'],
-  locale: 'PING',
+  description: 'Gets the bot\'s ping.',
+  category: 'Misc',
+  usage: '',
+  interaction: {
+    name: 'ping',
+    description: 'Gets the bot\'s ping.'
+  },
+  myPerms: ['embed'],
   exec: async (ctx) => {
     const time = Date.now()
-    const url = getAvatar(ctx.message.author)
 
     await ctx.typing()
 
     await ctx.embed
-      .author(`Pong! (${(Date.now() - time).toFixed(2)}ms)`, url)
-      .color(ctx.worker.colors.PURPLE)
+      .author(
+        `Pong! (${(Date.now() - time).toFixed(2)}ms)`,
+        ctx.worker.utils.getAvatar(ctx.worker.user)
+      )
+      .color(ctx.worker.config.colors.PURPLE)
       .send(true)
-    return true
   }
-} as CommandOptions<boolean>
+}

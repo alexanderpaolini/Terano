@@ -1,32 +1,30 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Blacklist',
   command: 'blacklist',
-  category: 'owner',
   aliases: ['bl'],
-  locale: 'BLACKLIST',
-  owner: true,
+  category: 'Owner',
+  usage: '<user: String>',
+  ownerOnly: true,
   exec: async (ctx) => {
-    const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
+    const userId: string = ctx.args[0]
 
-    if (!userID) {
-      await ctx.respond('CMD_BLACKLIST_NOUSER', { error: true })
-      return false
+    const isUserOwner = await ctx.worker.db.users.getOwner(userId)
+    if (isUserOwner) {
+      await ctx.respond({
+        color: ctx.worker.config.colors.RED,
+        text: 'You can\'t do that'
+      })
+      return
     }
 
-    if (userID === ctx.message.author.id) {
-      await ctx.respond('CMD_BLACKLIST_NOSELF', { error: true })
-      return false
-    }
+    const blacklisted = !(await ctx.worker.db.users.getBlacklist(userId))
+    await ctx.worker.db.users.setBlacklist(userId, blacklisted)
 
-    const isBlacklisted = await ctx.worker.db.userDB.getBlacklist(userID)
-    await ctx.worker.db.userDB.setBlacklist(userID, !isBlacklisted)
-
-    if (!isBlacklisted) {
-      await ctx.respond('CMD_BLACKLIST_ADDED', { color: ctx.worker.colors.ORANGE }, userID)
-    } else {
-      await ctx.respond('CMD_BLACKLIST_REMOVED', { color: ctx.worker.colors.ORANGE }, userID)
-    }
-    return true
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `<@${userId}> ${!blacklisted ? 'un' : ''}blacklisted`
+    })
   }
-} as CommandOptions<boolean>
+}

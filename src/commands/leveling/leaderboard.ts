@@ -1,62 +1,42 @@
-import { APIUser, Snowflake } from 'discord-api-types'
-import { CommandOptions } from '../../structures/CommandHandler'
+import { CommandOptions } from 'discord-rose'
 
-import { getGuildAvatar } from '../../utils'
-
-export default {
+export default <CommandOptions>{
+  name: 'Leaderboard',
   command: 'leaderboard',
-  category: 'leveling',
-  aliases: ['lb'],
-  locale: 'LEADERBOARD',
-  myPerms: ['embed'],
-  cooldown: {
-    time: 15e3,
-    before: true
+  category: 'Leveling',
+  usage: '',
+  interaction: {
+    name: 'leaderboard',
+    description: 'View the top ranks'
   },
+  guildOnly: true,
+  interactionOnly: true,
   exec: async (ctx) => {
     await ctx.typing()
 
-    // Get all of the level data and sort it
-    const allLevels = await ctx.worker.db.userDB.getAllLevels(ctx.id)
-    const data = allLevels.sort((a, b) => {
-      if (a.level !== b.level) return (a.level - b.level)
-      else return (Number(a.xp) - Number(b.xp))
-    })
-    data.reverse()
+    const allLevels = (await ctx.worker.db.users.getAllLevels(ctx.guild!.id))
+      .sort((a, b) => {
+        if (a.level !== b.level) return (b.level - a.level)
+        else return (b.xp - a.xp)
+      })
 
-    // Intialize the array that will be posted
     const newDataArr = []
 
-    if (data.length > 8) data.length = 8
+    if (allLevels.length > 8) allLevels.length = 8
 
-    // Loop through all users, getting the data from each
-    for (const user of data) {
-      const member = ctx.worker.members.get(ctx.id)?.get(user.userID as Snowflake) ??
-        await ctx.worker.api.members.get(ctx.id, user.userID as Snowflake).catch(() => null)
-      // Fetch the user, if none just continue
-      const user_ = member?.user as APIUser
-      if (!user_ || !member) continue
+    for (const levelData of allLevels) {
+      const member = await ctx.worker.api.members.get(ctx.guild!.id, levelData.user_id)
+      const user = member.user!
 
-      // Push the user to the array
       newDataArr.push({
-        tag: `${user_.username}#${user_.discriminator}`,
-        pfp: getGuildAvatar(member, ctx.id),
-        level: user.level,
-        rank: Number(data.indexOf(user)) + 1
+        tag: `${user.username}#${user.discriminator}`,
+        pfp: ctx.worker.utils.getGuildAvatar(member, ctx.guild!.id),
+        level: levelData.level,
+        rank: Number(allLevels.indexOf(levelData)) + 1
       })
     }
 
-    let buffer: Buffer
-    try {
-      buffer = await ctx.worker.imageAPI.leaderboard(newDataArr)
-    } catch (err) {
-      await ctx.respond('SERVER_ERROR', { error: true })
-      console.error(err)
-      return false
-    }
-
-    // Send the file
-    await ctx.sendFile({ name: 'leaderboard.png', buffer })
-    return true
+    const buffer = await ctx.worker.imageAPI.leaderboard(newDataArr)
+    await ctx.sendFile({ name: 'rank.png', buffer })
   }
-} as CommandOptions<boolean>
+}

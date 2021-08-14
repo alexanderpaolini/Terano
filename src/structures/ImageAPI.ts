@@ -1,9 +1,10 @@
 import fetch from 'node-fetch'
-import TeranoWorker from './TeranoWorker'
+
+import { Worker } from './Bot/Worker'
 
 type methods = 'GET' | 'POST'
 
-export interface CardRequest {
+interface CardRequest {
   color: string
   level: string | number
   xp: string | number
@@ -13,7 +14,7 @@ export interface CardRequest {
   usertag: string
 }
 
-export interface LeaderboardUser {
+interface LeaderboardUser {
   pfp: string
   tag: string
   level: string | number
@@ -24,7 +25,7 @@ export class ImageAPI {
   port: number
   token: string
 
-  constructor (private readonly worker: TeranoWorker) {
+  constructor (private readonly worker: Worker) {
     this.port = this.worker.config.image_api.port
     this.token = this.worker.config.image_api.token
   }
@@ -42,19 +43,16 @@ export class ImageAPI {
     if (!req?.ok) throw new Error('No response from ImageAPI request')
 
     const buffer = await req.buffer()
+    if (!Buffer.isBuffer(buffer)) throw new Error('non-Buffer returned when Buffer was expected')
 
     return buffer
   }
 
   public async card (data: CardRequest): Promise<Buffer> {
-    const buffer = await this._request('POST', '/leveling/card', data)
-    if (!Buffer.isBuffer(buffer)) throw new Error('non-Buffer returned when Buffer was expected')
-    return buffer
+    return await this._request('POST', '/leveling/card', data)
   }
 
   public async leaderboard (data: LeaderboardUser[]): Promise<Buffer> {
-    const buffer = await this._request('POST', '/leveling/leaderboard', { data })
-    if (!Buffer.isBuffer(buffer)) throw new Error('non-Buffer returned when Buffer was expected')
-    return buffer
+    return await this._request('POST', '/leveling/leaderboard', { data })
   }
 }

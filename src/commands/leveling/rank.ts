@@ -1,53 +1,46 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { ApplicationCommandOptionType } from 'discord-api-types'
 
-import { APIUser, Snowflake } from 'discord-api-types'
-import { getGuildAvatar } from '../../utils'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Rank',
   command: 'rank',
-  category: 'leveling',
-  aliases: ['card', 'level'],
-  locale: 'RANK',
-  myPerms: ['embed'],
-  cooldown: {
-    time: 9e3,
-    before: true
+  category: 'Leveling',
+  usage: '<user: User>',
+  interaction: {
+    name: 'rank',
+    description: 'View your or another person\'s rank',
+    options: [
+      {
+        name: 'user',
+        description: 'The user',
+        type: ApplicationCommandOptionType.User
+      }
+    ]
   },
+  guildOnly: true,
+  interactionOnly: true,
   exec: async (ctx) => {
     await ctx.typing()
 
-    const userId = (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake
-    const member = ctx.worker.members.get(ctx.id)?.get(userId) ??
-      await ctx.worker.api.members.get(ctx.id, userId).catch(() => null) ??
-      ctx.member
+    const userId = ctx.options.user ?? ctx.author.id
+    const member = await ctx.worker.api.members.get(ctx.guild!.id, userId).catch(() => null) ?? ctx.member
 
-    const user = member.user as APIUser
+    const user = member.user!
 
-    const data = await ctx.worker.db.userDB.getLevel(user.id, ctx.id)
-    const settings = await ctx.worker.db.userDB.getSettings(user.id)
+    const userOptions = await ctx.worker.db.users.getSettings(user.id)
+    const userData = await ctx.worker.db.users.getLevel(user.id, ctx.guild!.id)
 
-    const usertag = `${user.username}#${user.discriminator}`
+    const buffer = await ctx.worker.imageAPI.card({
+      color: userOptions.level.color || await ctx.worker.db.guilds.getLevelColor(ctx.guild!.id),
+      level: userData.level,
+      maxxp: Math.floor(100 + 5 / 6 * userData.level * (2 * userData.level * userData.level + 27 * userData.level + 91)),
+      picture: userOptions.level.picture || ctx.worker.utils.getGuildAvatar(member, ctx.guild!.id, 'png', 256),
+      tag: userOptions.level.tag,
+      usertag: `${user.username}#${user.discriminator}`,
+      xp: userData.xp
+    })
 
-    const level = data.level
-    const xp = data.xp
-    const maxxp = Math.floor(100 + 5 / 6 * level * (2 * level * level + 27 * level + 91))
-
-    const tag = settings.level.tag || '─────────────────'
-    const picture = settings.level.picture || getGuildAvatar(member, ctx.id, 'png', 256)
-    const color = settings.level.color || await ctx.worker.db.guildDB.getLevelColor(ctx.id)
-
-    const body = { color, level, xp, maxxp, picture, tag, usertag }
-
-    let buffer: Buffer
-    try {
-      buffer = await ctx.worker.imageAPI.card(body)
-    } catch (err) {
-      await ctx.respond('SERVER_ERROR', { error: true })
-      console.error(err)
-      return false
-    }
-
-    await ctx.sendFile({ name: 'rank.png', buffer: Buffer.from(buffer) })
-    return true
+    await ctx.sendFile({ name: 'rank.png', buffer })
   }
-} as CommandOptions<boolean>
+}

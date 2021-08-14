@@ -1,7 +1,7 @@
-import { CommandContext } from '../structures/CommandContext'
+import { CommandContext } from 'discord-rose'
 
-export default () => {
-  return async (ctx: CommandContext) => {
-    return !await ctx.worker.db.userDB.getBlacklist(ctx.message.author.id)
-  }
+import { MiddlewareFunc } from '.'
+
+export default (): MiddlewareFunc => {
+  return async (ctx: CommandContext) => !(await ctx.worker.db.users.getBlacklist(ctx.author.id))
 }

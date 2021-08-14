@@ -1,14 +1,12 @@
-import { CommandContext } from '../structures/CommandContext'
+import { CommandContext } from 'discord-rose'
 
-export default () => {
+import { MiddlewareFunc } from '.'
+
+export default (): MiddlewareFunc => {
   return async (ctx: CommandContext) => {
-    if (ctx.command.owner) {
-      const isOwner = !!await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
-      if (!isOwner) {
-        await ctx.respond('NOT_OWNER', { error: true })
-        return false
-      }
-    }
+    if (!ctx.command.ownerOnly) return true
+    const isOwner = await ctx.worker.db.users.getOwner(ctx.author.id)
+    if (!isOwner) return false
     return true
   }
 }

@@ -1,65 +1,80 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { CommandOptions } from '../../structures/CommandHandler'
-import { getAvatar } from '../../utils'
-import { LanguageString } from '../../lang'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Help',
   command: 'help',
-  category: 'misc',
-  aliases: ['yardım', 'yardim'],
-  locale: 'HELP',
+  category: 'Misc',
+  usage: '<command: String>',
+  interaction: {
+    name: 'help',
+    description: 'View the bot\'s help menu',
+    options: [
+      {
+        name: 'command',
+        description: 'The command you want info about',
+        type: 3
+      }
+    ]
+  },
+  myPerms: ['embed'],
   exec: async (ctx) => {
-    const guildPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.id)
+    const cmd = ctx.args.shift() ?? ctx.options.command
 
-    const cmd = ctx.args[0]
-    const url = getAvatar(ctx.message.author)
+    const isUserOwner = await ctx.worker.db.users.getOwner(ctx.author.id)
 
     if (cmd) {
-      const command = ctx.worker.commands.commands?.find(e => e.command === cmd)
-      if (command != null) {
-        const l1 = await ctx.lang('CMD_HELP_C', String(command.command))
-        const l2 = await ctx.lang('CMD_HELP_A', (command.aliases ?? []) as any as string)
-        const l3 = await ctx.lang('CMD_HELP_U', await ctx.lang(`CMD_${command.locale}_USAGE` as LanguageString))
-        const l4 = await ctx.lang('CMD_HELP_D', await ctx.lang(`CMD_${command.locale}_DESCRIPTION` as LanguageString))
+      const command = ctx.worker.commands.find(cmd) ?? ctx.worker.commands.commands!.find(c => c.interaction?.name === cmd)
 
-        ctx.embed
-          .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_HELP_NAME'), url)
-          .description(`${l1}${Array.isArray(command.aliases) ? `\n${l2}` : ''}\n${l3}\n${l4}`)
-          .footer(await ctx.lang('DEVELOPED_BY'))
-          .color(ctx.worker.colors.GREEN)
-          .timestamp()
-          .send(true)
-          .catch(() => { })
-      } else {
-        await ctx.respond('CMD_HELP_NOCMD', { error: true }, cmd)
-      }
-      return true
-    } else {
-      const userIsOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
-      const categories = ctx.worker.commands.commands?.reduce((a, b) => a.includes(b.category) ? a : a.concat([b.category]), [] as string[]) ?? []
+      if (command && !(command.ownerOnly && !isUserOwner)) {
+        let desc = `**Name**: \`${`${command.name} (${command.command as string})`}\`\n`
 
-      const embed = ctx.embed
-        .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_HELP_NAME'), url)
-        .title(await ctx.lang('CMD_HELP_COMMANDS'))
-        .footer(await ctx.lang('DEVELOPED_BY'))
-        .color(ctx.worker.colors.PURPLE)
-        .timestamp()
+        if (command.description) { desc += `**Description**: ${command.description}\n` }
 
-      for (const cat of categories) {
-        if (!cat) continue
-        if (cat === 'owner' && !userIsOwner) continue
-        let desc = ''
-        for (const cmd_ of ctx.worker.commands.commands?.filter(x => x.category === cat).map(e => e) ?? []) {
-          const cmdDesc = await ctx.lang(`CMD_${cmd_.locale}_DESCRIPTION` as LanguageString)
-          desc += `\`${guildPrefix}${cmd_.command}\`: ${cmdDesc}\n`
-        }
-        embed.field(await ctx.lang(`CAT_${cat.toUpperCase()}` as LanguageString), desc)
+        if (command.aliases?.length) { desc += `**Aliases**: ${command.aliases.map(e => `\`${e as string}\``).join(', ')}\n` }
+
+        if (command.usage) { desc += `**Usage**: \`${ctx.prefix ?? ''}${command.command as string} ${command.usage}\`\n` }
+
+        await ctx.embed
+          .title('Help Menu')
+          .description(desc)
+          .color(ctx.worker.config.colors.PURPLE)
+          .send()
+        return
       }
 
-      embed
-        .send(true)
-        .catch(() => { })
-      return true
+      await ctx.error(`Command "${cmd as string}" doesn't exist :(`)
+      return
     }
+
+    const categories = ctx.worker.commands.commands!
+      .reduce<string[]>((a, c) => a.includes(c.category) ? a : a.concat([c.category]), [])
+      .filter(e => isUserOwner || e !== 'Owner')
+
+    const embed = ctx.embed
+      .author(
+        'Help Menu',
+        ctx.worker.utils.getAvatar(ctx.me.user!)
+      )
+      .footer(
+        `${ctx.author.username}#${ctx.author.discriminator}`,
+        ctx.worker.utils.getAvatar(ctx.author)
+      )
+      .color(ctx.worker.config.colors.PURPLE)
+
+    for (const cat of categories) {
+      if (!cat) continue
+
+      embed.field(
+        cat,
+        ctx.worker.commands.commands!
+          .filter(c => c.category === cat)
+          .map(
+            c => `\`${(ctx.isInteraction ? c.interaction?.name ?? c.command : c.command) as string}\`: ${(c.interaction?.description ?? c.description)}\n`
+          )
+          .join('')
+      )
+    }
+
+    await embed.send()
   }
-} as CommandOptions<boolean>
+}

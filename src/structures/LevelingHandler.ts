@@ -1,144 +1,112 @@
-import TeranoWorker from './TeranoWorker'
-
-import { Snowflake, APIMessage, APIUser } from 'discord-api-types'
-
+import { APIGuildMember, APIMessage, Snowflake } from 'discord-api-types'
 import { Embed } from 'discord-rose'
-import { getAvatar } from '../utils'
+import { Worker } from './Bot/Worker'
 
 export class LevelingHandler {
-  /**
-   * Cooldown without duplicates
-   */
-  cooldown = new Set<string>()
+  cooldowns = new Set<string>()
 
-  constructor (private readonly worker: TeranoWorker) {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    worker.on('MESSAGE_CREATE', this.run.bind(this))
+  constructor (private readonly worker: Worker) {
+    this.worker.on('MESSAGE_CREATE', this.run.bind(this))
   }
 
-  /**
-   * The function that handles the leveling
-   * @param data The message
-   */
-  async run (data: APIMessage): Promise<void> {
-    if (!data.guild_id || data.author.bot) return
+  async run (msg: APIMessage): Promise<void> {
+    if (!msg.guild_id || !!msg.author.bot || !msg.member) return
 
-    const blacklist = await this.worker.db.userDB.getBlacklist(data.author.id)
+    const prefix = await this.worker.db.guilds.getPrefix(msg.guild_id)
+    if (msg.content.startsWith(prefix)) return
+
+    msg.member.user = msg.author
+
+    const blacklist = await this.worker.db.users.getBlacklist(msg.author.id)
     if (blacklist) return
 
-    const str = `${data.guild_id}-${data.author.id}`
-    if (this.cooldown.has(str)) return
+    const cooldownStr = `${msg.guild_id}-${msg.author.id}`
+    if (this.cooldowns.has(cooldownStr)) return
 
-    const userData = await this.worker.db.userDB.getLevel(data.author.id, data.guild_id)
-    const guildData = await this.worker.db.guildDB.getGuild(data.guild_id)
+    const userData = await this.worker.db.users.getLevel(msg.author.id, msg.guild_id)
+    const guildData = await this.worker.db.guilds.getGuild(msg.guild_id)
 
-    let xp = Number(userData.xp)
-    xp += (Math.floor(Math.random() * 8) + 8) * guildData.level.xp_multplier
+    const xp = userData.xp + ((Math.floor(Math.random() * 8) + 8) * guildData.level.xp_multplier)
 
     const xpFromLevel = this.xpFromLevel(userData.level)
-    if (xp > xpFromLevel) {
-      userData.level++
-      userData.xp = String(xp - xpFromLevel)
 
-      await this.sendUpdateMessage(data.guild_id, data.author, data.channel_id, userData.level)
-      await this.addLevelRole(data.guild_id, data.author, data.channel_id, userData.level)
-    } else {
-      userData.xp = String(xp)
+    userData.xp = xp
+    if (xp > xpFromLevel) {
+      userData.level = userData.level + 1
+      userData.xp = xp - xpFromLevel
+
+      const rolesAdded = await this.addLevelRole(msg.guild_id, msg.member, userData.level)
+      await this.sendLevelMessage(msg.guild_id, msg.channel_id, msg.member, userData.level, rolesAdded)
     }
 
-    await this.worker.db.userDB.updateLevel(userData)
+    await this.worker.db.users.updateLevel(userData)
 
-    this.cooldown.add(str)
-    setTimeout(() => { this.cooldown.delete(str) }, Number(guildData.level.cooldown) * 1000)
+    this.cooldowns.add(cooldownStr)
+    setTimeout(() => { this.cooldowns.delete(cooldownStr) }, guildData.level.cooldown * 1000)
   }
 
-  /**
-   * Add the role corresponding to the level for the guild
-   * @param guildID Guild ID
-   * @param user The user
-   * @param channelID Channel ID
-   * @param level level
-   */
-  async addLevelRole (guildID: Snowflake, user: APIUser, channelID: Snowflake, level: number): Promise<void> {
-    const guildData = await this.worker.db.guildDB.getGuild(guildID)
-    const role = guildData.level.level_roles.find(e => e.level === level)
-    if (!role) return
+  async addLevelRole (guildId: Snowflake, member: APIGuildMember, level: number): Promise<string[]> {
+    const guildData = await this.worker.db.guilds.getGuild(guildId)
 
-    await this.worker.api.members.addRole(guildID, user.id, role.id as Snowflake)
-      .then(async () => {
-        const msg = await this.worker.langs.getString(guildID, 'RANK_UP', level)
+    const roles = guildData.level.level_roles.filter(l => l.level === level)
 
-        const embed = new Embed()
-          .color(this.worker.colors.GREEN)
-          .author(msg, getAvatar(user))
+    if (roles.length === 0) return []
 
-        await this.worker.api.messages.send(channelID, embed)
-      })
-      .catch(async (err) => {
-        const msg = await this.worker.langs.getString(guildID, 'ERROR', err)
+    const rolesAdded: string[] = []
+    for (const role of roles) {
+      try {
+        await this.worker.api.members.addRole(guildId, member.user!.id, role.id)
+        rolesAdded.push(role.id)
+      } catch (e) { }
+    }
 
-        const embed = new Embed()
-          .color(this.worker.colors.RED)
-          .author(msg, getAvatar(user))
+    if (rolesAdded.length === 0) return []
 
-        await this.worker.api.messages.send(channelID, embed)
-          .catch(() => { })
-      })
+    return rolesAdded
   }
 
-  /**
-   * Send the Level-Up mesasge
-   * @param guildID Guild ID
-   * @param user The user
-   * @param channelID Channel ID
-   * @param level the level
-   */
-  async sendUpdateMessage (guildID: Snowflake, user: APIUser, channelID: Snowflake, level: number): Promise<void> {
-    const guildData = await this.worker.db.guildDB.getGuild(guildID)
-    if (!guildData.level.send_level_message) return
+  async sendLevelMessage (guildId: Snowflake, channelId: Snowflake, member: APIGuildMember, level: number, rolesAdded?: string[]): Promise<void> {
+    const embed = new Embed()
+      .color(this.worker.config.colors.PURPLE)
 
-    const member = this.worker.members.get(guildID)?.get(user.id) ??
-      await this.worker.api.members.get(guildID, user.id).catch(() => null)
+    const avatarUrl = this.worker.utils.getGuildAvatar(member, guildId)
 
-    if (!member) return
+    if (rolesAdded && rolesAdded.length > 0) {
+      embed
+        .author(`You ranked up to level ${level}!`, avatarUrl)
+        .description(`Role${rolesAdded.length === 1 ? '' : 's'} given: ${rolesAdded.map(e => `<@&${e}>`).join(', ')}`)
+    } else {
+      embed
+        .author(
+          await this.generateLevelMessage(guildId, member, level),
+          avatarUrl
+        )
+    }
 
-    const guild = this.worker.guilds.get(guildID)
+    await this.worker.api.messages.send(channelId, embed)
+  }
 
-    if (!guild) return
+  async generateLevelMessage (guildId: Snowflake, member: APIGuildMember, level: number): Promise<string> {
+    const guild = this.worker.guilds.get(guildId)!
+    const guildData = await this.worker.db.guilds.getGuild(guildId)
 
-    const msg = guildData.level.level_message.replace(/{{(.+?)}}/g, (match: string) => {
+    return guildData.level.level_message.replace(/{{(.+?)}}/g, (match: string) => {
       switch (match.slice(2, -2)) {
-        case 'tag': return `${user.username}#${user.discriminator}`
-
         case 'user':
         case 'username':
-        case 'author': return user.username
-
+        case 'author': return member.user!.username
         case 'nick':
-        case 'nickname': return member.nick ?? user.username
-
+        case 'nickname': return member.nick ?? member.user!.username
+        case 'tag': return `${member.user!.username}#${member.user!.discriminator}`
         case 'guild':
         case 'server': return guild.name
-
         case 'lvl':
         case 'level': return String(level)
-
         default: return match
       }
     })
-
-    const embed = new Embed()
-      .color(this.worker.colors.PURPLE)
-      .author(msg, getAvatar(user))
-
-    await this.worker.api.messages.send(channelID, embed)
-      .catch(() => { })
   }
 
-  /**
-   * Get the amount of xp required for the level
-   * @param level The level
-   */
   xpFromLevel (level: number): number {
     return Math.floor(100 + 5 / 6 * level * (2 * level * level + 27 * level + 91))
   }

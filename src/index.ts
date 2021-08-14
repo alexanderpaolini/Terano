@@ -1,11 +1,5 @@
-import path from 'path'
+import { Master } from './structures/Bot'
 
-import TeranoMaster from './structures/TeranoMaster'
+const master = new Master()
 
-const master = new TeranoMaster(path.resolve(__dirname, './worker.js'))
-
-master.spawnProcess('API', path.resolve(__dirname, './processes/api/index.js'))
-master.spawnProcess('Influx', path.resolve(__dirname, './processes/influx/index.js'))
-
-master.start()
-  .catch(master.log)
+void master.start()

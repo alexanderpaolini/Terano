@@ -1,4 +1,5 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+
+import { CommandOptions } from 'discord-rose'
 
 import util from 'util'
 
@@ -6,16 +7,13 @@ function clean (text: string): string {
   if (typeof (text) === 'string') { return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203)) } else { return text }
 }
 
-let last
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let temp: any
-
-export default {
+export default <CommandOptions>{
+  name: 'Eval',
   command: 'eval',
-  category: 'owner',
   aliases: ['ev'],
-  locale: 'EVAL',
-  owner: true,
+  category: 'Owner',
+  usage: '<user: String>',
+  ownerOnly: true,
   exec: async (ctx) => {
     const worker = ctx.worker
 
@@ -28,32 +26,24 @@ export default {
       // eslint-disable-next-line no-eval
       else evaled = await eval(code)
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      if (ctx.flags.l) last = evaled
-
       if (typeof evaled !== 'string') { evaled = util.inspect(evaled) }
 
-      if (ctx.flags.s || ctx.flags.silent) return true
-
-      const SUCCESS = await ctx.lang('CMD_EVAL_SUCCESS')
+      if (ctx.flags.s || ctx.flags.silent) return
 
       await ctx.embed
-        .color(ctx.worker.colors.GREEN)
-        .title(SUCCESS)
+        .color(ctx.worker.config.colors.GREEN)
+        .title('Eval Successful')
         .description(`\`\`\`xl\n${evaled}\`\`\``)
         .send()
     } catch (err) {
-      if (ctx.flags.s || ctx.flags.silent) return true
-
-      const FAIL = await ctx.lang('CMD_EVAL_UNSUCCESS')
+      if (ctx.flags.s || ctx.flags.silent) return
 
       ctx.embed
-        .color(ctx.worker.colors.RED)
-        .title(FAIL)
+        .color(ctx.worker.config.colors.RED)
+        .title('Eval Unsuccessful')
         .description(`\`\`\`xl\n${clean(err)}\`\`\``)
         .send()
         .catch(() => { })
     }
-    return true
   }
-} as CommandOptions<boolean>
+}

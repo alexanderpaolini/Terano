@@ -1,32 +1,29 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Owner',
   command: 'owner',
-  category: 'owner',
-  aliases: ['owo'],
-  locale: 'OWNER',
-  owner: true,
+  aliases: ['bl'],
+  category: 'Owner',
+  usage: '<user: String>',
+  ownerOnly: true,
   exec: async (ctx) => {
-    // Get the user ID
-    const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '')
+    const userId: string = ctx.args[0]
 
-    // Check if the user exists
-    if (!userID) {
-      await ctx.respond('CMD_OWNER_NOUSER', { error: true })
-      return false
-    }
-    if (userID === ctx.message.author.id) {
-      await ctx.respond('CMD_OWNER_NOSELF', { error: true })
-      return false
+    if (userId === ctx.author.id) {
+      await ctx.respond({
+        color: ctx.worker.config.colors.RED,
+        text: 'You can\'t do that'
+      })
+      return
     }
 
-    // Change the owner to the opposite
-    const isOwner = !(await ctx.worker.db.userDB.getOwner(userID))
-    await ctx.worker.db.userDB.setOwner(userID, isOwner)
+    const owner = !(await ctx.worker.db.users.getOwner(userId))
+    await ctx.worker.db.users.setOwner(userId, owner)
 
-    // Respond with success
-    if (isOwner) await ctx.respond('CMD_OWNER_ADDED', {}, userID)
-    else await ctx.respond('CMD_OWNER_REMOVED', {}, userID)
-    return true
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `<@${userId}> is ${owner ? 'now' : 'no longer'} an owner`
+    })
   }
-} as CommandOptions<boolean>
+}

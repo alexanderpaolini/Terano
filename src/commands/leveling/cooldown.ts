@@ -1,33 +1,34 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { ApplicationCommandOptionType } from 'discord-api-types'
 
-export default {
-  command: 'xpcooldown',
-  category: 'leveling',
-  aliases: ['cooldown'],
+import { CommandOptions } from 'discord-rose'
+
+export default <CommandOptions>{
+  name: 'Cooldown',
+  command: 'cooldown',
+  category: 'Leveling',
+  usage: '<time: Time in seconds>',
+  interaction: {
+    name: 'cooldown',
+    description: 'Set the XP cooldown',
+    options: [
+      {
+        name: 'seconds',
+        description: 'The delay in seconds',
+        type: ApplicationCommandOptionType.Integer,
+        required: true
+      }
+    ]
+  },
   userPerms: ['manageMessages'],
-  myPerms: [],
-  locale: 'COOLDOWN',
+  interactionOnly: true,
   exec: async (ctx) => {
-    // Make sure its a number
-    const oldCooldown = await ctx.worker.db.guildDB.getXPCooldown(ctx.id)
-    if (ctx.args[0] === undefined) {
-      await ctx.respond('CMD_COOLDOWN_CURRENT', {}, oldCooldown)
-      return true
-    }
+    const time: number = ctx.args[0]
 
-    // Get the cooldowns
-    const newCooldown = Number(ctx.args[0])
-    // Check To make sure people aren't stupid
-    if (newCooldown < 0 || isNaN(newCooldown)) {
-      await ctx.respond('CMD_COOLDOWN_LOW', { error: true })
-      return false
-    }
+    await ctx.worker.db.guilds.setXPCooldown(ctx.guild!.id, time)
 
-    // Update the cooldown in the DB
-    await ctx.worker.db.guildDB.setXPCooldown(ctx.id, String(newCooldown))
-
-    // Respond with success
-    await ctx.respond('CMD_COOLDOWN_UPDATED', {}, oldCooldown, String(newCooldown))
-    return true
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `XP cooldown set to \`${time}s\``
+    })
   }
-} as CommandOptions<boolean>
+}

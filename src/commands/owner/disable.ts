@@ -1,27 +1,27 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Disable',
   command: 'disable',
-  category: 'owner',
-  locale: 'DISABLE',
-  owner: true,
+  category: 'Owner',
+  usage: '<command: String>',
+  ownerOnly: true,
   exec: async (ctx) => {
-    const command = ctx.args[0]
+    const cmd: string = ctx.args.shift()
+    const command = ctx.worker.commands.find(cmd)
+
     if (!command) {
-      await ctx.respond('CMD_DISABLE_NONE', { error: true })
-      return false
+      await ctx.respond({
+        color: ctx.worker.config.colors.RED,
+        text: `Command "${cmd}" doesn't exist :(`
+      })
+      return
     }
 
-    const cmd = ctx.worker.commands.commands.find((c) => c.command === command)
-    if (cmd == null) {
-      await ctx.respond('CMD_DISABLE_NOTFOUND', { error: true }, command)
-      return false
-    }
-
-    cmd.disabled = !cmd.disabled
-
-    if (cmd.disabled) await ctx.respond('CMD_DISABLE_DISABLED', {}, String(cmd.command))
-    else await ctx.respond('CMD_DISABLE_ENABLED', {}, String(cmd.command))
-    return true
+    command.disabled = !command.disabled
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `Command \`${command.name}\` ${command.disabled ? 'disabled' : 'enabled'}`
+    })
   }
-} as CommandOptions<boolean>
+}

@@ -1,30 +1,34 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { ApplicationCommandOptionType } from 'discord-api-types'
 
-export default {
+import { CommandOptions } from 'discord-rose'
+
+export default <CommandOptions>{
+  name: 'Set Level Message',
   command: 'setlevelmessage',
-  category: 'leveling',
-  aliases: ['slm'],
+  category: 'Leveling',
+  usage: '<string: Level-Up Message>',
+  interaction: {
+    name: 'setlevelmessage',
+    description: 'Set the level-up message',
+    options: [
+      {
+        name: 'message',
+        description: 'The level-up message',
+        type: ApplicationCommandOptionType.String
+      }
+    ]
+  },
   userPerms: ['manageMessages'],
-  locale: 'SETLEVELMESSAGE',
+  guildOnly: true,
+  interactionOnly: true,
   exec: async (ctx) => {
-    // Get the new message
-    const message = ctx.args.join(' ')
+    const message: string = ctx.options.message
 
-    // Make sure they aren't dumb
-    if (message.length < 1) {
-      await ctx.respond('CMD_SETLEVELMESSAGE_CURRENT', { error: true }, await ctx.worker.db.guildDB.getLevelMessage(ctx.id))
-      return false
-    }
-    if (message.length >= 100) {
-      await ctx.respond('CMD_SETLEVELMESSAGE_SHORT', { error: true })
-      return false
-    }
+    await ctx.worker.db.guilds.setLevelMessage(ctx.guild!.id, message)
 
-    // Update the settings
-    await ctx.worker.db.guildDB.setLevelMessage(ctx.id, message)
-
-    // Respond with success
-    await ctx.respond('CMD_SETLEVELMESSAGE_SET', {}, message)
-    return true
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `Level-up message set to \`${message}\``
+    })
   }
-} as CommandOptions<boolean>
+}

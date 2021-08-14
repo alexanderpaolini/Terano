@@ -1,11 +1,25 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { CommandOptions } from 'discord-rose'
 
-export default {
+export default <CommandOptions>{
+  name: 'Support',
   command: 'support',
-  category: 'misc',
-  locale: 'SUPPORT',
+  description: 'Get the bot\'s support server link',
+  category: 'Misc',
+  usage: '',
+  interaction: {
+    name: 'support',
+    description: 'Get the bot\'s support server link'
+  },
   exec: async (ctx) => {
-    await ctx.reply(`https://discord.gg/${ctx.worker.config.discord.invite}`)
-    return true
+    await ctx.respond(
+      {
+        text: (
+          'My Support Server:\n' +
+          `https://discord.gg/${ctx.worker.config.discord.invite}`
+        ),
+        color: ctx.worker.config.colors.PURPLE,
+        removeEmbed: true
+      }
+    )
   }
-} as CommandOptions<boolean>
+}

@@ -1,30 +1,41 @@
-import { CommandOptions } from '../../structures/CommandHandler'
+import { ApplicationCommandOptionType } from 'discord-api-types'
 
-export default {
+import { CommandOptions } from 'discord-rose'
+
+export default <CommandOptions>{
+  name: 'Tag',
   command: 'tag',
-  category: 'leveling',
-  locale: 'TAG',
+  category: 'Leveling',
+  usage: '<tag: String>',
+  interaction: {
+    name: 'tag',
+    description: 'Set your rank card tag',
+    options: [
+      {
+        name: 'tag',
+        description: 'The display tag',
+        type: ApplicationCommandOptionType.String,
+        required: true
+      }
+    ]
+  },
+  interactionOnly: true,
   exec: async (ctx) => {
-    // Get the tag
-    const tag = ctx.args.join(' ')
+    const tag: string = ctx.options.tag
 
-    // Do the checks
-    if (!tag.length) {
-      await ctx.respond('CMD_TAG_NONE', { error: true })
-      return false
-    }
-
-    // Make sure people aren't stuid
     if (tag.length > 30) {
-      await ctx.respond('CMD_TAG_LONG', { error: true })
-      return false
+      await ctx.respond({
+        color: ctx.worker.config.colors.RED,
+        text: 'Tag must be no longer than thirty (30) characters'
+      })
+      return
     }
 
-    // Get the user settings
-    await ctx.worker.db.userDB.setTag(ctx.message.author.id, tag)
+    await ctx.worker.db.users.setTag(ctx.author.id, tag)
 
-    // Return success
-    await ctx.respond('CMD_TAG_UPDATED', {}, tag)
-    return true
+    await ctx.respond({
+      color: ctx.worker.config.colors.GREEN,
+      text: `Rank card tag set to \`${tag}\``
+    })
   }
-} as CommandOptions<boolean>
+}

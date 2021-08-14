@@ -1,6 +1,13 @@
 import { Snowflake } from 'discord-api-types'
-import { CommandOptions } from '../../structures/CommandHandler'
-import { getAvatar } from '../../utils'
+
+import { CommandOptions } from 'discord-rose'
+
+interface ShardStat {
+  guilds: number
+  channels: number
+  roles: number
+  ping: string
+}
 
 interface Stats {
   id: Snowflake
@@ -10,49 +17,69 @@ interface Stats {
   roles: number
 }
 
-export default {
+export default <CommandOptions>{
+  name: 'Stats',
   command: 'stats',
-  category: 'misc',
-  locale: 'STATS',
-  cooldown: {
-    time: 5e3
+  description: 'View bot stats',
+  category: 'Misc',
+  usage: '',
+  interaction: {
+    name: 'stats',
+    description: 'View bot stats'
   },
+  interactionOnly: true,
+  myPerms: ['embed'],
   exec: async (ctx) => {
-    const currentShard = Number((BigInt(ctx.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
+    const currentShard = ctx.guild
+      ? Number((BigInt(ctx.guild.id) >> BigInt(22)) % BigInt(ctx.worker.options.shards))
+      : 1
 
     const stats = await ctx.worker.comms.broadcastEval(
       `const stats = {
         id: worker.comms.id,
-        shards: worker.shardStats,
+        shards: worker.shards.reduce((a, shard) => {
+          a[shard.id] = worker.guilds.reduce((b, guild) => {
+            if (Number((BigInt(guild.id) >> BigInt(22)) % BigInt(worker.options.shards)) !== shard.id) return b
+            return {
+              ping: (worker.shards.get(shard.id)?.ping ?? '?').toString(),
+              guilds: b.guilds + 1,
+              roles: b.roles + (worker.guildRoles.get(guild.id)?.size ?? 0)
+            }
+          }, { ping: '', guilds: 0, channels: 0, roles: 0 })
+          return a
+        }, {}),
         guilds: worker.guilds.size,
-        channels: worker.channels.size,
         roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)
       }; stats`
     ) as unknown as Stats[]
 
-    const url = getAvatar(ctx.message.author)
-
     const embed = ctx.embed
-      .author(ctx.message.author.username + ' | ' + await ctx.lang('CMD_STATS_NAME'), url)
-      .color(ctx.worker.colors.PURPLE)
+      .author(
+        ctx.author.username + ' | Stats',
+        ctx.worker.utils.getAvatar(ctx.author)
+      )
+      .color(ctx.worker.config.colors.PURPLE)
       .description(
-        `\`\`\`properties
-Cluster: ${ctx.worker.comms.id} / ${stats.length}
-Shard: ${currentShard} / ${stats.reduce((a, shard) => a + Object.keys(shard).length, 0)}
-Memory: ${ctx.worker.mem.heapUsed}
-\`\`\``
+        '```properties\n' +
+        `Cluster: ${Number(ctx.worker.comms.id) + 1} / ${stats.length}\n` +
+        `Shard: ${currentShard + 1} / ${stats.reduce((a, cluster) => a + Object.keys(cluster.shards).length, 0)}\n` +
+        `Memory: ${ctx.worker.utils.mem.heapUsed}\n` +
+        '```'
       )
 
     for (const cluster of stats) {
-      embed.field(`Cluster ${cluster.id}`, `\`\`\`properties
-Shards: ${Object.keys(cluster.shards).length}
-Guilds: ${cluster.guilds.toLocaleString()}
-Channels: ${cluster.channels.toLocaleString()}
-Roles: ${cluster.roles.toLocaleString()}
-\`\`\``, true)
+      embed.field(
+        `Cluster ${cluster.id}`,
+        '```properties\n' +
+        `Shards: ${Object.keys(cluster.shards).length}\n` +
+        `Guilds: ${(cluster.guilds ?? '0').toLocaleString()}\n` +
+        `Channels: ${(cluster.channels ?? '0').toLocaleString()}\n` +
+        `Roles: ${(cluster.roles ?? '0').toLocaleString()}\n` +
+        '```',
+        true
+      )
     }
 
     await embed.send(true)
-    return true
   }
-} as CommandOptions<boolean>
+}
