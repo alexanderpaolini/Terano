@@ -7,14 +7,17 @@ DotEnv.config()
 const toCheckArr = [
   'MONGO_CONNECTION_STRING',
   'REDIS_CONNECTION_STRING',
+
   'DISCORD_TOKEN',
   'DISCORD_INVITE',
+
   'IMAGE_API_PORT',
   'IMAGE_API_KEY',
+
   'TOPGG_WEBHOOK_AUTH',
   'TOPGG_TOKEN',
-  'API_PORT',
-  'API_AUTH'
+
+  'API_PORT'
 ]
 const missingProps: string[] = []
 
@@ -29,6 +32,7 @@ if (missingProps.length) {
 
 function parseWebhook (name: string): { id: Snowflake, token: string } {
   const [id, token] = process.env[`DISCORD_WEBHOOK_${name.toUpperCase()}`]?.split(',') as [Snowflake, string]
+  if (!id || !token) throw new Error(`Webhook ${name} doesn't exist`)
   return { id, token }
 }
 
@@ -56,8 +60,7 @@ export const Config = {
   },
 
   api: {
-    port: process.env.API_PORT,
-    auth: process.env.API_AUTH
+    port: process.env.API_PORT
   },
 
   image_api: {

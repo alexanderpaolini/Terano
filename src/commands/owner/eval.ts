@@ -12,7 +12,7 @@ export default <CommandOptions>{
   command: 'eval',
   aliases: ['ev'],
   category: 'Owner',
-  usage: '<user: String>',
+  usage: '<code: String>',
   ownerOnly: true,
   exec: async (ctx) => {
     const worker = ctx.worker

@@ -1,3 +1,5 @@
+import { ApplicationCommandOptionType } from 'discord-api-types'
+
 import { CommandOptions } from 'discord-rose'
 
 export default <CommandOptions>{
@@ -12,7 +14,7 @@ export default <CommandOptions>{
       {
         name: 'command',
         description: 'The command you want info about',
-        type: 3
+        type: ApplicationCommandOptionType.String
       }
     ]
   },
@@ -35,9 +37,16 @@ export default <CommandOptions>{
         if (command.usage) { desc += `**Usage**: \`${ctx.prefix ?? ''}${command.command as string} ${command.usage}\`\n` }
 
         await ctx.embed
-          .title('Help Menu')
+          .author(
+            'Help Menu',
+            ctx.worker.utils.getAvatar(ctx.me.user!)
+          )
           .description(desc)
           .color(ctx.worker.config.colors.PURPLE)
+          .footer(
+            `${ctx.author.username}#${ctx.author.discriminator} | ${ctx.command.name}`,
+            ctx.worker.utils.getAvatar(ctx.author)
+          )
           .send()
         return
       }
@@ -56,7 +65,7 @@ export default <CommandOptions>{
         ctx.worker.utils.getAvatar(ctx.me.user!)
       )
       .footer(
-        `${ctx.author.username}#${ctx.author.discriminator}`,
+        `${ctx.author.username}#${ctx.author.discriminator} | ${ctx.command.name}`,
         ctx.worker.utils.getAvatar(ctx.author)
       )
       .color(ctx.worker.config.colors.PURPLE)
