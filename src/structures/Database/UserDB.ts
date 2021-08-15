@@ -44,6 +44,10 @@ export class UserDB {
    */
   settings: Cache<Snowflake, SettingsDoc> = new Cache(15 * 60 * 1000)
 
+  levelModel = levelModel
+  infoModel = infoModel
+  userModel = userModel
+
   /**
    * Get a LevelDoc
    * @param userID User ID

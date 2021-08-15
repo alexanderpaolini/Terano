@@ -29,6 +29,8 @@ const voteSchema = new Schema({
 const voteModel = model('users.votes', voteSchema)
 
 export class VoteDB {
+  voteModel = voteModel
+
   async getVotes (id: string): Promise<VoteDoc> {
     const fromDB: VoteDoc = await voteModel.findOne({ id }).lean()
     if (fromDB !== null) return fromDB

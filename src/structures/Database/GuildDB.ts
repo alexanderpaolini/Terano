@@ -30,6 +30,8 @@ export class GuildDB {
    */
   guilds: Cache<string, GuildDoc> = new Cache(15 * 60 * 1000)
 
+  guildModel = guildModel
+
   /**
    * Get a guild doc from the cache/DB
    * @param id The ID of the guild
