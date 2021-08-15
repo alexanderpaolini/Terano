@@ -224,7 +224,7 @@ export class UserDB {
 
     // Otherwise create a new one
     return {
-      user_id: id,
+      id,
       level: {
         tag: '',
         color: '',
@@ -247,8 +247,8 @@ export class UserDB {
    * @param doc Already existing settings doc
    */
   async updateSettings (doc: SettingsDoc): Promise<void> {
-    this.settings.set(doc.user_id, doc)
-    await userModel.updateOne({ id: doc.user_id }, doc, { upsert: true }).lean()
+    this.settings.set(doc.id, doc)
+    await userModel.updateOne({ id: doc.id }, doc, { upsert: true }).lean()
   }
 
   /**
@@ -353,7 +353,7 @@ interface SettingsDoc {
   /**
    * The ID of the user
    */
-  user_id: Snowflake
+  id: Snowflake
   /**
    * Configuration of the rank card
    */
