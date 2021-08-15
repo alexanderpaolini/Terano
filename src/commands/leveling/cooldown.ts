@@ -22,7 +22,7 @@ export default <CommandOptions>{
   userPerms: ['manageMessages'],
   interactionOnly: true,
   exec: async (ctx) => {
-    const time: number = ctx.args[0]
+    const time: number = ctx.options.seconds
 
     await ctx.worker.db.guilds.setXPCooldown(ctx.guild!.id, time)
 
