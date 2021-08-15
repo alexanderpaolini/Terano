@@ -69,6 +69,9 @@ export class LevelingHandler {
     const embed = new Embed()
       .color(this.worker.config.colors.PURPLE)
 
+    const sendMessages = await this.worker.db.guilds.getSendLevelMessage(guildId)
+    if (!sendMessages && !rolesAdded) return
+
     const avatarUrl = this.worker.utils.getGuildAvatar(member, guildId)
 
     if (rolesAdded && rolesAdded.length > 0) {
