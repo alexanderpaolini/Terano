@@ -83,7 +83,7 @@ export class LevelingHandler {
         )
     }
 
-    await this.worker.api.messages.send(channelId, embed)
+    await this.worker.api.messages.send(channelId, embed).catch(() => null)
   }
 
   async generateLevelMessage (guildId: Snowflake, member: APIGuildMember, level: number): Promise<string> {
