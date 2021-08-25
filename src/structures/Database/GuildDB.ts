@@ -268,7 +268,7 @@ export class GuildDB {
 /**
  * The Guild options
  */
-interface GuildDoc {
+export interface GuildDoc {
   /**
    * Guild ID
    */

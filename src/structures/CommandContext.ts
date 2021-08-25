@@ -4,6 +4,8 @@ import { APIActionRowComponent, APIMessage } from 'discord-api-types'
 
 import FormData from 'form-data'
 
+import { GuildDoc } from './Database/GuildDB'
+
 export interface ResponseOptions {
   text: string
   color: number
@@ -12,6 +14,11 @@ export interface ResponseOptions {
 }
 
 export class CommandContext extends Rose.CommandContext {
+  get db (): Promise<GuildDoc> {
+    if (!this.guild) throw new Error('Cannot access ctx.db since the command was ran in a DM')
+    return this.worker.db.guilds.getGuild(this.guild.id)
+  }
+
   async respond (options: ResponseOptions): Promise<APIMessage> {
     // @ts-expect-error | Flags does exist but ts is stupid
     if (this.flags.noembed || options.removeEmbed || !this.myPerms('embed')) {
@@ -41,7 +48,12 @@ export class CommandContext extends Rose.CommandContext {
 export class SlashCommandContext extends Rose.SlashCommandContext {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   get respond () {
-    return CommandContext.prototype.respond.bind(this)
+    return CommandContext.prototype.respond
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  get db () {
+    return CommandContext.prototype.db
   }
 
   /**
