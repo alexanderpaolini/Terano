@@ -25,7 +25,11 @@ export default <CommandOptions>{
     if (allLevels.length > 8) allLevels.length = 8
 
     for (const levelData of allLevels) {
-      const member = await ctx.worker.api.members.get(ctx.guild!.id, levelData.user_id)
+      if (newDataArr.length === 8) continue
+
+      const member = await ctx.worker.api.members.get(ctx.guild!.id, levelData.user_id).catch(() => null)
+      if (!member) continue
+
       const user = member.user!
 
       newDataArr.push({
