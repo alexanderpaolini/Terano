@@ -24,7 +24,7 @@ const guildSchema = new Schema({
 
 const guildModel = model('guilds', guildSchema)
 
-export class GuildDB {
+export class GuildDb {
   /**
    * The Guilds in cache
    */
@@ -69,66 +69,6 @@ export class GuildDB {
   async updateGuild (doc: GuildDoc): Promise<void> {
     this.guilds.set(doc.id, doc)
     await guildModel.updateOne({ id: doc.id }, doc).lean()
-  }
-
-  /**
-   * Get a guild's prefix
-   * @param id Guild ID
-   */
-  async getPrefix (id: string): Promise<string> {
-    const guildData = await this.getGuild(id)
-    return guildData.options.prefix
-  }
-
-  /**
-   * Set a guild's prefix
-   * @param id Guild ID
-   * @param prefix The new prefix
-   */
-  async setPrefix (id: string, prefix: string): Promise<void> {
-    const guildData = await this.getGuild(id)
-    guildData.options.prefix = prefix
-    await this.updateGuild(guildData)
-  }
-
-  /**
-   * Get whether or not to send embeds
-   * @param id Guild ID
-   */
-  async getEmbeds (id: string): Promise<boolean> {
-    const guildData = await this.getGuild(id)
-    return guildData.options.embeds
-  }
-
-  /**
-   * Set whether or not to send embeds
-   * @param id Guild ID
-   * @param value Whether or not to send embeds
-   */
-  async setEmbeds (id: string, value: boolean): Promise<void> {
-    const guildData = await this.getGuild(id)
-    guildData.options.embeds = value
-    await this.updateGuild(guildData)
-  }
-
-  /**
-   * Get whether or not to send the no-permissions message
-   * @param id Guild ID
-   */
-  async getSendPermsMessage (id: string): Promise<boolean> {
-    const guildData = await this.getGuild(id)
-    return guildData.options.no_permissions
-  }
-
-  /**
-   * Set whether or not to send the no-permisions message
-   * @param id Guild ID
-   * @param value Whether or not to send no-permissions message
-   */
-  async setSendPermsMessage (id: string, value: boolean): Promise<void> {
-    const guildData = await this.getGuild(id)
-    guildData.options.no_permissions = value
-    await this.updateGuild(guildData)
   }
 
   /**
@@ -215,7 +155,7 @@ export class GuildDB {
    * Get the default level color of a guild
    * @param id The Guild ID
    */
-  async getLevelColor (id: string): Promise<string> {
+  async getDefaultLevelColor (id: string): Promise<string> {
     const guildData = await this.getGuild(id)
     return guildData.level.default_color
   }
@@ -225,7 +165,7 @@ export class GuildDB {
    * @param id Guild ID
    * @param color The Level-Up Color
    */
-  async setLevelColor (id: string, color: string): Promise<void> {
+  async setDefaultLevelColor (id: string, color: string): Promise<void> {
     const guildData = await this.getGuild(id)
     guildData.level.default_color = color
     await this.updateGuild(guildData)
@@ -233,34 +173,15 @@ export class GuildDB {
 
   /**
    * Add a level role to the fuckin array
-   * @param guildID Guild ID
-   * @param roleID Role ID
+   * @param guildId Guild ID
+   * @param roleId Role ID
    */
-  async addLevelRole (guildID: string, roleID: string, level: number): Promise<void> {
-    const guildData = await this.getGuild(guildID)
+  async addLevelRole (guildId: string, roleId: string, level: number): Promise<void> {
+    const guildData = await this.getGuild(guildId)
     guildData.level.level_roles.push({
-      id: roleID,
+      id: roleId,
       level: level
     })
-    await this.updateGuild(guildData)
-  }
-
-  /**
-   * Get the language from the guild
-   * @param guildID Guild ID
-   */
-  async getLang (guildID: string): Promise<string> {
-    const guildData = await this.getGuild(guildID)
-    return guildData.options.lang
-  }
-
-  /**
-   * Get the language from the guild
-   * @param guildID Guild ID
-   */
-  async setLang (guildID: string, lang: string): Promise<void> {
-    const guildData = await this.getGuild(guildID)
-    guildData.options.lang = lang
     await this.updateGuild(guildData)
   }
 }

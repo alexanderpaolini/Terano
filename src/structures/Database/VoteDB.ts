@@ -28,7 +28,7 @@ const voteSchema = new Schema({
 
 const voteModel = model('users.votes', voteSchema)
 
-export class VoteDB {
+export class VoteDb {
   voteModel = voteModel
 
   async getVotes (id: string): Promise<VoteDoc> {

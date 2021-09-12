@@ -1,6 +1,7 @@
 import { Config } from './Config'
 
-import { RestManager, Thread } from 'discord-rose'
+import { Thread } from 'jadl'
+import { RestManager } from '@discord-rose/rest'
 
 import express from 'express'
 

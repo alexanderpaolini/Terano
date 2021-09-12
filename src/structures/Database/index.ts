@@ -2,14 +2,14 @@ import mongoose from 'mongoose'
 
 import { Config } from '../Config'
 
-import { GuildDB } from './GuildDB'
-import { UserDB } from './UserDB'
-import { VoteDB } from './VoteDB'
+import { GuildDb } from './GuildDb'
+import { UserDb } from './UserDb'
+import { VoteDb } from './VoteDb'
 
 export class Database {
-  guilds = new GuildDB()
-  users = new UserDB()
-  votes = new VoteDB()
+  guilds = new GuildDb()
+  users = new UserDb()
+  votes = new VoteDb()
 
   constructor () {
     mongoose.connect(Config.db.connection_string, {
@@ -22,4 +22,4 @@ export class Database {
   }
 }
 
-export { GuildDB, UserDB, VoteDB }
+export { GuildDb, UserDb, VoteDb }

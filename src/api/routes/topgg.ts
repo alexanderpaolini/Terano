@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { Webhook } from '@top-gg/sdk'
 
 import { Api } from '../../structures/Api'
-import { Embed } from 'discord-rose'
+import { Embed } from '@jadl/embed'
 
 export default function (this: Api, router: Router): void {
   if (!this.config.topgg) return
@@ -28,7 +28,7 @@ export default function (this: Api, router: Router): void {
     })
 
     if (this.config.topgg.vote_webhook) {
-      await this.comms.sendWebhook(
+      await this.rest.webhooks.send(
         this.config.topgg.vote_webhook.id as any,
         this.config.topgg.vote_webhook.token,
         {
