@@ -1,10 +1,10 @@
-import * as Rose from 'discord-rose'
+import * as Jadl from 'jadl'
 
 import path from 'path'
 
 import { Config } from '../Config'
 
-export class Master extends Rose.Master {
+export class Master extends Jadl.Master {
   config = Config
 
   constructor () {

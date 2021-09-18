@@ -1,6 +1,8 @@
 import { APIGuildMember, APIMessage, Snowflake } from 'discord-api-types'
-import { Embed } from 'discord-rose'
-import { Worker } from './Bot/Worker'
+
+import { Embed } from '@jadl/embed'
+
+import { Worker } from './Bot'
 
 export class LevelingHandler {
   cooldowns = new Set<string>()
@@ -11,9 +13,6 @@ export class LevelingHandler {
 
   async run (msg: APIMessage): Promise<void> {
     if (!msg.guild_id || !!msg.author.bot || !msg.member) return
-
-    const prefix = await this.worker.db.guilds.getPrefix(msg.guild_id)
-    if (msg.content.startsWith(prefix)) return
 
     msg.member.user = msg.author
 

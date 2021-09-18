@@ -30,7 +30,7 @@ const infoModel = model('users.info', infoSchema)
 const levelModel = model('users.levels', levelSchema)
 const userModel = model('users.settings', userSchema)
 
-export class UserDB {
+export class UserDb {
   /**
    * The level data in cache
    */
@@ -50,26 +50,26 @@ export class UserDB {
 
   /**
    * Get a LevelDoc
-   * @param userID User ID
-   * @param guildID Guild ID
+   * @param userId User ID
+   * @param guildId Guild ID
    */
-  async getLevel (userID: Snowflake, guildID: Snowflake): Promise<LevelDoc> {
+  async getLevel (userId: Snowflake, guildId: Snowflake): Promise<LevelDoc> {
     // Check the cache first
-    const fromCache = this.levels.get(`${userID}${guildID}`)
+    const fromCache = this.levels.get(`${userId}${guildId}`)
     if (fromCache !== undefined) return fromCache
 
     // Then check the DB
-    const fromDB: LevelDoc = await levelModel.findOne({ user_id: userID, guild_id: guildID }).lean()
+    const fromDB: LevelDoc = await levelModel.findOne({ user_id: userId, guild_id: guildId }).lean()
     if (fromDB !== null) {
       // Add it to the cache
-      this.levels.set(`${userID}${guildID}`, fromDB)
+      this.levels.set(`${userId}${guildId}`, fromDB)
       return fromDB
     }
 
     // Otherwise create a new one
     return {
-      user_id: userID,
-      guild_id: guildID,
+      user_id: userId,
+      guild_id: guildId,
       xp: 0,
       level: 0
     }
@@ -77,12 +77,12 @@ export class UserDB {
 
   /**
    * Create the default level doc
-   * @param userID User ID
-   * @param guildID Guild ID
+   * @param userId User ID
+   * @param guildId Guild ID
    */
-  async createLevel (userID: Snowflake, guildID: Snowflake): Promise<LevelDoc> {
-    await levelModel.create({ userID, guildID })
-    return await this.getLevel(userID, guildID)
+  async createLevel (userId: Snowflake, guildId: Snowflake): Promise<LevelDoc> {
+    await levelModel.create({ userId, guildId })
+    return await this.getLevel(userId, guildId)
   }
 
   /**
@@ -96,33 +96,33 @@ export class UserDB {
 
   /**
    * Get a user's level
-   * @param userID User ID
-   * @param guildID Guild ID
+   * @param userId User ID
+   * @param guildId Guild ID
    */
-  async getUserLevel (userID: Snowflake, guildID: Snowflake): Promise<number> {
-    const levelData = await this.getLevel(userID, guildID)
+  async getUserLevel (userId: Snowflake, guildId: Snowflake): Promise<number> {
+    const levelData = await this.getLevel(userId, guildId)
     return levelData.level
   }
 
   /**
    * Set a user's level
-   * @param userID User ID
-   * @param guildID Guild ID
+   * @param userId User ID
+   * @param guildId Guild ID
    * @param level The new level
    */
-  async setUserLevel (userID: Snowflake, guildID: Snowflake, level: number): Promise<void> {
-    const levelData = await this.getLevel(userID, guildID)
+  async setUserLevel (userId: Snowflake, guildId: Snowflake, level: number): Promise<void> {
+    const levelData = await this.getLevel(userId, guildId)
     levelData.level = level
     await this.updateLevel(levelData)
   }
 
   /**
    * Get a user's xp
-   * @param userID User ID
-   * @param guildID Guild ID
+   * @param userId User ID
+   * @param guildId Guild ID
    */
-  async getUserXP (userID: Snowflake, guildID: Snowflake): Promise<number> {
-    const levelData = await this.getLevel(userID, guildID)
+  async getUserXP (userId: Snowflake, guildId: Snowflake): Promise<number> {
+    const levelData = await this.getLevel(userId, guildId)
     return levelData.xp
   }
 
@@ -313,12 +313,12 @@ export class UserDB {
 
   /**
    * Get all of the levels, or all of the levels for a guild
-   * @param guildID The Guild ID, optional
+   * @param guildId The Guild ID, optional
    */
-  async getAllLevels (guildID: Snowflake | null = null): Promise<LevelDoc[]> {
+  async getAllLevels (guildId: Snowflake | null = null): Promise<LevelDoc[]> {
     let docs: LevelDoc[]
-    if (guildID != null) {
-      docs = await levelModel.find({ guild_id: guildID }).lean()
+    if (guildId != null) {
+      docs = await levelModel.find({ guild_id: guildId }).lean()
     } else docs = await levelModel.find().lean()
     return docs
   }
