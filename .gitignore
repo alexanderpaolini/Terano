@@ -6,3 +6,4 @@ test/
 .vscode/
 .env
 dumb_stuff/
+.DS_Store

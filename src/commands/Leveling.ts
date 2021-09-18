@@ -1,22 +1,19 @@
-import { Command, Options, Thinks, GetWorker, Run, Guild, UserPerms, Author, Member } from '@jadl/cmd'
+import { APIGuild, APIGuildMember, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
 
+import { Command, Options, Thinks, GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
-import { APIGuild, APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
 
 import { Worker } from '../structures/Bot'
 
-@Command('color', 'Set your rank card accemt color')
+@Command('color', 'Set your rank card accent color')
 export class ColorCommand {
   @Run()
   async exec (
-    @Options.String('color', 'The accent color', true) color: string,
+    @Options.String('color', 'The accent color', { required: true }) color: string,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
   ) {
     await worker.db.users.setColor(author.id, color)
-
-    console.log(this)
 
     return new Embed()
       .author(
@@ -33,7 +30,7 @@ export class CooldownCommand {
   @Run()
   @UserPerms('manageMessages')
   async exec (
-    @Options.Integer('seconds', 'The delay in seconds', true) delay: number,
+    @Options.Integer('seconds', 'The delay in seconds', { required: true }) delay: number,
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser
@@ -56,7 +53,8 @@ export class LeaderboardCommand {
   @Thinks()
   async exec (
     @GetWorker() worker: Worker,
-    @Guild(true) guild: APIGuild
+    @Guild(true) guild: APIGuild,
+    @Options.Boolean('ephemeral', 'Whether or not to send as ephemeral') ephemeral: boolean
   ) {
     const allLevels = (await worker.db.users.getAllLevels(guild.id))
       .sort((a, b) => {
@@ -81,7 +79,12 @@ export class LeaderboardCommand {
       })
 
       const buffer = await worker.imageAPI.leaderboard(newDataArr)
-      return { name: 'leaderboard.png', buffer }
+      return new FileBuilder()
+        .name('leaderboard.png')
+        .buffer(buffer)
+        .extra({
+          flags: ephemeral ? MessageFlags.Ephemeral : undefined
+        })
     }
   }
 }
@@ -93,7 +96,7 @@ export class MultiplierCommand {
   @Run()
   @UserPerms('manageMessages')
   async exec (
-    @Options.Integer('multiplier', 'The XP multiplier', true) multiplier: number,
+    @Options.Integer('multiplier', 'The XP multiplier', { required: true }) multiplier: number,
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser
@@ -128,7 +131,8 @@ export class RankCommand {
     @Guild(true) guild: APIGuild,
     @GetWorker() worker: Worker,
     @Author() author: APIUser,
-    @Member() member: APIGuildMember
+    @Member() member: APIGuildMember,
+    @Options.Boolean('ephemeral', 'Whether or not to send as ephemeral') ephemeral: boolean
   ) {
     const userId = u ?? author.id
     member = await worker.api.members.get(guild.id, userId).catch(() => null) ?? member
@@ -148,7 +152,12 @@ export class RankCommand {
       xp: userData.xp
     })
 
-    return { name: 'rank.png', buffer }
+    return new FileBuilder()
+      .name('rank.png')
+      .buffer(buffer)
+      .extra({
+        flags: ephemeral ? MessageFlags.Ephemeral : undefined
+      })
   }
 }
 
@@ -157,7 +166,7 @@ export class SetLevelMessageCommand {
   @Run()
   @UserPerms('manageMessages')
   async exec (
-    @Options.String('message', 'The level-up message', true) message: string,
+    @Options.String('message', 'The level-up message', { required: true }) message: string,
     @Guild(true) guild: APIGuild,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
@@ -178,7 +187,7 @@ export class SetLevelMessageCommand {
 export class TagCommand {
   @Run()
   async exec (
-    @Options.String('tag', 'The display tag', true) tag: string,
+    @Options.String('tag', 'The display tag', { required: true }) tag: string,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
   ) {
