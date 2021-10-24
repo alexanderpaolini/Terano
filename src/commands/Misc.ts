@@ -1,4 +1,4 @@
-import { Command, Thinks, GetWorker, Run, Guild, Author } from '@jadl/cmd'
+import { Command, Thinks, Worker as GetWorker, Run, Guild, Author } from '@jadl/cmd'
 
 import { Embed } from '@jadl/embed'
 
