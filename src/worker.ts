@@ -1,3 +1,3 @@
 import { Worker } from './structures/Bot'
 
-const worker = new Worker()
+export default new Worker()

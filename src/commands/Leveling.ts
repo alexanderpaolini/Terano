@@ -1,6 +1,6 @@
-import { APIGuild, APIGuildMember, APIRole, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
+import { APIGuild, APIGuildMember, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
 
-import { Command, Options, Thinks, GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder } from '@jadl/cmd'
+import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 
 import { Worker } from '../structures/Bot'
@@ -80,8 +80,7 @@ export class LeaderboardCommand {
 
       const buffer = await worker.imageAPI.leaderboard(newDataArr)
       return new FileBuilder()
-        .name('leaderboard.png')
-        .buffer(buffer)
+        .add('leaderboard.png', buffer)
         .extra({
           flags: ephemeral ? MessageFlags.Ephemeral : undefined
         })
@@ -257,8 +256,7 @@ export class RankCommand {
     })
 
     return new FileBuilder()
-      .name('rank.png')
-      .buffer(buffer)
+      .add('rank.png', buffer)
       .extra({
         flags: ephemeral ? MessageFlags.Ephemeral : undefined
       })

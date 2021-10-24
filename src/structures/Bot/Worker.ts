@@ -51,7 +51,7 @@ export class Worker extends Jadl.Worker {
       RankCommand,
       SetLevelMessageCommand,
       TagCommand,
-      ToggleLevelMessageCommand,
+      ToggleLevelMessageCommand
     ],
     {
       interactionGuild: this.config.discord.test_guild

@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@discord-rose/rest": "^1.0.0",
-    "@jadl/cmd": "^0.0.8",
+    "@jadl/cmd": "^0.0.12",
     "@jadl/embed": "^0.0.3",
     "@jpbberry/cache": "^1.0.4",
     "@jpbberry/load-routes": "^1.0.3",
