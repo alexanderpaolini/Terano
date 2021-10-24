@@ -1,6 +1,6 @@
 import { APIGuild, APIGuildMember, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
 
-import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder, SubCommand } from '@jadl/cmd'
+import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder, SubCommand, MessageTypes } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 
 import { Worker } from '../structures/Bot'
@@ -12,7 +12,7 @@ export class ColorCommand {
     @Options.String('color', 'The accent color', { required: true }) color: string,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     await worker.db.users.setColor(author.id, color)
 
     return new Embed()
@@ -34,7 +34,7 @@ export class CooldownCommand {
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     await worker.db.guilds.setXPCooldown(guild.id, delay)
 
     return new Embed()
@@ -55,7 +55,7 @@ export class LeaderboardCommand {
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Options.Boolean('ephemeral', 'Whether or not to send as ephemeral') ephemeral: boolean
-  ) {
+  ): Promise<MessageTypes> {
     const allLevels = (await worker.db.users.getAllLevels(guild.id))
       .sort((a, b) => {
         if (a.level !== b.level) return (b.level - a.level)
@@ -97,8 +97,8 @@ export class LevelRoleCommand {
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser,
     @Options.Role('role', 'The role to be rewarded', { required: true }) roleId: Snowflake,
-    @Options.Integer('level', 'The level when it will be given', { required: true }) level: number,
-  ) {
+    @Options.Integer('level', 'The level when it will be given', { required: true }) level: number
+  ): Promise<MessageTypes> {
     const guildData = await worker.db.guilds.getGuild(guild.id)
     const levelRoles = guildData.level.level_roles
 
@@ -129,8 +129,8 @@ export class LevelRoleCommand {
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser,
     @Options.Role('role', 'The role that is rewarded', { required: true }) roleId: Snowflake,
-    @Options.Integer('level', 'The level when is given', { required: true }) level: number,
-  ) {
+    @Options.Integer('level', 'The level when is given', { required: true }) level: number
+  ): Promise<MessageTypes> {
     const guildData = await worker.db.guilds.getGuild(guild.id)
     const levelRoles = guildData.level.level_roles
 
@@ -161,8 +161,8 @@ export class LevelRoleCommand {
   async listCommand (
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
-    @Author() author: APIUser,
-  ) {
+    @Author() author: APIUser
+  ): Promise<MessageTypes> {
     const guildData = await worker.db.guilds.getGuild(guild.id)
     const levelRoles = guildData.level.level_roles.sort((a, b) => a.level - b.level)
 
@@ -195,7 +195,7 @@ export class MultiplierCommand {
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     if (multiplier <= 0 || multiplier > 100)
       return new Embed()
         .author(
@@ -228,7 +228,7 @@ export class RankCommand {
     @Author() author: APIUser,
     @Member() member: APIGuildMember,
     @Options.Boolean('ephemeral', 'Whether or not to send as ephemeral') ephemeral: boolean
-  ) {
+  ): Promise<MessageTypes> {
     const userId = u ?? author.id
     member = await worker.api.members.get(guild.id, userId).catch(() => null) ?? member
 
@@ -264,7 +264,7 @@ export class SetLevelMessageCommand {
     @Guild(true) guild: APIGuild,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     await worker.db.guilds.setLevelMessage(guild.id, message)
 
     return new Embed()
@@ -284,7 +284,7 @@ export class TagCommand {
     @Options.String('tag', 'The display tag', { required: true }) tag: string,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     if (tag.length > 30)
       return new Embed()
         .author(
@@ -314,7 +314,7 @@ export class ToggleLevelMessageCommand {
     @Guild(true) guild: APIGuild,
     @GetWorker() worker: Worker,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     const sendMesasge = !(await worker.db.guilds.getSendLevelMessage(guild.id))
     await worker.db.guilds.setSendLevelMessage(guild.id, sendMesasge)
 

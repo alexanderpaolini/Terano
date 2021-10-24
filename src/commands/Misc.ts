@@ -1,4 +1,4 @@
-import { Command, Thinks, Worker as GetWorker, Run, Guild, Author } from '@jadl/cmd'
+import { Command, Thinks, Worker as GetWorker, Run, Guild, Author, MessageTypes } from '@jadl/cmd'
 
 import { Embed } from '@jadl/embed'
 
@@ -26,7 +26,7 @@ export class InviteCommand {
   @Run()
   async exec (
     @GetWorker() worker: Worker
-  ) {
+  ): Promise<MessageTypes> {
     return (
       'My Invite Link:\n' +
       `<https://discord.com/oauth2/authorize?client_id=${worker.user.id}&permissions=8&scope=bot%20applications.commands>`
@@ -40,10 +40,10 @@ export class PingCommand {
   @Thinks()
   async exec (
     @GetWorker() worker: Worker
-  ) {
+  ): Promise<MessageTypes> {
     return new Embed()
       .author(
-        `Pong! (???ms)`,
+        'Pong! (???ms)',
         worker.utils.getAvatar(worker.user)
       )
       .color(worker.config.colors.PURPLE)
@@ -57,13 +57,13 @@ export class StatsCommand {
     @GetWorker() worker: Worker,
     @Guild() guild: APIGuild,
     @Author() author: APIUser
-  ) {
+  ): Promise<MessageTypes> {
     const currentShard = guild
       ? Number((BigInt(guild.id) >> BigInt(22)) % BigInt(worker.options.shards))
       : 1
 
-      const stats = await worker.comms.broadcastEval(
-        `const stats = {
+    const stats = await worker.comms.broadcastEval(
+      `const stats = {
           id: worker.comms.id,
           shards: worker.shards.reduce((a, shard) => {
             a[shard.id] = worker.guilds.reduce((b, guild) => {
@@ -79,9 +79,9 @@ export class StatsCommand {
           guilds: worker.guilds.size,
           roles: worker.guildRoles.reduce((a, b) => a + b.size, 0)
         }; stats`
-      ) as unknown as Stats[]
+    ) as unknown as Stats[]
 
-      const embed = new Embed()
+    const embed = new Embed()
       .author(
         author.username + ' | Stats',
         worker.utils.getAvatar(author)
@@ -95,20 +95,20 @@ export class StatsCommand {
         '```'
       )
 
-      for (const cluster of stats) {
-        embed.field(
-          `Cluster ${cluster.id}`,
-          '```properties\n' +
-          `Shards: ${Object.keys(cluster.shards).length}\n` +
-          `Guilds: ${(cluster.guilds ?? '0').toLocaleString()}\n` +
-          `Channels: ${(cluster.channels ?? '0').toLocaleString()}\n` +
-          `Roles: ${(cluster.roles ?? '0').toLocaleString()}\n` +
-          '```',
-          true
-        )
-      }
+    for (const cluster of stats) {
+      embed.field(
+        `Cluster ${cluster.id}`,
+        '```properties\n' +
+        `Shards: ${Object.keys(cluster.shards).length}\n` +
+        `Guilds: ${(cluster.guilds ?? '0').toLocaleString()}\n` +
+        `Channels: ${(cluster.channels ?? '0').toLocaleString()}\n` +
+        `Roles: ${(cluster.roles ?? '0').toLocaleString()}\n` +
+        '```',
+        true
+      )
+    }
 
-      return embed
+    return embed
   }
 }
 
@@ -117,7 +117,7 @@ export class SupportCommand {
   @Run()
   async exec (
     @GetWorker() worker: Worker
-  ) {
+  ): Promise<MessageTypes> {
     return (
       'My Support Server:\n' +
       `<https://discord.gg/${worker.config.discord.invite}>`
