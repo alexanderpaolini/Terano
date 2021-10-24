@@ -1,6 +1,6 @@
 import { APIGuild, APIGuildMember, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
 
-import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder } from '@jadl/cmd'
+import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, UserPerms, Author, Member, FileBuilder, SubCommand } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 
 import { Worker } from '../structures/Bot'
@@ -88,13 +88,11 @@ export class LeaderboardCommand {
   }
 }
 
-// TODO: Move levelrole to subcommands
-
-@Command('levelrole-add', 'Add a level-up reward role')
-export class LevelRoleAddCommand {
-  @Run()
+@Command('levelrole', 'Manage the level-up rewards')
+export class LevelRoleCommand {
+  @SubCommand('add', 'Add a level-up reward role')
   @UserPerms('manageMessages')
-  async exec (
+  async addCommand (
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser,
@@ -123,13 +121,10 @@ export class LevelRoleAddCommand {
       .color(worker.config.colors.GREEN)
       .description('Added role to level-up rewards')
   }
-}
 
-@Command('levelrole-remove', 'Remove a level-up reward role')
-export class LevelRoleRemoveCommand {
-  @Run()
+  @SubCommand('remove', 'Remove a level-up reward role')
   @UserPerms('manageMessages')
-  async exec (
+  async removeCommand (
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser,
@@ -161,12 +156,9 @@ export class LevelRoleRemoveCommand {
       .color(worker.config.colors.GREEN)
       .description('Removed role from level-up rewards')
   }
-}
 
-@Command('levelrole-list', 'List the level-up reward roles')
-export class LevelRoleListCommand {
-  @Run()
-  async exec (
+  @SubCommand('list', 'List the level-up reward roles')
+  async listCommand (
     @GetWorker() worker: Worker,
     @Guild(true) guild: APIGuild,
     @Author() author: APIUser,

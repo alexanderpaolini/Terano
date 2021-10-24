@@ -23,9 +23,7 @@ import {
   SetLevelMessageCommand,
   TagCommand,
   ToggleLevelMessageCommand,
-  LevelRoleAddCommand,
-  LevelRoleRemoveCommand,
-  LevelRoleListCommand
+  LevelRoleCommand
 } from '../../commands'
 
 export class Worker extends Jadl.Worker {
@@ -44,9 +42,7 @@ export class Worker extends Jadl.Worker {
       ColorCommand,
       CooldownCommand,
       LeaderboardCommand,
-      LevelRoleAddCommand,
-      LevelRoleRemoveCommand,
-      LevelRoleListCommand,
+      LevelRoleCommand,
       MultiplierCommand,
       RankCommand,
       SetLevelMessageCommand,
