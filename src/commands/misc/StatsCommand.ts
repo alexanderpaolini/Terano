@@ -1,10 +1,9 @@
-import { Command, Thinks, Worker as GetWorker, Run, Guild, Author, MessageTypes } from '@jadl/cmd'
-
-import { Embed } from '@jadl/embed'
-
 import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
 
-import { Worker } from '../structures/Bot'
+import { Command, Worker as GetWorker, Run, Guild, Author, MessageTypes } from '@jadl/cmd'
+import { Embed } from '@jadl/embed'
+
+import { Worker } from '../../structures/Bot'
 
 interface ShardStat {
   guilds: number
@@ -13,41 +12,12 @@ interface ShardStat {
   ping: string
 }
 
-interface Stats {
+export interface Stats {
   id: Snowflake
   shards: ShardStat[]
   guilds: number
   channels: number
   roles: number
-}
-
-@Command('invite', 'Get the bot\'s invite link')
-export class InviteCommand {
-  @Run()
-  async exec (
-    @GetWorker() worker: Worker
-  ): Promise<MessageTypes> {
-    return (
-      'My Invite Link:\n' +
-      `<https://discord.com/oauth2/authorize?client_id=${worker.user.id}&permissions=8&scope=bot%20applications.commands>`
-    )
-  }
-}
-
-@Command('ping', 'View the bot\'s ping')
-export class PingCommand {
-  @Run()
-  @Thinks()
-  async exec (
-    @GetWorker() worker: Worker
-  ): Promise<MessageTypes> {
-    return new Embed()
-      .author(
-        'Pong! (???ms)',
-        worker.utils.getAvatar(worker.user)
-      )
-      .color(worker.config.colors.PURPLE)
-  }
 }
 
 @Command('stats', 'View bot stats')
@@ -109,18 +79,5 @@ export class StatsCommand {
     }
 
     return embed
-  }
-}
-
-@Command('support', 'Get the bot\'s support server link')
-export class SupportCommand {
-  @Run()
-  async exec (
-    @GetWorker() worker: Worker
-  ): Promise<MessageTypes> {
-    return (
-      'My Support Server:\n' +
-      `<https://discord.gg/${worker.config.discord.invite}>`
-    )
   }
 }
