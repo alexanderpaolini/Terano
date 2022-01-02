@@ -1,9 +1,14 @@
-config.json
+# Typescript compile output
 dist/
+
+# Node modules
 node_modules/
-TODO
-test/
+
+# VSCode settings
 .vscode/
+
+# Security
 .env
-dumb_stuff/
+
+# MacOS
 .DS_Store
