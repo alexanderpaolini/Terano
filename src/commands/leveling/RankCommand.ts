@@ -1,4 +1,4 @@
-import { APIGuild, APIGuildMember, APIUser, MessageFlags, Snowflake } from 'discord-api-types'
+import { APIGuild, APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
 
 import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, Author, Member, FileBuilder, MessageTypes } from '@jadl/cmd'
 
@@ -17,7 +17,7 @@ export class RankCommand {
     @Options.Boolean('ephemeral', 'Whether or not to send as ephemeral') ephemeral: boolean
   ): Promise<MessageTypes> {
     const userId = u ?? author.id
-    member = await worker.api.members.get(guild.id, userId).catch(() => null) ?? member
+    member = await worker.requests.getMember(guild.id, userId).catch(() => null) ?? member
 
     const user = member.user!
 
@@ -37,7 +37,7 @@ export class RankCommand {
     return new FileBuilder()
       .add('rank.png', buffer)
       .extra({
-        flags: ephemeral ? MessageFlags.Ephemeral : undefined
+        flags: ephemeral ? 64 : undefined
       })
   }
 }

@@ -54,7 +54,7 @@ export class LevelingHandler {
     const rolesAdded: string[] = []
     for (const role of roles) {
       try {
-        await this.worker.api.members.addRole(guildId, member.user!.id, role.id)
+        await this.worker.requests.addRole(guildId, member.user!.id, role.id)
         rolesAdded.push(role.id)
       } catch (e) { }
     }
@@ -85,7 +85,7 @@ export class LevelingHandler {
         )
     }
 
-    await this.worker.api.messages.send(channelId, embed).catch(() => null)
+    await this.worker.requests.sendMessage(channelId, embed).catch(() => null)
   }
 
   async generateLevelMessage (guildId: Snowflake, member: APIGuildMember, level: number): Promise<string> {

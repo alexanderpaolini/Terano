@@ -1,4 +1,4 @@
-import { APIGuild, MessageFlags } from 'discord-api-types'
+import { APIGuild } from 'discord-api-types'
 
 import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, FileBuilder, MessageTypes } from '@jadl/cmd'
 
@@ -23,7 +23,7 @@ export class LeaderboardCommand {
     for (const levelData of allLevels) {
       if (newDataArr.length === 8) { continue }
 
-      const member = await worker.api.members.get(guild.id, levelData.user_id).catch(() => null)
+      const member = await worker.requests.getMember(guild.id, levelData.user_id).catch(() => null)
       if (!member) { continue }
 
       const user = member.user!
@@ -38,7 +38,7 @@ export class LeaderboardCommand {
       return new FileBuilder()
         .add('leaderboard.png', buffer)
         .extra({
-          flags: ephemeral ? MessageFlags.Ephemeral : undefined
+          flags: ephemeral ? 64 : undefined
         })
     }
   }

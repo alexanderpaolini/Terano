@@ -1,4 +1,4 @@
-import * as Jadl from 'jadl'
+import { Worker as JadlWorker } from 'jadl'
 
 import { CommandHandler } from '@jadl/cmd'
 
@@ -26,13 +26,16 @@ import { InviteCommand } from '../../commands/misc/InviteCommand'
 import { PingCommand } from '../../commands/misc/PingCommand'
 import { StatsCommand } from '../../commands/misc/StatsCommand'
 import { SupportCommand } from '../../commands/misc/SupportCommand'
+import { Requests } from '../Requests'
 
-export class Worker extends Jadl.Worker {
+export class Worker extends JadlWorker {
   config = Config
 
   db = new Database()
   imageAPI = new ImageAPI(this)
   leveling = new LevelingHandler(this)
+  requests = new Requests(this.api)
+
   cmd = new CommandHandler(
     this,
     [
@@ -57,12 +60,14 @@ export class Worker extends Jadl.Worker {
 
   utils = Utils
 
-  _events = new WorkerEvents(this)
+  workerEvents = new WorkerEvents(this)
 
   constructor () {
     super()
 
-    this._events.add(this)
+    this.workerEvents.add(this)
+
+    this.api.on('restDebug', this.debug.bind(this))
   }
 
   webhook (wh: keyof typeof Config.discord.webhooks): Embed | null {
@@ -71,7 +76,7 @@ export class Worker extends Jadl.Worker {
     const webhook = this.config.discord.webhooks[wh]
     if (!webhook) throw new Error('Webhook not found')
     return new Embed(async (embed) => {
-      return await this.api.webhooks.send(webhook.id, webhook.token, embed)
+      return await this.requests.sendWebhookMessage(webhook.id, webhook.token, { embeds: [embed.render()] })
     })
   }
 }

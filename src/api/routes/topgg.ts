@@ -46,7 +46,7 @@ export default function (this: Api, router: Router): void {
               )
               .description(`\`${user.username}#${user.discriminator}\` just voted!`)
               .footer(`They have voted ${votes.total_votes} time${votes.total_votes > 1 ? 's' : ''}!`)
-              .render()
+              .render() as any // Deal with this later
           ]
         }
       )

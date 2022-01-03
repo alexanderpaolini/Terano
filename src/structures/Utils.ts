@@ -23,7 +23,6 @@ export class Utils {
   }
 
   static getGuildAvatar (user: APIGuildMember, guildId: Snowflake, type?: string, size?: number): string {
-    // @ts-expect-error I don't really care
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     if (user.avatar) return `https://cdn.discordapp.com/guilds/${guildId}/users/${user.user?.id}/avatars/${user.avatar as string}.${type ?? (user.avatar.startsWith('a_') ? 'gif' : 'png')}?size=${size ?? 128}`
     else return this.getAvatar(user.user as unknown as APIUser)

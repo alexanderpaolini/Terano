@@ -29,7 +29,7 @@ export class Master extends Jadl.Master {
       {
         token: Config.discord.token,
         shards: Number(Config.discord.shards) || 'auto',
-        intents: ['GUILDS', 'GUILD_MESSAGES'],
+        intents: 513,
         cacheControl: {
           guilds: ['name', 'description', 'preferred_locale', 'unavailable', 'icon', 'owner_id', 'preferred_locale'],
           channels: ['nsfw', 'permission_overwrites'],
