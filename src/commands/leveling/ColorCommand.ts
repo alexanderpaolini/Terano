@@ -1,8 +1,6 @@
-import { APIUser } from 'discord-api-types'
-
-import { Command, Options, Worker as GetWorker, Run, Author, MessageTypes } from '@jadl/cmd'
+import { Author, Command, MessageTypes, Options, Run, Worker as GetWorker } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
+import { APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
 @Command('color', 'Set your rank card accent color')

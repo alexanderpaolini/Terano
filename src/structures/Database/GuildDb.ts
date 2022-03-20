@@ -1,8 +1,6 @@
-import { Schema, model } from 'mongoose'
-
 import { Cache } from '@jpbberry/cache'
-
 import { Snowflake } from 'discord-api-types'
+import { model, Schema } from 'mongoose'
 
 const guildSchema = new Schema({
   id: { type: String, required: true, unique: true },

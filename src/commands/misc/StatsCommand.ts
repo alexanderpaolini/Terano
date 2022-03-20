@@ -1,8 +1,6 @@
-import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
-
-import { Command, Worker as GetWorker, Run, Guild, Author, MessageTypes } from '@jadl/cmd'
+import { Author, Command, Guild, MessageTypes, Run, Worker as GetWorker } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
+import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
 interface ShardStat {

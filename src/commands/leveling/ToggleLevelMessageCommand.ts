@@ -1,8 +1,6 @@
-import { APIGuild, APIUser } from 'discord-api-types'
-
-import { Command, Worker as GetWorker, Run, Guild, UserPerms, Author, MessageTypes } from '@jadl/cmd'
+import { Author, Command, Guild, MessageTypes, Run, UserPerms, Worker as GetWorker } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
+import { APIGuild, APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
 @Command('togglelevelmessage', 'Toggle the level-up message')

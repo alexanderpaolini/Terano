@@ -1,4 +1,4 @@
-import { APIUser, APIGuildMember, Snowflake } from 'discord-api-types'
+import { APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
 
 // I don't really care to be honest
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class

@@ -1,7 +1,5 @@
+import { Command, FileBuilder, Guild, MessageTypes, Options, Run, Thinks, Worker as GetWorker } from '@jadl/cmd'
 import { APIGuild } from 'discord-api-types'
-
-import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, FileBuilder, MessageTypes } from '@jadl/cmd'
-
 import { Worker } from '../../structures/Bot'
 
 @Command('leaderboard', 'View the top ranks')

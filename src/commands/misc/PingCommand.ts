@@ -1,6 +1,5 @@
-import { Command, Thinks, Worker as GetWorker, Run, MessageTypes } from '@jadl/cmd'
+import { Command, MessageTypes, Run, Thinks, Worker as GetWorker } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
 import { Worker } from '../../structures/Bot'
 
 @Command('ping', 'View the bot\'s ping')

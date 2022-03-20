@@ -1,8 +1,6 @@
-import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
-
-import { Command, Options, Worker as GetWorker, Guild, UserPerms, Author, SubCommand, MessageTypes } from '@jadl/cmd'
+import { Author, Command, Guild, MessageTypes, Options, SubCommand, UserPerms, Worker as GetWorker } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
-
+import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
 @Command('levelrole', 'Manage the level-up rewards')

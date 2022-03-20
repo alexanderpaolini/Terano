@@ -1,7 +1,5 @@
+import { Author, Command, FileBuilder, Guild, Member, MessageTypes, Options, Run, Thinks, Worker as GetWorker } from '@jadl/cmd'
 import { APIGuild, APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
-
-import { Command, Options, Thinks, Worker as GetWorker, Run, Guild, Author, Member, FileBuilder, MessageTypes } from '@jadl/cmd'
-
 import { Worker } from '../../structures/Bot'
 
 @Command('rank', 'View your or another person\'s rank')

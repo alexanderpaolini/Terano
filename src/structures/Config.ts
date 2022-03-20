@@ -1,6 +1,5 @@
-import * as DotEnv from 'dotenv'
-
 import { Snowflake } from 'discord-api-types'
+import * as DotEnv from 'dotenv'
 
 DotEnv.config()
 

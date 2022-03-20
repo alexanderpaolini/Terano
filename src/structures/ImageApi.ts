@@ -1,5 +1,4 @@
 import fetch from 'node-fetch'
-
 import { Worker } from './Bot'
 
 type methods = 'GET' | 'POST'

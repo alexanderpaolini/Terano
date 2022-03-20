@@ -1,8 +1,6 @@
-import types, { Snowflake, Routes } from 'discord-api-types/v9'
-
-import { MessageTypes, formatMessage } from '@jadl/cmd'
-
-import { REST, RequestData } from '@discordjs/rest'
+import { RequestData, REST } from '@discordjs/rest'
+import { formatMessage, MessageTypes } from '@jadl/cmd'
+import types, { Routes, Snowflake } from 'discord-api-types/v9'
 
 export class Requests {
   constructor (private readonly api: REST) { }

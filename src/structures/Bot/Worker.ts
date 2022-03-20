@@ -1,17 +1,6 @@
-import { Worker as JadlWorker } from 'jadl'
-
 import { CommandHandler } from '@jadl/cmd'
-
 import { Embed } from '@jadl/embed'
-
-import { Config } from '../Config'
-import { Database } from '../Database'
-import { ImageAPI } from '../ImageApi'
-import { Utils } from '../Utils'
-import { LevelingHandler } from '../LevelingHandler'
-
-import { WorkerEvents } from '../../events/WorkerEvents'
-
+import { Worker as JadlWorker } from 'jadl'
 import { ColorCommand } from '../../commands/leveling/ColorCommand'
 import { CooldownCommand } from '../../commands/leveling/CooldownCommand'
 import { LeaderboardCommand } from '../../commands/leveling/LeaderboardCommand'
@@ -21,12 +10,17 @@ import { RankCommand } from '../../commands/leveling/RankCommand'
 import { SetLevelMessageCommand } from '../../commands/leveling/SetLevelMessageCommand'
 import { TagCommand } from '../../commands/leveling/TagCommand'
 import { ToggleLevelMessageCommand } from '../../commands/leveling/ToggleLevelMessageCommand'
-
 import { InviteCommand } from '../../commands/misc/InviteCommand'
 import { PingCommand } from '../../commands/misc/PingCommand'
 import { StatsCommand } from '../../commands/misc/StatsCommand'
 import { SupportCommand } from '../../commands/misc/SupportCommand'
+import { WorkerEvents } from '../../events/WorkerEvents'
+import { Config } from '../Config'
+import { Database } from '../Database'
+import { ImageAPI } from '../ImageApi'
+import { LevelingHandler } from '../LevelingHandler'
 import { Requests } from '../Requests'
+import { Utils } from '../Utils'
 
 export class Worker extends JadlWorker {
   config = Config

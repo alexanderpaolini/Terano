@@ -1,7 +1,5 @@
-import { ExtendedEmitter, Event } from '@jpbberry/typed-emitter'
-
+import { Event, ExtendedEmitter } from '@jpbberry/typed-emitter'
 import { DiscordEventMap } from 'jadl'
-
 import { Worker } from '../structures/Bot/Worker'
 
 export class WorkerEvents extends ExtendedEmitter {

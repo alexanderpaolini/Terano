@@ -1,5 +1,4 @@
-import { Command, Worker as GetWorker, Run, MessageTypes } from '@jadl/cmd'
-
+import { Command, MessageTypes, Run, Worker as GetWorker } from '@jadl/cmd'
 import { Worker } from '../../structures/Bot'
 
 @Command('support', 'Get the bot\'s support server link')

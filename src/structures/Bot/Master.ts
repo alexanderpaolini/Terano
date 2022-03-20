@@ -1,9 +1,6 @@
 import * as Jadl from 'jadl'
-
 import path from 'path'
-
-import { createLogger, transports, format } from 'winston'
-
+import { createLogger, format, transports } from 'winston'
 import { Config } from '../Config'
 
 export class Master extends Jadl.Master {

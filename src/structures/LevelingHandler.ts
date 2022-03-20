@@ -1,7 +1,5 @@
-import { APIGuildMember, APIMessage, Snowflake } from 'discord-api-types'
-
 import { Embed } from '@jadl/embed'
-
+import { APIGuildMember, APIMessage, Snowflake } from 'discord-api-types'
 import { Worker } from './Bot'
 
 export class LevelingHandler {
