@@ -10,7 +10,7 @@ export class Requests {
     message: MessageTypes,
     extra?: RequestData
   ): Promise<types.RESTPostAPIChannelMessageResult> {
-    return await this.api.post(Routes.channelMessages(channelId), {
+    return await this.api.post(Routes.channelMessages(channelId) as unknown as `/${string}`, {
       body: formatMessage(message).data,
       ...extra
     }) as any
@@ -21,7 +21,7 @@ export class Requests {
     webhookToken: string,
     message: types.RESTPostAPIWebhookWithTokenJSONBody
   ): Promise<types.RESTPostAPIWebhookWithTokenWaitResult> {
-    return await this.api.post(Routes.webhook(webhookId, webhookToken), {
+    return await this.api.post(Routes.webhook(webhookId, webhookToken) as unknown as `/${string}`, {
       query: new URLSearchParams({ wait: 'true' }),
       body: message
     }) as any
@@ -34,7 +34,7 @@ export class Requests {
     extra?: RequestData
   ): Promise<types.RESTPutAPIGuildMemberRoleResult> {
     return await this.api.put(
-      Routes.guildMemberRole(guildId, userId, roleId),
+      Routes.guildMemberRole(guildId, userId, roleId) as unknown as `/${string}`,
       extra
     ) as never
   }
@@ -44,6 +44,6 @@ export class Requests {
     userId: Snowflake,
     extra?: RequestData
   ): Promise<types.RESTGetAPIGuildMemberResult> {
-    return await this.api.get(Routes.guildMember(guildId, userId), extra) as any
+    return await this.api.get(Routes.guildMember(guildId, userId) as unknown as `/${string}`, extra) as any
   }
 }
