@@ -1,4 +1,4 @@
-import { Command, FileBuilder, Guild, MessageTypes, Options, Run, Thinks, Worker as GetWorker } from '@jadl/cmd'
+import { Command, FileBuilder, Worker as GetWorker, Guild, MessageTypes, Options, Run, Thinks } from '@jadl/cmd'
 import { APIGuild } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
@@ -26,7 +26,7 @@ export class LeaderboardCommand {
 
       const user = member.user!
       newDataArr.push({
-        tag: `${user.username}#${user.discriminator}`,
+        tag: user.global_name || user.username,
         pfp: worker.utils.getGuildAvatar(member, guild.id),
         level: levelData.level,
         rank: Number(allLevels.indexOf(levelData)) + 1

@@ -1,4 +1,4 @@
-import { Author, Command, Guild, MessageTypes, Run, UserPerms, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, Worker as GetWorker, Guild, MessageTypes, Run, UserPerms } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 import { APIGuild, APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
@@ -17,7 +17,7 @@ export class ToggleLevelMessageCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Tag`,
+        `${author.username} | Tag`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)

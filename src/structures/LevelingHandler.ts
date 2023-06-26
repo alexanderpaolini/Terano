@@ -94,10 +94,10 @@ export class LevelingHandler {
       switch (match.slice(2, -2)) {
         case 'user':
         case 'username':
-        case 'author': return member.user!.username
+        case 'author': return member.user.global_name || member.user!.username
         case 'nick':
-        case 'nickname': return member.nick ?? member.user!.username
-        case 'tag': return `${member.user!.username}#${member.user!.discriminator}`
+        case 'nickname': return member.nick ?? (member.user.global_name || member.user!.username)
+        case 'tag': return member.user.global_name || member.user!.username
         case 'guild':
         case 'server': return guild.name
         case 'lvl':

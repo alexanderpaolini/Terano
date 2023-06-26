@@ -1,4 +1,4 @@
-import { Author, Command, Guild, MessageTypes, Options, Run, UserPerms, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, Worker as GetWorker, Guild, MessageTypes, Options, Run, UserPerms } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 import { APIGuild, APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
@@ -17,7 +17,7 @@ export class SetLevelMessageCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Set Level-Up Message`,
+        `${author.username} | Set Level-Up Message`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)

@@ -1,4 +1,4 @@
-import { Author, Command, FileBuilder, Guild, Member, MessageTypes, Options, Run, Thinks, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, FileBuilder, Worker as GetWorker, Guild, Member, MessageTypes, Options, Run, Thinks } from '@jadl/cmd'
 import { APIGuild, APIGuildMember, APIUser, Snowflake } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
 
@@ -28,7 +28,7 @@ export class RankCommand {
       maxxp: Math.floor(100 + 5 / 6 * userData.level * (2 * userData.level * userData.level + 27 * userData.level + 91)),
       picture: userOptions.level.picture || worker.utils.getGuildAvatar(member, guild.id, 'png', 256),
       tag: userOptions.level.tag,
-      usertag: `${user.username}#${user.discriminator}`,
+      usertag: user.global_name || user.username,
       xp: userData.xp
     })
 

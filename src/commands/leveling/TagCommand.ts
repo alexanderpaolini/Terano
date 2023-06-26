@@ -1,4 +1,4 @@
-import { Author, Command, MessageTypes, Options, Run, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, Worker as GetWorker, MessageTypes, Options, Run } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 import { APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
@@ -14,7 +14,7 @@ export class TagCommand {
     if (tag.length > 30) {
       return new Embed()
         .author(
-          `${author.username}#${author.discriminator} | Tag`,
+          `${author.username} | Tag`,
           worker.utils.getAvatar(author)
         )
         .color(worker.config.colors.GREEN)
@@ -25,7 +25,7 @@ export class TagCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Tag`,
+        `${author.username} | Tag`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)

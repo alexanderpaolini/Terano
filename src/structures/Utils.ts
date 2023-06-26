@@ -19,7 +19,8 @@ export class Utils {
 
   static getAvatar (user: APIUser, type: string = 'png', size: number = 128): string {
     if (user.avatar !== null) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${type ?? (user.avatar.startsWith('a_') ? 'gif' : 'png')}?size=${size}`
-    return `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`
+    if (user.discriminator !== '0') return `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png`
+    return `https://cdn.discordapp.com/embed/avatars/${(BigInt(user.id) >> BigInt(22)) % BigInt(5)}.png`
   }
 
   static getGuildAvatar (user: APIGuildMember, guildId: Snowflake, type?: string, size?: number): string {

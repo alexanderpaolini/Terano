@@ -1,4 +1,4 @@
-import { Author, Command, Guild, MessageTypes, Options, Run, UserPerms, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, Worker as GetWorker, Guild, MessageTypes, Options, Run, UserPerms } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 import { APIGuild, APIUser } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
@@ -16,7 +16,7 @@ export class MultiplierCommand {
     if (multiplier <= 0 || multiplier > 100) {
       return new Embed()
         .author(
-          `${author.username}#${author.discriminator} | Multiplier`,
+          `${author.username} | Multiplier`,
           worker.utils.getAvatar(author)
         )
         .color(worker.config.colors.RED)
@@ -27,7 +27,7 @@ export class MultiplierCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Multiplier`,
+        `${author.username} | Multiplier`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)

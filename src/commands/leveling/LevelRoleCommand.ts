@@ -1,4 +1,4 @@
-import { Author, Command, Guild, MessageTypes, Options, SubCommand, UserPerms, Worker as GetWorker } from '@jadl/cmd'
+import { Author, Command, Worker as GetWorker, Guild, MessageTypes, Options, SubCommand, UserPerms } from '@jadl/cmd'
 import { Embed } from '@jadl/embed'
 import { APIGuild, APIUser, Snowflake } from 'discord-api-types'
 import { Worker } from '../../structures/Bot'
@@ -21,7 +21,7 @@ export class LevelRoleCommand {
     if (exists) {
       return new Embed()
         .author(
-          `${author.username}#${author.discriminator} | Level Role`,
+          `${author.username} | Level Role`,
           worker.utils.getAvatar(author)
         )
         .color(worker.config.colors.RED)
@@ -32,7 +32,7 @@ export class LevelRoleCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Level Role`,
+        `${author.username} | Level Role`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)
@@ -55,7 +55,7 @@ export class LevelRoleCommand {
     if (!exists) {
       return new Embed()
         .author(
-          `${author.username}#${author.discriminator} | Level Role`,
+          `${author.username} | Level Role`,
           worker.utils.getAvatar(author)
         )
         .color(worker.config.colors.RED)
@@ -69,7 +69,7 @@ export class LevelRoleCommand {
 
     return new Embed()
       .author(
-        `${author.username}#${author.discriminator} | Level Role`,
+        `${author.username} | Level Role`,
         worker.utils.getAvatar(author)
       )
       .color(worker.config.colors.GREEN)
@@ -88,7 +88,7 @@ export class LevelRoleCommand {
     if (!levelRoles.length) {
       return new Embed()
         .author(
-          `${author.username}#${author.discriminator} | Level Role`,
+          `${author.username} | Level Role`,
           worker.utils.getAvatar(author)
         )
         .color(worker.config.colors.RED)
